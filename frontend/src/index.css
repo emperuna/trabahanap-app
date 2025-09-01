@@ -1,0 +1,224 @@
+@import "tailwindcss";
+
+:root {
+  --primary-color: #0077b5;
+  --secondary-color: #caccce;
+  --background-color: #FFFFFF;
+  --medium-gray: #86888a;
+  --dark-gray: #313335;
+  --pure-black: #000000;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #FFFFFF;
+  color: #313335;
+}
+
+/* Ensure LinkedIn blue is used correctly */
+.bg-primary-500 {
+  background-color: #0077b5 !important;
+}
+
+.text-primary-500 {
+  color: #0077b5 !important;
+}
+
+.border-primary-500 {
+  border-color: #0077b5 !important;
+}
+
+.focus\:ring-primary-500:focus {
+  --tw-ring-color: #0077b5 !important;
+}
+
+.focus\:border-primary-500:focus {
+  border-color: #0077b5 !important;
+}
+
+/* Custom Button Styles */
+.btn-primary {
+  background-color: #0077b5;
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: #006699;
+}
+
+.btn-secondary {
+  background-color: #caccce;
+  color: #313335;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-outline {
+  border: 2px solid #0077b5;
+  color: #0077b5;
+  background-color: transparent;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background-color: #0077b5;
+  color: white;
+}
+
+/* Input styles */
+.input-field {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border: 1px solid #caccce;
+  border-radius: 0.5rem;
+  transition: border-color 0.2s;
+  color: #313335;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #0077b5;
+  box-shadow: 0 0 0 2px rgba(0, 119, 181, 0.3);
+}
+
+.input-field::placeholder {
+  color: #86888a;
+}
+
+/* Card styles */
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1px solid #caccce;
+  padding: 1.5rem;
+}
+
+/* Navigation styles */
+.navbar-link {
+  color: #313335;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.navbar-link:hover {
+  color: #0077b5;
+}
+
+.navbar-link.active {
+  color: #0077b5;
+  background-color: rgba(0, 119, 181, 0.1);
+}
+
+/* Text Color Utilities */
+.text-primary {
+  color: var(--primary-color);
+}
+
+.text-secondary {
+  color: var(--secondary-color);
+}
+
+.text-medium-gray {
+  color: var(--medium-gray);
+}
+
+.text-dark-gray {
+  color: var(--dark-gray);
+}
+
+.text-black {
+  color: var(--pure-black);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Background Color Utilities */
+.bg-primary {
+  background-color: var(--primary-color);
+}
+
+.bg-secondary {
+  background-color: var(--secondary-color);
+}
+
+.bg-medium-gray {
+  background-color: var(--medium-gray);
+}
+
+.bg-dark-gray {
+  background-color: var(--dark-gray);
+}
+
+.bg-black {
+  background-color: var(--pure-black);
+}
+
+/* Border Color Utilities */
+.border-primary {
+  border-color: var(--primary-color);
+}
+
+.border-secondary {
+  border-color: var(--secondary-color);
+}
+
+.border-medium-gray {
+  border-color: var(--medium-gray);
+}
+
+.border-dark-gray {
+  border-color: var(--dark-gray);
+}
+
+.border-black {
+  border-color: var(--pure-black);
+}
+
+/* Additional Utility Classes */
+.shadow-primary {
+  box-shadow: 0 4px 6px rgba(0, 119, 181, 0.1);
+}
+
+.shadow-dark {
+  box-shadow: 0 4px 6px rgba(49, 51, 53, 0.2);
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: all 0.2s;
+}
+
+.hover-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
