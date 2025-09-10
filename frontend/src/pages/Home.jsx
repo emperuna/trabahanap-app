@@ -1,32 +1,42 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AuthContext from "../context/AuthContext"; // <-- default import
 
 const Home = () => {
+  const { isAuthenticated, user } = React.useContext(AuthContext);
+  console.log("isAuthenticated:", isAuthenticated, "user:", user); // Debug log
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-primary-500 text-white py-16 lg:py-24">
+      <section className="bg-blue-700 text-white py-16 lg:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Find Your Dream Job
+              {isAuthenticated && user
+                ? `Welcome back, ${user.username}!`
+                : "Find Your Dream Job"}
             </h1>
             <p className="text-xl mb-8 text-blue-100 max-w-2xl mx-auto">
-              Connect with top employers and discover opportunities that match your skills
+              {isAuthenticated
+                ? "Check out the latest jobs tailored for you."
+                : "Connect with top employers and discover opportunities that match your skills"}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 to="/jobs"
-                className="bg-white text-primary-500 hover:bg-gray-50 font-bold py-3 px-8 rounded-lg transition-colors duration-200"
+                className="bg-white text-blue-700 hover:bg-gray-50 font-bold py-3 px-8 rounded-lg transition-colors duration-200"
               >
                 Browse Jobs
               </Link>
-              <Link
-                to="/register"
-                className="border-2 border-white text-white hover:bg-white hover:text-primary-500 font-bold py-3 px-8 rounded-lg transition-colors duration-200"
-              >
-                Get Started
-              </Link>
+              {!isAuthenticated && (
+                <Link
+                  to="/register"
+                  className="border-2 border-white text-white hover:bg-white hover:text-blue-700 font-bold py-3 px-8 rounded-lg transition-colors duration-200"
+                >
+                  Get Started
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -145,34 +155,36 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16" style={{ backgroundColor: '#313335' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
-            Ready to Find Your Next Opportunity?
-          </h2>
-          <p className="text-xl mb-8" style={{ color: '#86888a' }}>
-            Join thousands of professionals who have found their dream jobs through TrabaHanap
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/register"
-              className="text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200 hover:opacity-90"
-              style={{ backgroundColor: '#0077b5' }}
-            >
-              Create Account
-            </Link>
-            <Link
-              to="/jobs"
-              className="border-2 border-white text-white hover:bg-white font-bold py-3 px-8 rounded-lg transition-colors duration-200"
-              style={{ color: '#86888a' }}
-              onMouseEnter={(e) => e.target.style.color = '#313335'}
-              onMouseLeave={(e) => e.target.style.color = '#86888a'}
-            >
-              Explore Jobs
-            </Link>
+      {!isAuthenticated && (
+        <section className="py-16" style={{ backgroundColor: '#313335' }}>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Ready to Find Your Next Opportunity?
+            </h2>
+            <p className="text-xl mb-8" style={{ color: '#86888a' }}>
+              Join thousands of professionals who have found their dream jobs through TrabaHanap
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/register"
+                className="text-white font-bold py-3 px-8 rounded-lg transition-colors duration-200 hover:opacity-90"
+                style={{ backgroundColor: '#0077b5' }}
+              >
+                Create Account
+              </Link>
+              <Link
+                to="/jobs"
+                className="border-2 border-white text-white hover:bg-white font-bold py-3 px-8 rounded-lg transition-colors duration-200"
+                style={{ color: '#86888a' }}
+                onMouseEnter={(e) => e.target.style.color = '#313335'}
+                onMouseLeave={(e) => e.target.style.color = '#86888a'}
+              >
+                Explore Jobs
+              </Link>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>
   );
 };
