@@ -3,7 +3,7 @@
 :root {
   --primary-color: #0077b5;
   --secondary-color: #caccce;
-  --background-color: #FFFFFF;
+  --background-color: #060010;
   --medium-gray: #86888a;
   --dark-gray: #313335;
   --pure-black: #000000;
@@ -20,8 +20,37 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #FFFFFF;
-  color: #313335;
+  background-color: #060010;
+  color: #FFFFFF;
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Firefox scrollbar */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
 }
 
 /* Ensure LinkedIn blue is used correctly */
@@ -156,10 +185,6 @@ body {
 
 .text-black {
   color: var(--pure-black);
-}
-
-.text-muted {
-  color: var(--text-muted);
 }
 
 /* Background Color Utilities */
