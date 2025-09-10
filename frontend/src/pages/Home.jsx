@@ -6,6 +6,9 @@ import ScrollCard from "../components/ui/Home/ScrollCard";
 import CTA from "../components/ui/Home/CTA";
 
 const Home = () => {
+  // const { isAuthenticated, user } = React.useContext(AuthContext);
+  // console.log("isAuthenticated:", isAuthenticated, "user:", user); // Debug log
+
   return (
     <div 
       className="home" 
