@@ -6,7 +6,15 @@
             "command": "npm",
             "args": [
                 "run",
-                "mcp:server"
+                "mcp:chakra"
+            ],
+            "cwd": "${workspaceFolder}"
+        },
+        "trabahanap-react": {
+            "command": "npm",
+            "args": [
+                "run",
+                "mcp:react"
             ],
             "cwd": "${workspaceFolder}"
         }
