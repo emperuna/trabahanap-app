@@ -1,10 +1,20 @@
 {
+  "name": "trabahanap-app",
+  "version": "1.0.0",
+  "description": "Job search application",
   "scripts": {
-    "mcp:server": "node mcp/servers/chakra-server.js",
-    "mcp:dev": "concurrently \"npm run dev\" \"npm run mcp:server\"",
-    "mcp:test": "node mcp/test/test-server.js"
+    "install:frontend": "cd frontend && npm install",
+    "install:backend": "cd backend && mvn clean install",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && mvn spring-boot:run",
+    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.18.0"
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
