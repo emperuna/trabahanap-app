@@ -7,7 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "mcp:chakra": "node mcp/servers/chakra-server.js",
+    "mcp:react": "node mcp/servers/react-server.js",
+    "mcp:all": "concurrently \"npm run mcp:chakra\" \"npm run mcp:react\"",
+    "dev:all-mcp": "concurrently \"npm run dev\" \"npm run mcp:all\""
   },
   "dependencies": {
     "@chakra-ui/react": "^3.26.0",
@@ -23,14 +27,7 @@
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
     "@vitejs/plugin-react": "^5.0.0",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.12",
-    "vite": "^7.1.2"
+    "concurrently": "^9.2.1"
   },
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
   "main": "eslint.config.js",

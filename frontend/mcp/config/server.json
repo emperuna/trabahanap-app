@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "trabahanap-chakra": {
+      "command": "node",
+      "args": ["mcp/servers/chakra-server.js"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    },
+    "trabahanap-react": {
+      "command": "node",
+      "args": ["mcp/servers/react-server.js"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}
