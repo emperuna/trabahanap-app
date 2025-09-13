@@ -1,1 +1,10 @@
-{}
+{
+  "scripts": {
+    "mcp:server": "node mcp/servers/chakra-server.js",
+    "mcp:dev": "concurrently \"npm run dev\" \"npm run mcp:server\"",
+    "mcp:test": "node mcp/test/test-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0"
+  }
+}
