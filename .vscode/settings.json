@@ -17,6 +17,14 @@
                 "mcp:react"
             ],
             "cwd": "${workspaceFolder}"
+        },
+        "trabahanap-api": {
+            "command": "npm",
+            "args": [
+                "run",
+                "mcp:api"
+            ],
+            "cwd": "${workspaceFolder}"
         }
     },
     "files.exclude": {
