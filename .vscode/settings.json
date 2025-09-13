@@ -1,4 +1,19 @@
 {
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.configuration.updateBuildConfiguration": "disabled"
+    "java.configuration.updateBuildConfiguration": "disabled",
+    "mcp.servers": {
+        "trabahanap-chakra": {
+            "command": "npm",
+            "args": [
+                "run",
+                "mcp:server"
+            ],
+            "cwd": "${workspaceFolder}"
+        }
+    },
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/.git": true,
+        "mcp/logs": true
+    }
 }

@@ -21,4 +21,8 @@ Thumbs.db
 /frontend/build/
 
 # Dependencies
-/frontend/node_modules/
+/frontend/node_modules/node_modules/
+.DS_Store
+build/
+*.log
+dist/
