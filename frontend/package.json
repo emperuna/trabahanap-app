@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "mcp:chakra": "node mcp/servers/chakra-server.js",
     "mcp:react": "node mcp/servers/react-server.js",
-    "mcp:all": "concurrently \"npm run mcp:chakra\" \"npm run mcp:react\"",
+    "mcp:api": "node mcp/servers/api-server.js",
+    "mcp:all": "concurrently \"npm run mcp:chakra\" \"npm run mcp:react\" \"npm run mcp:api\"",
     "dev:all-mcp": "concurrently \"npm run dev\" \"npm run mcp:all\""
   },
   "dependencies": {
