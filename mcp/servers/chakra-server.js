@@ -40,8 +40,6 @@ class SimpleMCPServer {
   }
 
   handleRequest(method, params = {}) {
-    console.error(`🔍 Handling method: ${method}`); // Debug log
-    
     switch (method) {
       case 'initialize':
         return {
@@ -111,48 +109,64 @@ class SimpleMCPServer {
       throw new Error('URI parameter is required');
     }
 
-    try {
-      const url = new URL(uri);
+    if (uri.startsWith('chakra://')) {
+      const resource = uri.replace('chakra://', '');
       
-      if (url.protocol === 'chakra:') {
-        switch (url.pathname) {
-          case 'components':
-            return {
-              contents: [{
-                uri: uri,
-                mimeType: "application/json",
-                text: JSON.stringify(this.getChakraComponents(), null, 2)
-              }]
-            };
-          
-          case 'hooks':
-            return {
-              contents: [{
-                uri: uri,
-                mimeType: "application/json", 
-                text: JSON.stringify(this.getChakraHooks(), null, 2)
-              }]
-            };
-          
-          case 'theme-tokens':
-            return {
-              contents: [{
-                uri: uri,
-                mimeType: "application/json",
-                text: JSON.stringify(this.getThemeTokens(), null, 2)
-              }]
-            };
-        }
+      switch (resource) {
+        case 'components':
+          return {
+            contents: [{
+              uri: uri,
+              mimeType: "application/json",
+              text: JSON.stringify(this.getChakraComponents(), null, 2)
+            }]
+          };
+        
+        case 'hooks':
+          return {
+            contents: [{
+              uri: uri,
+              mimeType: "application/json", 
+              text: JSON.stringify(this.getChakraHooks(), null, 2)
+            }]
+          };
+        
+        case 'theme-tokens':
+          return {
+            contents: [{
+              uri: uri,
+              mimeType: "application/json",
+              text: JSON.stringify(this.getThemeTokens(), null, 2)
+            }]
+          };
+        
+        default:
+          throw new Error(`Unknown Chakra resource: ${resource}`);
       }
-      
-      throw new Error(`Resource not found: ${uri}`);
-    } catch (error) {
-      throw new Error(`Failed to read resource: ${error.message}`);
     }
+    
+    if (uri.startsWith('file://')) {
+      const filePath = uri.replace('file://', '');
+      try {
+        const fullPath = path.join(process.cwd(), filePath);
+        const content = fs.readFileSync(fullPath, 'utf8');
+        return {
+          contents: [{
+            uri: uri,
+            mimeType: "text/plain",
+            text: content
+          }]
+        };
+      } catch (error) {
+        throw new Error(`Failed to read file: ${error.message}`);
+      }
+    }
+    
+    throw new Error(`Unsupported URI scheme: ${uri}`);
   }
 
   start() {
-    console.error("TrabaHanap Chakra-aware MCP Server running (simplified version)");
+    console.error("TrabaHanap Chakra-aware MCP Server running");
     
     process.stdin.setEncoding('utf8');
     process.stdin.on('data', (data) => {
@@ -162,7 +176,6 @@ class SimpleMCPServer {
         for (const line of lines) {
           if (line.trim()) {
             const request = JSON.parse(line);
-            console.error(`📨 Received request: ${JSON.stringify(request)}`); // Debug log
             
             try {
               const result = this.handleRequest(request.method, request.params);
@@ -200,6 +213,5 @@ class SimpleMCPServer {
   }
 }
 
-// Start the server
 const server = new SimpleMCPServer("trabahanap-chakra-mcp-server", "1.0.0");
 server.start();
