@@ -8,7 +8,7 @@
                 "run",
                 "mcp:chakra"
             ],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}/frontend"
         },
         "trabahanap-react": {
             "command": "npm",
@@ -16,7 +16,7 @@
                 "run",
                 "mcp:react"
             ],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}/frontend"
         },
         "trabahanap-api": {
             "command": "npm",
@@ -24,7 +24,7 @@
                 "run",
                 "mcp:api"
             ],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}/frontend"
         }
     },
     "files.exclude": {

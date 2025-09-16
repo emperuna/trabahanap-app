@@ -15,6 +15,14 @@
       "env": {
         "NODE_ENV": "development"
       }
+    },
+    "trabahanap-api": {
+      "command": "node",
+      "args": ["mcp/servers/api-server.js"],
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "NODE_ENV": "development"
+      }
     }
   }
 }
