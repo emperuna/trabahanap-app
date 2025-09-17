@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import JobSeekerProfile from "./pages/JobSeekerProfile";
 import ComingSoon from "./pages/ComingSoon";
 
 // Components
@@ -24,6 +25,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/job-seeker-profile" element={<JobSeekerProfile />} />
             
             {/* Protected Routes - Dashboard */}
             <Route path="/dashboard" element={
