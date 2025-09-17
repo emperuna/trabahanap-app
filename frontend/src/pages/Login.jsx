@@ -1,8 +1,33 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Button,
+  Checkbox,
+  Link,
+  Alert,
+  AlertIcon,
+  Image,
+  Flex,
+  useColorModeValue,
+  IconButton,
+  Divider,
+} from '@chakra-ui/react';
+import { HiUser, HiLockClosed, HiEye, HiEyeOff } from 'react-icons/hi';
 import { useAuth } from '../context/AuthContext';
-import Button from '../components/common/Button';
-import Input from '../components/common/Input';
+import logo from '../assets/logo/TrabaHanap-Logo.svg';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -10,8 +35,17 @@ const Login = () => {
     password: '',
   });
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
+  
   const { login, isLoading, error } = useAuth();
   const navigate = useNavigate();
+
+  // Theme colors
+  const bgColor = useColorModeValue('gray.50', 'gray.900');
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const textColor = useColorModeValue('gray.600', 'gray.300');
+  const headingColor = useColorModeValue('gray.900', 'white');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,87 +92,273 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Sign in to your account</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Or{' '}
-              <Link
-                to="/register"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                create a new account
-              </Link>
-            </p>
-          </div>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <Input
-              label="Username"
-              name="username"
-              type="text"
-              required
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
-              placeholder="Enter your username"
+    <Box minH="100vh" bg={bgColor} py={12}>
+      <Container maxW="lg" centerContent>
+        <Box
+          w="full"
+          maxW="md"
+          bg={cardBg}
+          boxShadow="2xl"
+          borderRadius="3xl"
+          border="1px solid"
+          borderColor="gray.200"
+          overflow="hidden"
+        >
+          {/* Header Section */}
+          <Box
+            bgGradient="linear(135deg, purple.500, blue.500)"
+            px={8}
+            py={12}
+            textAlign="center"
+            position="relative"
+            overflow="hidden"
+          >
+            {/* Background Pattern */}
+            <Box
+              position="absolute"
+              top="-50%"
+              left="-50%"
+              w="200%"
+              h="200%"
+              bg="whiteAlpha.100"
+              borderRadius="50%"
+              transform="rotate(15deg)"
             />
             
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-              placeholder="Enter your password"
-            />
-          </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
-              {error}
-            </div>
-          )}
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="remember-me"
-                type="checkbox"
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <Link
-                to="/forgot-password"
-                className="font-medium text-blue-600 hover:text-blue-500"
+            <VStack spacing={4} position="relative" zIndex={1}>
+              <Box
+                p={4}
+                bg="whiteAlpha.200"
+                borderRadius="2xl"
+                backdropFilter="blur(10px)"
               >
-                Forgot your password?
-              </Link>
-            </div>
-          </div>
+                <Image
+                  src={logo}
+                  alt="TrabaHanap"
+                  h={10}
+                  w={10}
+                  filter="brightness(0) invert(1)"
+                />
+              </Box>
+              
+              <VStack spacing={2}>
+                <Heading size="lg" color="white" fontWeight="bold">
+                  Welcome Back
+                </Heading>
+                <Text color="whiteAlpha.900" fontSize="sm">
+                  Sign in to continue your job search journey
+                </Text>
+              </VStack>
+            </VStack>
+          </Box>
 
-          <Button
-            type="submit"
-            className="w-full"
-            loading={isLoading}
-            disabled={isLoading}
-          >
-            Sign in
-          </Button>
-        </form>
-      </div>
-    </div>
+          {/* Form Section */}
+          <Box px={8} py={8}>
+            <VStack spacing={6}>
+              {/* Error Alert */}
+              {error && (
+                <Alert status="error" borderRadius="xl" variant="left-accent">
+                  <AlertIcon />
+                  <Text fontSize="sm">{error}</Text>
+                </Alert>
+              )}
+
+              {/* Login Form */}
+              <Box as="form" onSubmit={handleSubmit} w="full">
+                <VStack spacing={5}>
+                  {/* Username Field */}
+                  <FormControl isInvalid={!!errors.username}>
+                    <FormLabel fontSize="sm" fontWeight="semibold" color={textColor}>
+                      Username
+                    </FormLabel>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none">
+                        <HiUser color="gray.400" />
+                      </InputLeftElement>
+                      <Input
+                        name="username"
+                        type="text"
+                        value={formData.username}
+                        onChange={handleChange}
+                        placeholder="Enter your username"
+                        size="lg"
+                        borderRadius="xl"
+                        bg="gray.50"
+                        border="1px solid"
+                        borderColor="gray.200"
+                        _focus={{
+                          borderColor: 'purple.400',
+                          bg: 'white',
+                          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2)'
+                        }}
+                        _hover={{
+                          borderColor: 'gray.300'
+                        }}
+                      />
+                    </InputGroup>
+                    <FormErrorMessage fontSize="sm">
+                      {errors.username}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  {/* Password Field */}
+                  <FormControl isInvalid={!!errors.password}>
+                    <FormLabel fontSize="sm" fontWeight="semibold" color={textColor}>
+                      Password
+                    </FormLabel>
+                    <InputGroup>
+                      <InputLeftElement pointerEvents="none">
+                        <HiLockClosed color="gray.400" />
+                      </InputLeftElement>
+                      <Input
+                        name="password"
+                        type={showPassword ? 'text' : 'password'}
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Enter your password"
+                        size="lg"
+                        borderRadius="xl"
+                        bg="gray.50"
+                        border="1px solid"
+                        borderColor="gray.200"
+                        _focus={{
+                          borderColor: 'purple.400',
+                          bg: 'white',
+                          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2)'
+                        }}
+                        _hover={{
+                          borderColor: 'gray.300'
+                        }}
+                      />
+                      <InputRightElement>
+                        <IconButton
+                          variant="ghost"
+                          size="sm"
+                          icon={showPassword ? <HiEyeOff /> : <HiEye />}
+                          onClick={() => setShowPassword(!showPassword)}
+                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                          color="gray.400"
+                          _hover={{ color: 'gray.600' }}
+                        />
+                      </InputRightElement>
+                    </InputGroup>
+                    <FormErrorMessage fontSize="sm">
+                      {errors.password}
+                    </FormErrorMessage>
+                  </FormControl>
+
+                  {/* Remember Me & Forgot Password */}
+                  <Flex justify="space-between" align="center" w="full">
+                    <Checkbox
+                      isChecked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      colorScheme="purple"
+                      size="sm"
+                    >
+                      <Text fontSize="sm" color={textColor}>
+                        Remember me
+                      </Text>
+                    </Checkbox>
+                    
+                    <Link
+                      as={RouterLink}
+                      to="/forgot-password"
+                      fontSize="sm"
+                      color="purple.500"
+                      fontWeight="medium"
+                      _hover={{ color: 'purple.600', textDecoration: 'none' }}
+                    >
+                      Forgot password?
+                    </Link>
+                  </Flex>
+
+                  {/* Submit Button */}
+                  <Button
+                    type="submit"
+                    size="lg"
+                    w="full"
+                    h={12}
+                    bgGradient="linear(135deg, purple.500, blue.500)"
+                    color="white"
+                    fontWeight="600"
+                    borderRadius="xl"
+                    isLoading={isLoading}
+                    loadingText="Signing in..."
+                    _hover={{
+                      bgGradient: "linear(135deg, purple.600, blue.600)",
+                      transform: 'translateY(-2px)',
+                      boxShadow: 'lg'
+                    }}
+                    _active={{
+                      transform: 'translateY(0)',
+                    }}
+                    transition="all 0.2s ease"
+                  >
+                    Sign In
+                  </Button>
+                </VStack>
+              </Box>
+
+              {/* Divider */}
+              <HStack w="full">
+                <Divider />
+                <Text fontSize="sm" color={textColor} whiteSpace="nowrap">
+                  New to TrabaHanap?
+                </Text>
+                <Divider />
+              </HStack>
+
+              {/* Sign Up Link */}
+              <Button
+                as={RouterLink}
+                to="/register"
+                variant="outline"
+                size="lg"
+                w="full"
+                h={12}
+                borderColor="purple.200"
+                color="purple.500"
+                fontWeight="600"
+                borderRadius="xl"
+                _hover={{
+                  bg: 'purple.50',
+                  borderColor: 'purple.300',
+                  transform: 'translateY(-1px)'
+                }}
+                transition="all 0.2s ease"
+              >
+                Create New Account
+              </Button>
+
+              {/* Back to Home */}
+              <Text textAlign="center" fontSize="sm" color={textColor}>
+                <Link
+                  as={RouterLink}
+                  to="/"
+                  color="purple.500"
+                  fontWeight="medium"
+                  _hover={{ color: 'purple.600', textDecoration: 'none' }}
+                >
+                  ← Back to Home
+                </Link>
+              </Text>
+            </VStack>
+          </Box>
+        </Box>
+
+        {/* Footer Text */}
+        <Text mt={8} fontSize="sm" color={textColor} textAlign="center">
+          By signing in, you agree to our{' '}
+          <Link color="purple.500" fontWeight="medium">
+            Terms of Service
+          </Link>{' '}
+          and{' '}
+          <Link color="purple.500" fontWeight="medium">
+            Privacy Policy
+          </Link>
+        </Text>
+      </Container>
+    </Box>
   );
 };
 
