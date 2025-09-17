@@ -1,31 +1,20 @@
 import React from "react";
-import Hero from "../components/Hero";
-import JobSearch from "../components/ui/Home/JobSearch";
-import Features from "../components/ui/Home/Features";
-import ScrollCard from "../components/ui/Home/ScrollCard";
-import CTA from "../components/ui/Home/CTA";
+import { Box, Flex } from "@chakra-ui/react";
+import { GuestNavbar, Footer } from "../components/layout";
+import { Hero, Features, CTA, HowItWorks } from "../components/sections/home";
 
 const Home = () => {
-  // const { isAuthenticated, user } = React.useContext(AuthContext);
-  // console.log("isAuthenticated:", isAuthenticated, "user:", user); // Debug log
-
   return (
-    <div 
-      className="home" 
-      style={{ 
-        backgroundColor: "#060010",
-        overflowX: "hidden",
-        width: "100vw",
-        minHeight: "100vh",
-        position: "relative"
-      }}
-    >
-      <Hero />
-      <JobSearch />
-      <Features />
-      <ScrollCard />
-      <CTA />
-    </div>
+    <Flex direction="column" minH="100vh">
+      <GuestNavbar />
+      <Box flex="1">
+        <Hero />
+        <Features />
+        <HowItWorks />
+        <CTA />
+      </Box>
+      <Footer />
+    </Flex>
   );
 };
 
