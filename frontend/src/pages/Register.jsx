@@ -1,267 +1,263 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import Button from '../components/common/Button';
-import Input from '../components/common/Input';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  VStack,
+  HStack,
+  Heading,
+  Text,
+  Button,
+  Alert,
+  AlertIcon,
+  Image,
+  useColorModeValue,
+  Divider,
+  Link,
+} from '@chakra-ui/react';
+import { HiUser, HiMail, HiLockClosed, HiCheckCircle } from 'react-icons/hi';
+
+import { useRegistrationForm } from '../hooks/useRegistrationForm';
+import PersonalInfoStep from '../components/auth/PersonalInfoStep';
+import AccountDetailsStep from '../components/auth/AccountDetailsStep';
+import SecurityStep from '../components/auth/SecurityStep';
+import StepProgress from '../components/auth/StepProgress';
+import logo from '../assets/logo/TrabaHanap-Logo.svg';
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: '',
-    phoneNumber: '',
-    role: 'user',
-  });
-  const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(false);
-  const { register, isLoading, error } = useAuth();
-  const navigate = useNavigate();
+  const {
+    currentStep,
+    formData,
+    errors,
+    showPassword,
+    setShowPassword,
+    showConfirmPassword,
+    setShowConfirmPassword,
+    agreeTerms,
+    setAgreeTerms,
+    success,
+    isLoading,
+    error,
+    handleChange,
+    handleNext,
+    handlePrevious,
+    handleSubmit,
+  } = useRegistrationForm();
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
+  // Theme colors
+  const bgColor = useColorModeValue('gray.50', 'gray.900');
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const textColor = useColorModeValue('gray.600', 'gray.300');
+  const headingColor = useColorModeValue('gray.900', 'white');
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
-    } else if (formData.username.length < 3) {
-      newErrors.username = 'Username must be at least 3 characters';
-    }
-    
-    if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-    
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
-    } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
-    }
-
-    if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
-    }
-
-    if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
-    }
-
-    const registrationData = {
-      ...formData,
-      role: [formData.role], // Convert to array as expected by backend
-    };
-
-    const result = await register(registrationData);
-    
-    if (result.success) {
-      setSuccess(true);
-      setTimeout(() => {
-        navigate('/login');
-      }, 2000);
-    }
-  };
+  const steps = [
+    { number: 1, title: 'Personal Info', icon: HiUser },
+    { number: 2, title: 'Account Details', icon: HiMail },
+    { number: 3, title: 'Security', icon: HiLockClosed },
+  ];
 
   if (success) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-md w-full space-y-8">
-          <div className="text-center">
-            <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
-              Registration successful! Redirecting to login page...
-            </div>
-          </div>
-        </div>
-      </div>
+      <Box minH="100vh" bg={bgColor} display="flex" alignItems="center" justifyContent="center">
+        <Container maxW="md" textAlign="center">
+          <VStack spacing={6}>
+            <Box p={6} bg="green.50" borderRadius="full" display="inline-block">
+              <HiCheckCircle size={48} color="green" />
+            </Box>
+            <VStack spacing={2}>
+              <Heading size="lg" color={headingColor}>
+                Account Created Successfully!
+              </Heading>
+              <Text color={textColor}>
+                Welcome to TrabaHanap! Redirecting you to the login page...
+              </Text>
+            </VStack>
+          </VStack>
+        </Container>
+      </Box>
     );
   }
 
+  const renderStepContent = () => {
+    const stepProps = {
+      formData,
+      errors,
+      onChange: handleChange,
+      textColor,
+    };
+
+    switch (currentStep) {
+      case 1:
+        return <PersonalInfoStep {...stepProps} />;
+      case 2:
+        return <AccountDetailsStep {...stepProps} />;
+      case 3:
+        return (
+          <SecurityStep
+            {...stepProps}
+            showPassword={showPassword}
+            setShowPassword={setShowPassword}
+            showConfirmPassword={showConfirmPassword}
+            setShowConfirmPassword={setShowConfirmPassword}
+            agreeTerms={agreeTerms}
+            setAgreeTerms={setAgreeTerms}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Create your account</h2>
-            <p className="mt-2 text-sm text-gray-600">
-              Or{' '}
-              <Link
-                to="/login"
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                sign in to your existing account
-              </Link>
-            </p>
-          </div>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <Input
-                label="First Name"
-                name="firstName"
-                type="text"
-                required
-                value={formData.firstName}
-                onChange={handleChange}
-                error={errors.firstName}
-                placeholder="John"
-              />
-              
-              <Input
-                label="Last Name"
-                name="lastName"
-                type="text"
-                required
-                value={formData.lastName}
-                onChange={handleChange}
-                error={errors.lastName}
-                placeholder="Doe"
-              />
-            </div>
-
-            <Input
-              label="Username"
-              name="username"
-              type="text"
-              required
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
-              placeholder="johndoe"
-              helperText="Must be at least 3 characters"
-            />
-            
-            <Input
-              label="Email"
-              name="email"
-              type="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
-              placeholder="john@example.com"
-            />
-
-            <Input
-              label="Phone Number"
-              name="phoneNumber"
-              type="tel"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              error={errors.phoneNumber}
-              placeholder="+63 912 345 6789"
-            />
-
-            <div className="space-y-1">
-              <label className="block text-sm font-medium text-gray-700">
-                Account Type <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
-                <option value="user">Job Seeker</option>
-                <option value="employer">Employer</option>
-              </select>
-            </div>
-            
-            <Input
-              label="Password"
-              name="password"
-              type="password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
-              placeholder="Enter your password"
-              helperText="Must be at least 6 characters"
-            />
-            
-            <Input
-              label="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              error={errors.confirmPassword}
-              placeholder="Confirm your password"
-            />
-          </div>
-
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative">
-              {error}
-            </div>
-          )}
-
-          <div className="flex items-center">
-            <input
-              id="agree-terms"
-              name="agree-terms"
-              type="checkbox"
-              required
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="agree-terms" className="ml-2 block text-sm text-gray-900">
-              I agree to the{' '}
-              <Link to="/terms" className="text-blue-600 hover:text-blue-500">
-                Terms of Service
-              </Link>{' '}
-              and{' '}
-              <Link to="/privacy" className="text-blue-600 hover:text-blue-500">
-                Privacy Policy
-              </Link>
-            </label>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full"
-            loading={isLoading}
-            disabled={isLoading}
+    <Box minH="100vh" bg={bgColor} py={12}>
+      <Container maxW="lg" centerContent>
+        <Box
+          w="full"
+          maxW="lg"
+          bg={cardBg}
+          boxShadow="2xl"
+          borderRadius="3xl"
+          border="1px solid"
+          borderColor="gray.200"
+          overflow="hidden"
+        >
+          {/* Header Section */}
+          <Box
+            bgGradient="linear(135deg, purple.500, blue.500)"
+            px={8}
+            py={8}
+            textAlign="center"
+            position="relative"
+            overflow="hidden"
           >
-            Create Account
-          </Button>
-        </form>
-      </div>
-    </div>
+            <VStack spacing={4} position="relative" zIndex={1}>
+              <Box
+                p={3}
+                bg="whiteAlpha.200"
+                borderRadius="2xl"
+                backdropFilter="blur(10px)"
+              >
+                <Image
+                  src={logo}
+                  alt="TrabaHanap"
+                  h={8}
+                  w={8}
+                  filter="brightness(0) invert(1)"
+                />
+              </Box>
+              
+              <VStack spacing={2}>
+                <Heading size="lg" color="white" fontWeight="bold">
+                  Join TrabaHanap
+                </Heading>
+                <Text color="whiteAlpha.900" fontSize="sm">
+                  Create your account to start your career journey
+                </Text>
+              </VStack>
+
+              <StepProgress steps={steps} currentStep={currentStep} />
+            </VStack>
+          </Box>
+
+          {/* Form Section */}
+          <Box px={8} py={8}>
+            <VStack spacing={6}>
+              {error && (
+                <Alert status="error" borderRadius="xl" variant="left-accent">
+                  <AlertIcon />
+                  <Text fontSize="sm">{error}</Text>
+                </Alert>
+              )}
+
+              <Box w="full">{renderStepContent()}</Box>
+
+              {/* Navigation Buttons */}
+              <HStack spacing={4} w="full" justify="space-between">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={handlePrevious}
+                  isDisabled={currentStep === 1}
+                  borderRadius="xl"
+                  flex={1}
+                >
+                  Previous
+                </Button>
+
+                {currentStep < steps.length ? (
+                  <Button
+                    size="lg"
+                    onClick={handleNext}
+                    bgGradient="linear(135deg, purple.500, blue.500)"
+                    color="white"
+                    _hover={{
+                      bgGradient: "linear(135deg, purple.600, blue.600)",
+                      transform: 'translateY(-1px)'
+                    }}
+                    borderRadius="xl"
+                    flex={1}
+                  >
+                    Next
+                  </Button>
+                ) : (
+                  <Button
+                    type="submit"
+                    size="lg"
+                    onClick={handleSubmit}
+                    bgGradient="linear(135deg, purple.500, blue.500)"
+                    color="white"
+                    isLoading={isLoading}
+                    loadingText="Creating Account..."
+                    _hover={{
+                      bgGradient: "linear(135deg, purple.600, blue.600)",
+                      transform: 'translateY(-1px)'
+                    }}
+                    borderRadius="xl"
+                    flex={1}
+                  >
+                    Create Account
+                  </Button>
+                )}
+              </HStack>
+
+              <HStack w="full">
+                <Divider />
+                <Text fontSize="sm" color={textColor} whiteSpace="nowrap">
+                  Already have an account?
+                </Text>
+                <Divider />
+              </HStack>
+
+              <Button
+                as={RouterLink}
+                to="/login"
+                variant="ghost"
+                size="lg"
+                w="full"
+                color="purple.500"
+                fontWeight="600"
+                borderRadius="xl"
+                _hover={{ bg: 'purple.50', transform: 'translateY(-1px)' }}
+              >
+                Sign In Instead
+              </Button>
+
+              <Text textAlign="center" fontSize="sm" color={textColor}>
+                <Link
+                  as={RouterLink}
+                  to="/"
+                  color="purple.500"
+                  fontWeight="medium"
+                  _hover={{ color: 'purple.600', textDecoration: 'none' }}
+                >
+                  ← Back to Home
+                </Link>
+              </Text>
+            </VStack>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
 };
 
