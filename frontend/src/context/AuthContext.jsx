@@ -1,7 +1,29 @@
-import { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
-// Initial state
+const AuthContext = createContext();
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+const AUTH_ACTIONS = {
+  LOGIN_START: 'LOGIN_START',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGIN_FAILURE: 'LOGIN_FAILURE',
+  REGISTER_START: 'REGISTER_START',
+  REGISTER_SUCCESS: 'REGISTER_SUCCESS',
+  REGISTER_FAILURE: 'REGISTER_FAILURE',
+  LOGOUT: 'LOGOUT',
+  LOAD_USER: 'LOAD_USER',
+  CLEAR_ERROR: 'CLEAR_ERROR',
+  SET_LOADING_FALSE: 'SET_LOADING_FALSE',
+};
+
 const initialState = {
   user: null,
   token: localStorage.getItem('token'),
@@ -10,20 +32,6 @@ const initialState = {
   error: null,
 };
 
-// Action types
-const AUTH_ACTIONS = {
-  LOGIN_START: 'LOGIN_START',
-  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-  LOGIN_FAILURE: 'LOGIN_FAILURE',
-  LOGOUT: 'LOGOUT',
-  REGISTER_START: 'REGISTER_START',
-  REGISTER_SUCCESS: 'REGISTER_SUCCESS',
-  REGISTER_FAILURE: 'REGISTER_FAILURE',
-  LOAD_USER: 'LOAD_USER',
-  CLEAR_ERROR: 'CLEAR_ERROR',
-};
-
-// Reducer function
 const authReducer = (state, action) => {
   switch (action.type) {
     case AUTH_ACTIONS.LOGIN_START:
@@ -80,7 +88,7 @@ const authReducer = (state, action) => {
         isLoading: false,
       };
 
-    case 'SET_LOADING_FALSE':
+    case AUTH_ACTIONS.SET_LOADING_FALSE:
       return {
         ...state,
         isLoading: false,
@@ -97,32 +105,48 @@ const authReducer = (state, action) => {
   }
 };
 
-// Create context
-const AuthContext = createContext();
-
-// AuthProvider component
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Check if user is logged in on app start
+  // Verify token on app startup
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // TODO: Verify token with backend and load user data
-      // For now, we'll just set loading to false
-      dispatch({ type: AUTH_ACTIONS.LOAD_USER, payload: null });
+      verifyToken();
     } else {
-      dispatch({ type: 'SET_LOADING_FALSE' });
+      dispatch({ type: AUTH_ACTIONS.SET_LOADING_FALSE });
     }
   }, []);
 
-  // Login function
+  const verifyToken = async () => {
+    try {
+      const response = await authAPI.verifyToken();
+      dispatch({
+        type: AUTH_ACTIONS.LOAD_USER,
+        payload: {
+          id: response.id,
+          username: response.username,
+          email: response.email,
+          firstName: response.firstName,
+          lastName: response.lastName,
+          phoneNumber: response.phoneNumber,
+          roles: response.roles
+        }
+      });
+    } catch (error) {
+      localStorage.removeItem('token');
+      dispatch({ type: AUTH_ACTIONS.SET_LOADING_FALSE });
+    }
+  };
+
   const login = async (credentials) => {
     dispatch({ type: AUTH_ACTIONS.LOGIN_START });
     try {
       const response = await authAPI.login(credentials);
       
-      localStorage.setItem('token', response.accessToken);
+      const token = response.accessToken || response.token;
+      localStorage.setItem('token', token);
+      
       dispatch({
         type: AUTH_ACTIONS.LOGIN_SUCCESS,
         payload: {
@@ -130,9 +154,11 @@ export const AuthProvider = ({ children }) => {
             id: response.id,
             username: response.username,
             email: response.email,
+            firstName: response.firstName,
+            lastName: response.lastName,
             roles: response.roles
           },
-          token: response.accessToken
+          token: token
         },
       });
 
@@ -146,14 +172,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Register function
   const register = async (userData) => {
     dispatch({ type: AUTH_ACTIONS.REGISTER_START });
     try {
-      const response = await authAPI.register(userData);
-      
+      await authAPI.register(userData);
       dispatch({ type: AUTH_ACTIONS.REGISTER_SUCCESS });
-      return { success: true, message: response.message };
+      return { success: true };
     } catch (error) {
       dispatch({
         type: AUTH_ACTIONS.REGISTER_FAILURE,
@@ -163,19 +187,21 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
   const logout = () => {
     localStorage.removeItem('token');
     dispatch({ type: AUTH_ACTIONS.LOGOUT });
   };
 
-  // Clear error function
   const clearError = () => {
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
   };
 
   const value = {
-    ...state,
+    user: state.user,
+    token: state.token,
+    isAuthenticated: state.isAuthenticated,
+    isLoading: state.isLoading,
+    error: state.error,
     login,
     register,
     logout,
@@ -184,14 +210,3 @@ export const AuthProvider = ({ children }) => {
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
-
-// Custom hook to use auth context
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
-
-export default AuthContext;
