@@ -1,17 +1,15 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <div className="min-h-screen flex flex-col">
-          <Navbar />
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -25,7 +23,6 @@ function App() {
               <Route path="*" element={<div className="p-8 text-center">404 - Page Not Found</div>} />
             </Routes>
           </main>
-          <Footer />
         </div>
       </Router>
     </AuthProvider>
