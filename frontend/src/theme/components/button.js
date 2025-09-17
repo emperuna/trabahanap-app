@@ -1,48 +1,63 @@
 const Button = {
   baseStyle: {
-    fontWeight: 'semibold',
-    borderRadius: 'lg',
-    _focusVisible: {
-      boxShadow: '0 0 0 2px var(--chakra-colors-purple-400)'
-    }
-  },
-  sizes: {
-    md: { h: 11, px: 6, fontSize: 'sm' },
-    lg: { h: 14, px: 8, fontSize: 'md' }
+    fontWeight: '600',
+    borderRadius: 'xl',
+    transition: 'all 0.2s ease',
+    _focus: {
+      boxShadow: 'none',
+    },
   },
   variants: {
-    solid: {
-      bg: 'brand.500',
-      color: 'white',
-      _hover: { bg: 'brand.600', transform: 'translateY(-2px)', boxShadow: 'elevated' },
-      _active: { transform: 'translateY(0)' }
-    },
+    // Primary gradient button
     primaryGradient: {
-      bgGradient: 'linear(to-r, purple.500, blue.500)',
+      bgGradient: 'linear(135deg, purple.500, blue.500)',
       color: 'white',
       _hover: {
-        bgGradient: 'linear(to-r, purple.600, blue.600)',
+        bgGradient: 'linear(135deg, purple.600, blue.600)',
         transform: 'translateY(-2px)',
-        boxShadow: 'glow'
-      }
+        boxShadow: 'xl',
+      },
+      _active: {
+        transform: 'translateY(0)',
+      },
     },
-    outline: {
-      border: '2px solid',
-      borderColor: 'purple.400',
-      color: 'purple.400',
+    
+    // Glass effect button
+    glass: {
+      bg: 'bg.glass',
+      backdropFilter: 'blur(20px)',
+      border: '1px solid',
+      borderColor: 'border.subtle',
+      color: 'text.primary',
       _hover: {
-        bg: 'purple.50'
-      }
+        bg: 'whiteAlpha.200',
+        borderColor: 'border.accent',
+      },
     },
-    ghost: {
-      color: 'gray.600',
-      _hover: { bg: 'gray.100' },
-      _dark: { color: 'gray.300', _hover: { bg: 'whiteAlpha.200' } }
-    }
+    
+    // Modern ghost
+    modernGhost: {
+      bg: 'transparent',
+      color: 'text.secondary',
+      _hover: {
+        bg: 'bg.surface',
+        color: 'text.primary',
+        transform: 'translateY(-1px)',
+      },
+    },
   },
-  defaultProps: {
-    variant: 'solid',
-    size: 'md'
-  }
+  sizes: {
+    lg: {
+      h: 12,
+      px: 8,
+      fontSize: 'md',
+    },
+    xl: {
+      h: 14,
+      px: 10,
+      fontSize: 'lg',
+    },
+  },
 };
+
 export default Button;

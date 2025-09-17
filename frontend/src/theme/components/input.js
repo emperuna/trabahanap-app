@@ -1,43 +1,47 @@
 const Input = {
   baseStyle: {
     field: {
-      borderRadius: 'lg',
-      _placeholder: { color: 'gray.400' }
-    }
-  },
-  sizes: {
-    lg: {
-      field: { h: 14, px: 5, fontSize: 'sm' }
-    }
+      borderRadius: 'xl',
+      transition: 'all 0.2s ease',
+    },
   },
   variants: {
     glass: {
       field: {
         bg: 'whiteAlpha.200',
-        backdropFilter: 'blur(12px)',
         border: '1px solid',
         borderColor: 'whiteAlpha.300',
         color: 'white',
+        _placeholder: {
+          color: 'whiteAlpha.600',
+        },
         _focus: {
-          borderColor: 'purple.400',
-          boxShadow: '0 0 0 1px var(--chakra-colors-purple-400)',
-          bg: 'whiteAlpha.300'
-        }
-      }
+          borderColor: 'whiteAlpha.500',
+          bg: 'whiteAlpha.300',
+          boxShadow: '0 0 0 1px rgba(255,255,255,0.2)',
+        },
+      },
     },
-    subtle: {
+    modern: {
       field: {
-        bg: 'gray.100',
+        bg: 'bg.card',
+        border: '1px solid',
+        borderColor: 'border.subtle',
         _focus: {
-          bg: 'white',
           borderColor: 'purple.400',
-          boxShadow: '0 0 0 1px var(--chakra-colors-purple-400)'
-        }
-      }
-    }
+          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2)',
+        },
+      },
+    },
   },
-  defaultProps: {
-    size: 'lg'
-  }
+  sizes: {
+    lg: {
+      field: {
+        h: 12,
+        px: 4,
+      },
+    },
+  },
 };
+
 export default Input;
