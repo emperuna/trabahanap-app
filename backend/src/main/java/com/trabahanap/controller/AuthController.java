@@ -1,30 +1,43 @@
 package com.trabahanap.controller;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.trabahanap.config.JwtUtil;
 import com.trabahanap.dto.JwtResponse;
 import com.trabahanap.dto.LoginRequest;
 import com.trabahanap.dto.MessageResponse;
 import com.trabahanap.dto.SignupRequest;
+import com.trabahanap.dto.UserInfoResponse;
 import com.trabahanap.model.ERole;
 import com.trabahanap.model.Role;
 import com.trabahanap.model.User;
 import com.trabahanap.repository.RoleRepository;
 import com.trabahanap.repository.UserRepository;
+import com.trabahanap.service.UserDetailsServiceImpl;
 import com.trabahanap.service.UserPrincipal;
-import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -44,6 +57,9 @@ public class AuthController {
 
     @Autowired
     JwtUtil jwtUtil;
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -121,5 +137,74 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @GetMapping("/me")
+    @PreAuthorize("hasRole('USER') or hasRole('EMPLOYER') or hasRole('ADMIN')")
+    public ResponseEntity<?> getCurrentUser(Authentication authentication) {
+        try {
+            UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+
+            User user = userRepository.findById(userPrincipal.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            List<String> roles = userPrincipal.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(new UserInfoResponse(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getPhoneNumber(),
+                    roles
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new MessageResponse("Unauthorized access"));
+        }
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
+        String token = jwtUtil.getJwtFromRequest(request);
+
+        if (token != null) {
+            try {
+                // First get the username from the token
+                String username = jwtUtil.getUsernameFromToken(token);
+
+                // Load user details
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+                // Now validate with both parameters
+                if (jwtUtil.validateToken(token, userDetails)) {
+                    String newToken = jwtUtil.generateToken((UserPrincipal) userDetails);
+
+                    // Get user info for the response
+                    UserPrincipal userPrincipal = (UserPrincipal) userDetails;
+                    List<String> roles = userPrincipal.getAuthorities().stream()
+                            .map(item -> item.getAuthority())
+                            .collect(Collectors.toList());
+
+                    return ResponseEntity.ok(new JwtResponse(
+                            newToken,
+                            userPrincipal.getId(),
+                            userPrincipal.getUsername(),
+                            userPrincipal.getEmail(),
+                            roles
+                    ));
+                }
+            } catch (Exception e) {
+                // Token is invalid or user not found
+                return ResponseEntity.badRequest()
+                        .body(new MessageResponse("Invalid token"));
+            }
+        }
+
+        return ResponseEntity.badRequest()
+                .body(new MessageResponse("Invalid token"));
     }
 }

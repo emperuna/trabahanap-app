@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -25,6 +25,7 @@ import StepProgress from '../components/auth/StepProgress';
 import logo from '../assets/logo/TrabaHanap-Logo.svg';
 
 const Register = () => {
+  const navigate = useNavigate();
   const {
     currentStep,
     formData,
@@ -56,12 +57,22 @@ const Register = () => {
     { number: 3, title: 'Security', icon: HiLockClosed },
   ];
 
+  // In the success state rendering, update the redirect message:
   if (success) {
+    setTimeout(() => {
+      navigate('/login', { state: { from: { pathname: '/dashboard' } } });
+    }, 2000);
+
     return (
       <Box minH="100vh" bg={bgColor} display="flex" alignItems="center" justifyContent="center">
         <Container maxW="md" textAlign="center">
           <VStack spacing={6}>
-            <Box p={6} bg="green.50" borderRadius="full" display="inline-block">
+            <Box
+              p={4}
+              bg="green.100"
+              borderRadius="full"
+              display="inline-flex"
+            >
               <HiCheckCircle size={48} color="green" />
             </Box>
             <VStack spacing={2}>
@@ -69,7 +80,10 @@ const Register = () => {
                 Account Created Successfully!
               </Heading>
               <Text color={textColor}>
-                Welcome to TrabaHanap! Redirecting you to the login page...
+                Welcome to TrabaHanap! Redirecting you to login...
+              </Text>
+              <Text fontSize="sm" color="gray.500">
+                You'll be taken to your dashboard after signing in.
               </Text>
             </VStack>
           </VStack>

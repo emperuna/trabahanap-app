@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   Box,
   Container,
@@ -37,15 +37,19 @@ const Login = () => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  
+
   const { login, isLoading, error } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Theme colors
+  // Get the page user was trying to access, or default to dashboard
+  const from = location.state?.from?.pathname || '/dashboard';
+
+  // Color mode values
   const bgColor = useColorModeValue('gray.50', 'gray.900');
   const cardBg = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.600', 'gray.300');
-  const headingColor = useColorModeValue('gray.900', 'white');
+  const headingColor = useColorModeValue('gray.800', 'white');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,24 +57,27 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
+    
+    // Clear specific error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
-        [name]: ''
+        [name]: null
       }));
     }
   };
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.username.trim()) {
       newErrors.username = 'Username is required';
     }
-    
+
     if (!formData.password) {
       newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
     }
 
     setErrors(newErrors);
@@ -87,7 +94,8 @@ const Login = () => {
     const result = await login(formData);
     
     if (result.success) {
-      navigate('/');
+      // ✅ FIXED: Redirect to dashboard or intended page
+      navigate(from, { replace: true });
     }
   };
 
@@ -146,7 +154,7 @@ const Login = () => {
                   Welcome Back
                 </Heading>
                 <Text color="whiteAlpha.900" fontSize="sm">
-                  Sign in to continue your job search journey
+                  Sign in to access your dashboard
                 </Text>
               </VStack>
             </VStack>
@@ -157,18 +165,20 @@ const Login = () => {
             <VStack spacing={6}>
               {/* Error Alert */}
               {error && (
-                <Alert status="error" borderRadius="xl" variant="left-accent">
-                  <AlertIcon />
-                  <Text fontSize="sm">{error}</Text>
+                <Alert status="error" borderRadius="xl" bg="red.50" border="1px" borderColor="red.200">
+                  <AlertIcon color="red.500" />
+                  <Text color="red.700" fontSize="sm">
+                    {error}
+                  </Text>
                 </Alert>
               )}
 
               {/* Login Form */}
               <Box as="form" onSubmit={handleSubmit} w="full">
-                <VStack spacing={5}>
+                <VStack spacing={6}>
                   {/* Username Field */}
                   <FormControl isInvalid={!!errors.username}>
-                    <FormLabel fontSize="sm" fontWeight="semibold" color={textColor}>
+                    <FormLabel color={textColor} fontSize="sm" fontWeight="600">
                       Username
                     </FormLabel>
                     <InputGroup>
@@ -183,16 +193,11 @@ const Login = () => {
                         placeholder="Enter your username"
                         size="lg"
                         borderRadius="xl"
-                        bg="gray.50"
-                        border="1px solid"
                         borderColor="gray.200"
-                        _focus={{
-                          borderColor: 'purple.400',
-                          bg: 'white',
-                          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2)'
-                        }}
-                        _hover={{
-                          borderColor: 'gray.300'
+                        _hover={{ borderColor: 'gray.300' }}
+                        _focus={{ 
+                          borderColor: 'purple.400', 
+                          boxShadow: '0 0 0 1px rgba(128, 90, 213, 0.4)' 
                         }}
                       />
                     </InputGroup>
@@ -203,7 +208,7 @@ const Login = () => {
 
                   {/* Password Field */}
                   <FormControl isInvalid={!!errors.password}>
-                    <FormLabel fontSize="sm" fontWeight="semibold" color={textColor}>
+                    <FormLabel color={textColor} fontSize="sm" fontWeight="600">
                       Password
                     </FormLabel>
                     <InputGroup>
@@ -218,27 +223,20 @@ const Login = () => {
                         placeholder="Enter your password"
                         size="lg"
                         borderRadius="xl"
-                        bg="gray.50"
-                        border="1px solid"
                         borderColor="gray.200"
-                        _focus={{
-                          borderColor: 'purple.400',
-                          bg: 'white',
-                          boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2)'
-                        }}
-                        _hover={{
-                          borderColor: 'gray.300'
+                        _hover={{ borderColor: 'gray.300' }}
+                        _focus={{ 
+                          borderColor: 'purple.400', 
+                          boxShadow: '0 0 0 1px rgba(128, 90, 213, 0.4)' 
                         }}
                       />
                       <InputRightElement>
                         <IconButton
                           variant="ghost"
                           size="sm"
-                          icon={showPassword ? <HiEyeOff /> : <HiEye />}
                           onClick={() => setShowPassword(!showPassword)}
-                          aria-label={showPassword ? 'Hide password' : 'Show password'}
+                          icon={showPassword ? <HiEyeOff /> : <HiEye />}
                           color="gray.400"
-                          _hover={{ color: 'gray.600' }}
                         />
                       </InputRightElement>
                     </InputGroup>
@@ -248,7 +246,7 @@ const Login = () => {
                   </FormControl>
 
                   {/* Remember Me & Forgot Password */}
-                  <Flex justify="space-between" align="center" w="full">
+                  <Flex justify="space-between" w="full" align="center">
                     <Checkbox
                       isChecked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
@@ -294,7 +292,7 @@ const Login = () => {
                     }}
                     transition="all 0.2s ease"
                   >
-                    Sign In
+                    Sign In to Dashboard
                   </Button>
                 </VStack>
               </Box>

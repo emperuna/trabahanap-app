@@ -15,6 +15,8 @@ import com.trabahanap.model.User;
 import com.trabahanap.repository.RoleRepository;
 import com.trabahanap.repository.UserRepository;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 @SpringBootApplication
 public class TrabahanapApplication implements CommandLineRunner {
 
@@ -28,6 +30,18 @@ public class TrabahanapApplication implements CommandLineRunner {
     private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
+        // ✅ Load .env file before starting Spring
+        Dotenv dotenv = Dotenv.configure()
+                .directory("./")
+                .ignoreIfMalformed()
+                .ignoreIfMissing()
+                .load();
+        
+        // Set system properties from .env file
+        dotenv.entries().forEach(entry -> {
+            System.setProperty(entry.getKey(), entry.getValue());
+        });
+        
         SpringApplication.run(TrabahanapApplication.class, args);
     }
 
@@ -57,7 +71,7 @@ public class TrabahanapApplication implements CommandLineRunner {
             userRepository.save(testUser);
             System.out.println("✅ Created test user: testuser / password123");
         } else {
-            System.out.println("✅ Test user already exists in Neon database");
+            System.out.println("✅ Test user already exists in database");
         }
         
         System.out.println("=== DATABASE INITIALIZATION COMPLETE ===");
