@@ -8,7 +8,10 @@
     "mcp:spring": "node mcp/tools/spring-boot-helper.js",
     "mcp:db": "node mcp/tools/database-helper.js",
     "mcp:api": "node mcp/tools/api-generator.js",
-    "mcp:test": "echo 'Testing MCP servers...' && npm run mcp:spring --version"
+    "mcp:all": "concurrently \"npm run mcp:spring\" \"npm run mcp:db\" \"npm run mcp:api\"",
+    "mcp:test": "node mcp/test-mcp.js",
+    "dev:spring-boot": "mvn spring-boot:run",
+    "dev:all-mcp": "concurrently \"npm run dev:spring-boot\" \"npm run mcp:all\""
   },
   "keywords": [],
   "author": "",
@@ -17,5 +20,8 @@
     "@modelcontextprotocol/sdk": "^1.18.1",
     "@modelcontextprotocol/server-filesystem": "^2025.8.21",
     "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
   }
 }
