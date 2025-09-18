@@ -1,26 +1,53 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import SideNavbar from '../components/SideNavbar';
-import ProfileHeader from '../components/ui/JobSeekerProfile/ProfileHeader';
-import AboutMe from '../components/ui/JobSeekerProfile/AboutMe';
-import Skills from '../components/ui/JobSeekerProfile/Skills';
-import Portfolio from '../components/ui/JobSeekerProfile/Portfolio';
-import Contact from '../components/ui/JobSeekerProfile/Contact';
-import Experience from '../components/ui/JobSeekerProfile/Experience';
+import { useLocation } from 'react-router-dom';
+import {
+  Box,
+  Container,
+  Grid,
+  GridItem,
+  VStack,
+  HStack,
+  Flex,
+  Text,
+  Button,
+  Card,
+  CardBody,
+  Heading,
+  Badge,
+  useColorModeValue,
+  Tabs,
+  TabList,
+  TabPanels,
+  Tab,
+  TabPanel,
+} from '@chakra-ui/react';
+import { useAuth } from '../context/AuthContext';
 
-// Import SVG icons for stats section
-import TimeIcon from '../assets/icons/Time.svg';
-import VerifiedIcon from '../assets/icons/Verified.svg';
-import PersonIcon from '../assets/icons/Person.svg';
+import DashboardSidebar from '../components/dashboard/DashboardSidebar';
+import ProfileHeader from '../components/JobSeekerProfile/ProfileHeader';
+import AboutMe from '../components/JobSeekerProfile/AboutMe';
+import Skills from '../components/JobSeekerProfile/Skills';
+import Portfolio from '../components/JobSeekerProfile/Portfolio';
+import Contact from '../components/JobSeekerProfile/Contact';
+import Experience from '../components/JobSeekerProfile/Experience';
 
 const JobSeekerProfile = () => {
-  const [activeTab, setActiveTab] = useState('About Me');
+  const [activeTab, setActiveTab] = useState(0);
   const location = useLocation();
+  const { user } = useAuth();
   
-  // Mock data for demonstration
+  // Design system colors
+  const bgColor = useColorModeValue('gray.50', 'gray.900');
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const textColor = useColorModeValue('gray.800', 'white');
+  const primaryColor = '#153CF5';
+  
+  // Use actual user data or fallback to mock data
   const profileData = {
-    name: "Marc Justin Alberto",
+    name: user?.firstName && user?.lastName 
+      ? `${user.firstName} ${user.lastName}` 
+      : user?.username || "Marc Justin Alberto",
     location: "Gilid, Laguna",
     profileImage: "/api/placeholder/200/200",
     jobExperience: "3+ Years",
@@ -32,116 +59,133 @@ const JobSeekerProfile = () => {
       mobile: "0123 456 7899",
       facebook: "www.facebook.com/MarcJustinAlberto",
       linkedin: "www.linkedin.com/in/marcjustinalberto",
-      email: "marcjustin.alberto@gmail.com",
+      email: user?.email || "marcjustin.alberto@gmail.com",
       viber: "+63 912 345 6789"
     }
   };
 
-  const tabItems = ['About Me', 'Experience', 'Skills', 'Portfolio'];
-  const isProfilePage = location.pathname === '/jobseeker-profile';
+  const tabItems = [
+    { label: 'About Me', component: <AboutMe /> },
+    { label: 'Experience', component: <Experience /> },
+    { label: 'Skills', component: <Skills /> },
+    { label: 'Portfolio', component: <Portfolio /> }
+  ];
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      <Navbar showProfileContainer={isProfilePage} />
-      
-      {/* Fixed Sidebar - Hidden on mobile, visible on md+ */}
-      <SideNavbar />
+    <Box bg={bgColor} minH="100vh">
+      <Container maxW="8xl" p={6}>
+        <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
+          {/* Sidebar */}
+          <GridItem display={{ base: 'none', lg: 'block' }}>
+            <Box position="sticky" top={6}>
+              <DashboardSidebar />
+            </Box>
+          </GridItem>
 
-      {/* Profile Header Section - Responsive */}
-      <ProfileHeader profileData={profileData} />
-
-      {/* Main Content - Responsive */}
-      <div className="ml-12 md:ml-16 p-4 md:p-8">
-        {/* Stats Cards - Responsive */}
-        <div className="p-4 md:p-6 mb-8 -mx-4 -ml-16 md:-ml-24 md:-mr-8 w-screen" style={{ backgroundColor: '#153CF5' }}>
-          <div className="flex flex-col md:flex-row justify-center items-center gap-20 md:gap-32">
-            <div className="text-white text-left">
-              <div className="flex items-center justify-start space-x-4">
-                <img 
-                  src={TimeIcon} 
-                  alt="Time" 
-                  className="w-6 h-6"
-                  style={{ filter: 'brightness(0) saturate(100%) invert(100%)' }}
-                />
-                <div>
-                  <div className="font-bold text-2xl">{profileData.jobExperience}</div>
-                  <div className="text-base opacity-90">Job Experience</div>
-                </div>
-              </div>
-            </div>
-            <div className="text-white text-left">
-              <div className="flex items-center justify-start space-x-4">
-                <img 
-                  src={VerifiedIcon} 
-                  alt="Verified" 
-                  className="w-6 h-6"
-                  style={{ filter: 'brightness(0) saturate(100%) invert(100%)' }}
-                />
-                <div>
-                  <div className="font-bold text-2xl">{profileData.certificates}</div>
-                  <div className="text-base opacity-90">Achieved</div>
-                </div>
-              </div>
-            </div>
-            <div className="text-white text-left">
-              <div className="flex items-center justify-start space-x-4">
-                <img 
-                  src={PersonIcon} 
-                  alt="Person" 
-                  className="w-6 h-6"
-                  style={{ filter: 'brightness(0) saturate(100%) invert(100%)' }}
-                />
-                <div>
-                  <div className="font-bold text-2xl">{profileData.trainings}</div>
-                  <div className="text-base opacity-90">Completed</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Navigation Tabs - Responsive */}
-        <div className="p-2 mb-8 border-b-2 border-gray-200">
-          <nav className="flex flex-wrap justify-between gap-4 md:gap-8">
-            {tabItems.map((tab) => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-3 py-2 rounded-lg font-medium text-base transition-all duration-200 ${
-                  activeTab === tab
-                    ? 'text-white shadow-sm'
-                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
-                }`}
-                style={activeTab === tab ? { backgroundColor: '#153CF5' } : {}}
-              >
-                {tab}
-              </button>
-            ))}
-          </nav>
-        </div>
-
-        {/* Content Area */}
-        <div className={`grid gap-8 ${(activeTab === 'About Me' || activeTab === 'Experience' || activeTab === 'Skills') ? 'grid-cols-1 lg:grid-cols-3' : 'grid-cols-1'}`}>
           {/* Main Content */}
-          <div className={(activeTab === 'About Me' || activeTab === 'Experience' || activeTab === 'Skills') ? 'lg:col-span-2' : 'col-span-1'}>
-            {activeTab === 'About Me' && <AboutMe />}
+          <GridItem>
+            <VStack spacing={6} align="stretch">
+              {/* Profile Header Card */}
+              <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} overflow="hidden">
+                <Box bgGradient="linear(135deg, purple.500, blue.500)" p={8} color="white">
+                  <ProfileHeader profileData={profileData} />
+                </Box>
+              </Card>
 
-            {activeTab === 'Experience' && <Experience />}
+              {/* Profile Stats Cards */}
+              <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={6}>
+                <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={6}>
+                  <VStack spacing={3}>
+                    <Text fontSize="2xl" fontWeight="bold" color={primaryColor}>
+                      {profileData.jobExperience}
+                    </Text>
+                    <Text fontSize="sm" color="gray.500" textAlign="center">
+                      Job Experience
+                    </Text>
+                  </VStack>
+                </Card>
+                
+                <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={6}>
+                  <VStack spacing={3}>
+                    <Text fontSize="2xl" fontWeight="bold" color={primaryColor}>
+                      {profileData.certificates}
+                    </Text>
+                    <Text fontSize="sm" color="gray.500" textAlign="center">
+                      Certificates Achieved
+                    </Text>
+                  </VStack>
+                </Card>
+                
+                <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={6}>
+                  <VStack spacing={3}>
+                    <Text fontSize="2xl" fontWeight="bold" color={primaryColor}>
+                      {profileData.trainings}
+                    </Text>
+                    <Text fontSize="sm" color="gray.500" textAlign="center">
+                      Trainings Completed
+                    </Text>
+                  </VStack>
+                </Card>
+              </Grid>
 
-            {activeTab === 'Skills' && <Skills />}
+              {/* Main Content with Tabs */}
+              <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
+                {/* Left Column - Main Content */}
+                <GridItem>
+                  <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor}>
+                    <CardBody p={0}>
+                      <Tabs 
+                        index={activeTab} 
+                        onChange={setActiveTab}
+                        variant="enclosed"
+                        colorScheme="purple"
+                      >
+                        <TabList borderBottom="1px" borderColor={borderColor} px={6} pt={6}>
+                          {tabItems.map((tab, index) => (
+                            <Tab
+                              key={index}
+                              _selected={{
+                                color: primaryColor,
+                                borderColor: primaryColor,
+                                borderBottomColor: cardBg,
+                                bg: cardBg,
+                                fontWeight: 'semibold'
+                              }}
+                              _hover={{
+                                color: primaryColor,
+                              }}
+                              borderRadius="lg lg 0 0"
+                              mr={2}
+                            >
+                              {tab.label}
+                            </Tab>
+                          ))}
+                        </TabList>
+                        
+                        <TabPanels>
+                          {tabItems.map((tab, index) => (
+                            <TabPanel key={index} p={6}>
+                              {tab.component}
+                            </TabPanel>
+                          ))}
+                        </TabPanels>
+                      </Tabs>
+                    </CardBody>
+                  </Card>
+                </GridItem>
 
-            {activeTab === 'Portfolio' && <Portfolio />}
-          </div>
-
-          {/* Contact Sidebar - Visible on About Me, Experience, and Skills tabs */}
-          {(activeTab === 'About Me' || activeTab === 'Experience' || activeTab === 'Skills') && (
-            <div className="lg:col-span-1">
-              <Contact profileData={profileData} />
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+                {/* Right Column - Contact Sidebar */}
+                <GridItem>
+                  <VStack spacing={6}>
+                    <Contact profileData={profileData} />
+                  </VStack>
+                </GridItem>
+              </Grid>
+            </VStack>
+          </GridItem>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 

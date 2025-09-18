@@ -25,12 +25,30 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/job-seeker-profile" element={<JobSeekerProfile />} />
             
             {/* Protected Routes - Dashboard */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Protected Routes - Profile */}
+            <Route path="/dashboard/profile" element={
+              <ProtectedRoute>
+                <JobSeekerProfile />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard/profile/edit" element={
+              <ProtectedRoute>
+                <JobSeekerProfile />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard/settings/profile" element={
+              <ProtectedRoute>
+                <JobSeekerProfile />
               </ProtectedRoute>
             } />
             
