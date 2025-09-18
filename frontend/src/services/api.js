@@ -1,43 +1,39 @@
 import axios from 'axios';
 
-// Create axios instance with base configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8080/api',
+  baseURL: 'http://localhost:8080/api',
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Add token to requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  return config;
+});
 
-// Response interceptor to handle common errors
+// Add response interceptor for token refresh
 api.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      // Redirect to login if token is invalid
       localStorage.removeItem('token');
       window.location.href = '/login';
     }
+
     return Promise.reject(error);
   }
 );
 
-// Authentication API calls
 export const authAPI = {
   login: async (credentials) => {
     try {
@@ -57,12 +53,22 @@ export const authAPI = {
     }
   },
 
-  getCurrentUser: async () => {
+  // ✅ Make sure this method exists
+  verifyToken: async () => {
     try {
       const response = await api.get('/auth/me');
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to get user data');
+      throw new Error('Token verification failed');
+    }
+  },
+
+  refreshToken: async () => {
+    try {
+      const response = await api.post('/auth/refresh');
+      return response.data;
+    } catch (error) {
+      throw new Error('Token refresh failed');
     }
   },
 };
