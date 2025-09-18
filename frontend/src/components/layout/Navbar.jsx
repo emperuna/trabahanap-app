@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -18,10 +18,12 @@ import logo from '../../assets/logo/TrabaHanap-Logo.svg';
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     logout();
     setIsOpen(false);
+    navigate('/'); // Redirect to home after logout
   };
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -43,7 +45,7 @@ const Navbar = () => {
         <Flex justify="space-between" h={16}>
           {/* Logo */}
           <Flex align="center">
-            <Link to="/">
+            <Link to={user ? "/dashboard" : "/"}>
               <Image
                 src={logo}
                 alt="TrabaHanap"
@@ -57,7 +59,7 @@ const Navbar = () => {
           <HStack spacing={8} display={{ base: 'none', md: 'flex' }}>
             <Button
               as={Link}
-              to="/"
+              to={user ? "/dashboard" : "/"}
               variant="ghost"
               color="gray.800"
               _hover={{ color: 'purple.400' }}
@@ -66,7 +68,7 @@ const Navbar = () => {
               fontSize="sm"
               fontWeight="medium"
             >
-              Home
+              {user ? "Dashboard" : "Home"}
             </Button>
             <Button
               as={Link}
@@ -110,21 +112,8 @@ const Navbar = () => {
 
             {user ? (
               <HStack spacing={4}>
-                <Button
-                  as={Link}
-                  to="/dashboard"
-                  variant="ghost"
-                  color="gray.800"
-                  _hover={{ color: 'purple.400' }}
-                  px={3}
-                  py={2}
-                  fontSize="sm"
-                  fontWeight="medium"
-                >
-                  Dashboard
-                </Button>
                 <Text color="gray.500" fontSize="sm">
-                  Welcome, {user.name}
+                  Welcome, {user.firstName || user.username}
                 </Text>
                 <Button
                   onClick={handleLogout}
@@ -170,36 +159,42 @@ const Navbar = () => {
           </HStack>
 
           {/* Mobile Menu Button */}
-          <Flex align="center" display={{ base: 'flex', md: 'none' }}>
-            <IconButton
-              onClick={toggleMenu}
-              variant="ghost"
-              color="gray.800"
-              aria-label="Toggle menu"
-              icon={isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
-            />
-          </Flex>
+          <IconButton
+            display={{ base: 'flex', md: 'none' }}
+            onClick={toggleMenu}
+            variant="ghost"
+            aria-label="Toggle menu"
+            icon={isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
+          />
         </Flex>
 
-        {/* Mobile Menu */}
+        {/* Mobile Navigation */}
         {isOpen && (
           <Box
-            display={{ base: 'block', md: 'none' }}
-            borderTop="1px solid"
-            borderColor="border.subtle"
-            bg="bg.glass"
-            px={2}
-            pt={2}
-            pb={3}
+            position="absolute"
+            top="100%"
+            left={0}
+            right={0}
+            bg="white"
+            boxShadow="lg"
+            borderRadius="md"
+            mt={2}
+            mx={4}
+            p={4}
+            zIndex={40}
           >
-            <VStack spacing={1} align="stretch">
-              <Button as={Link} to="/" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Home</Button>
+            <VStack spacing={2} align="stretch">
+              <Button as={Link} to={user ? "/dashboard" : "/"} variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>
+                {user ? "Dashboard" : "Home"}
+              </Button>
               <Button as={Link} to="/jobs" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Find Jobs</Button>
               <Button as={Link} to="/companies" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>For Employers</Button>
               <Button as={Link} to="/about" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>About</Button>
               {user ? (
                 <>
-                  <Button as={Link} to="/dashboard" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Dashboard</Button>
+                  <Text color="gray.500" fontSize="sm" px={3}>
+                    Welcome, {user.firstName || user.username}
+                  </Text>
                   <Button onClick={() => { handleLogout(); closeMenu(); }} variant="outline" w="full">Logout</Button>
                 </>
               ) : (
