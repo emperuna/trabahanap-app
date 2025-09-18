@@ -9,6 +9,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import JobSeekerProfile from "./pages/JobSeekerProfile";
 import ComingSoon from "./pages/ComingSoon";
 
 // Components
@@ -29,6 +30,25 @@ function App() {
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Protected Routes - Profile */}
+            <Route path="/dashboard/profile" element={
+              <ProtectedRoute>
+                <JobSeekerProfile />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard/profile/edit" element={
+              <ProtectedRoute>
+                <JobSeekerProfile />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard/settings/profile" element={
+              <ProtectedRoute>
+                <JobSeekerProfile />
               </ProtectedRoute>
             } />
             
