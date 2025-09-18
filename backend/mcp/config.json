@@ -1,0 +1,29 @@
+{
+  "mcpServers": {
+    "spring-boot-helper": {
+      "command": "node",
+      "args": ["./tools/spring-boot-helper.js"],
+      "cwd": "/Volumes/Projects/repos/trabahanap-app/backend/mcp",
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "database-helper": {
+      "command": "node", 
+      "args": ["./tools/database-helper.js"],
+      "cwd": "/Volumes/Projects/repos/trabahanap-app/backend/mcp",
+      "env": {
+        "DATABASE_URL": "${DATABASE_URL}"
+      }
+    },
+    "api-generator": {
+      "command": "node",
+      "args": ["./tools/api-generator.js"], 
+      "cwd": "/Volumes/Projects/repos/trabahanap-app/backend/mcp"
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "/Volumes/Projects/repos/trabahanap-app/backend/src"]
+    }
+  }
+}

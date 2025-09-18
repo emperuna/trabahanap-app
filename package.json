@@ -1,20 +1,34 @@
 {
   "name": "trabahanap-app",
   "version": "1.0.0",
-  "description": "Job search application",
+  "description": "TrabaHanap Job Portal - Full Stack Application",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
-    "install:frontend": "cd frontend && npm install",
-    "install:backend": "cd backend && mvn clean install",
     "dev:frontend": "cd frontend && npm run dev",
     "dev:backend": "cd backend && mvn spring-boot:run",
-    "dev:all": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\""
-  },
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.18.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "dev:frontend-mcp": "cd frontend && npm run dev:all-mcp",
+    "dev:backend-mcp": "cd backend && npm run dev:all-mcp",
+    "dev:all": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:all-mcp": "concurrently \"npm run dev:frontend-mcp\" \"npm run dev:backend-mcp\"",
+    "test:mcp": "concurrently \"cd frontend && npm run mcp:test\" \"cd backend && npm run mcp:test\"",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && mvn clean package"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
-  }
+    "concurrently": "^9.1.0"
+  },
+  "keywords": [
+    "job-portal",
+    "react",
+    "spring-boot",
+    "mcp",
+    "full-stack"
+  ],
+  "author": "TrabaHanap Team",
+  "license": "MIT"
 }
