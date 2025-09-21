@@ -5,12 +5,12 @@ import theme from "./theme";
 import { AuthProvider } from "./context/AuthContext";
 
 // Pages
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import JobSeekerProfile from "./pages/JobSeekerProfile";
-import ComingSoon from "./pages/ComingSoon";
+import Home from "./pages/common/Home";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Dashboard from "./pages/jobseeker/JobSeekerDashboard";
+import JobSeekerProfile from "./pages/jobseeker/JobSeekerProfile";
+import ComingSoon from "./pages/common/ComingSoon";
 
 // Components
 import ProtectedRoute from "./components/auth/ProtectedRoute";
