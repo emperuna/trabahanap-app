@@ -17,12 +17,12 @@ import {
 } from '@chakra-ui/react';
 import { HiUser, HiMail, HiLockClosed, HiCheckCircle } from 'react-icons/hi';
 
-import { useRegistrationForm } from '../hooks/useRegistrationForm';
-import PersonalInfoStep from '../components/auth/PersonalInfoStep';
-import AccountDetailsStep from '../components/auth/AccountDetailsStep';
-import SecurityStep from '../components/auth/SecurityStep';
-import StepProgress from '../components/auth/StepProgress';
-import logo from '../assets/logo/TrabaHanap-Logo.svg';
+import { useRegistrationForm } from '../../hooks/useRegistrationForm';
+import PersonalInfoStep from '../../components/auth/PersonalInfoStep';
+import AccountDetailsStep from '../../components/auth/AccountDetailsStep';
+import SecurityStep from '../../components/auth/SecurityStep';
+import StepProgress from '../../components/auth/StepProgress';
+import logo from '../../assets/logo/TrabaHanap-Logo.svg';
 
 const Register = () => {
   const navigate = useNavigate();

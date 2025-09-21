@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Container, VStack } from '@chakra-ui/react';
 import { keyframes } from '@emotion/react';
-import { useErrorPage } from '../hooks/useErrorPage';
-import ErrorBackground from '../components/error/ErrorBackground';
-import ErrorHeader from '../components/error/ErrorHeader';
-import ErrorContent from '../components/error/ErrorContent';
-import FeaturesPreview from '../components/error/FeaturesPreview';
-import ErrorActions from '../components/error/ErrorActions';
+import { useErrorPage } from '../../hooks/useErrorPage';
+import ErrorBackground from '../../components/error/ErrorBackground';
+import ErrorHeader from '../../components/error/ErrorHeader';
+import ErrorContent from '../../components/error/ErrorContent';
+import FeaturesPreview from '../../components/error/FeaturesPreview';
+import ErrorActions from '../../components/error/ErrorActions';
 
 const fadeIn = keyframes`
   from { opacity: 0; transform: translateY(30px); }
