@@ -12,17 +12,17 @@ import {
   Button,
   Text,
 } from '@chakra-ui/react';
-import { useAuth } from '../context/AuthContext';
-import { authAPI } from '../services/api';
+import { useAuth } from '../../context/AuthContext';
+import { authAPI } from '../../services/api';
 
 // Import dashboard components
-import DashboardSidebar from '../components/dashboard/DashboardSidebar';
-import WelcomeSection from '../components/dashboard/WelcomeSection';
-import StatsGrid from '../components/dashboard/StatsGrid';
-import QuickActionsCard from '../components/dashboard/QuickActionsCard';
-import RecentActivityCard from '../components/dashboard/RecentActivityCard';
-import ProfileProgressCard from '../components/dashboard/ProfileProgressCard';
-import JobRecommendationsCard from '../components/dashboard/JobRecommendationsCard';
+import DashboardSidebar from '../../components/dashboard/DashboardSidebar';
+import WelcomeSection from '../../components/dashboard/WelcomeSection';
+import StatsGrid from '../../components/dashboard/StatsGrid';
+import QuickActionsCard from '../../components/dashboard/QuickActionsCard';
+import RecentActivityCard from '../../components/dashboard/RecentActivityCard';
+import ProfileProgressCard from '../../components/dashboard/ProfileProgressCard';
+import JobRecommendationsCard from '../../components/dashboard/JobRecommendationsCard';
 
 const Dashboard = () => {
   const { user } = useAuth();

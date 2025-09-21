@@ -26,8 +26,8 @@ import {
   Divider,
 } from '@chakra-ui/react';
 import { HiUser, HiLockClosed, HiEye, HiEyeOff } from 'react-icons/hi';
-import { useAuth } from '../context/AuthContext';
-import logo from '../assets/logo/TrabaHanap-Logo.svg';
+import { useAuth } from '../../context/AuthContext';
+import logo from '../../assets/logo/TrabaHanap-Logo.svg';
 
 const Login = () => {
   const [formData, setFormData] = useState({

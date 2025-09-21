@@ -1,7 +1,7 @@
 import React from "react";
 import { Box, Flex } from "@chakra-ui/react";
-import { GuestNavbar, Footer } from "../components/layout";
-import { Hero, Features, CTA, HowItWorks } from "../components/sections/home";
+import { GuestNavbar, Footer } from "../../components/layout";
+import { Hero, Features, CTA, HowItWorks } from "../../components/sections/home";
 
 const Home = () => {
   return (
