@@ -21,15 +21,15 @@ import {
   Tab,
   TabPanel,
 } from '@chakra-ui/react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 
-import DashboardSidebar from '../components/dashboard/DashboardSidebar';
-import ProfileHeader from '../components/JobSeekerProfile/ProfileHeader';
-import AboutMe from '../components/JobSeekerProfile/AboutMe';
-import Skills from '../components/JobSeekerProfile/Skills';
-import Portfolio from '../components/JobSeekerProfile/Portfolio';
-import Contact from '../components/JobSeekerProfile/Contact';
-import Experience from '../components/JobSeekerProfile/Experience';
+import DashboardSidebar from '../../components/dashboard/DashboardSidebar';
+import ProfileHeader from '../../components/JobSeekerProfile/ProfileHeader';
+import AboutMe from '../../components/JobSeekerProfile/AboutMe';
+import Skills from '../../components/JobSeekerProfile/Skills';
+import Portfolio from '../../components/JobSeekerProfile/Portfolio';
+import Contact from '../../components/JobSeekerProfile/Contact';
+import Experience from '../../components/JobSeekerProfile/Experience';
 
 const JobSeekerProfile = () => {
   const [activeTab, setActiveTab] = useState(0);
