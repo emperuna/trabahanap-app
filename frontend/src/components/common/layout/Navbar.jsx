@@ -49,7 +49,7 @@ const Navbar = () => {
               <Image
                 src={logo}
                 alt="TrabaHanap"
-                h={8}
+                h={3}
                 w="auto"
               />
             </Link>

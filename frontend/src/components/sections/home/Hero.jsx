@@ -30,7 +30,7 @@ import {
 
 const Hero = () => {
   const bgGradient = useColorModeValue(
-    'linear(135deg, #667eea 0%, #764ba2 100%)',
+    'linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)',
     'linear(135deg, #2d3748 0%, #4a5568 100%)'
   );
 
@@ -67,7 +67,7 @@ const Hero = () => {
             </Text>
             {trend && (
               <Badge
-                colorScheme="green"
+                colorScheme="yellow"
                 variant="solid"
                 fontSize="xs"
                 borderRadius="full"
@@ -117,14 +117,6 @@ const Hero = () => {
         filter="blur(60px)"
         animation="float 8s ease-in-out infinite reverse"
       />
-      
-      {/* Custom CSS for animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(5deg); }
-        }
-      `}</style>
 
       <Container maxW="7xl" position="relative" zIndex={1} py={20}>
         <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={16} alignItems="center">
@@ -186,15 +178,15 @@ const Hero = () => {
                 size="lg"
                 h={14}
                 px={8}
-                bg="white"
-                color="purple.600"
+                bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
+                color="#153CF5"
                 fontWeight="600"
                 borderRadius="2xl"
                 boxShadow="0 8px 32px rgba(0,0,0,0.12)"
                 _hover={{
                   transform: 'translateY(-2px)',
                   boxShadow: '0 12px 40px rgba(0,0,0,0.16)',
-                  bg: 'gray.50'
+                  bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
                 }}
                 transition="all 0.3s ease"
                 leftIcon={<Icon as={HiSearch} />}
@@ -337,15 +329,15 @@ const Hero = () => {
                     w="full"
                     size="lg"
                     h={14}
-                    bg="white"
-                    color="purple.600"
+                    bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
+                    color="#153CF5"
                     fontWeight="600"
                     borderRadius="xl"
                     boxShadow="0 8px 25px rgba(0,0,0,0.15)"
                     _hover={{
                       transform: 'translateY(-2px)',
                       boxShadow: '0 12px 35px rgba(0,0,0,0.2)',
-                      bg: 'gray.50'
+                      bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
                     }}
                     transition="all 0.3s ease"
                     leftIcon={<Icon as={HiSearch} />}
