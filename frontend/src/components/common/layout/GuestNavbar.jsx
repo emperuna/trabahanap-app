@@ -42,7 +42,7 @@ const GuestNavbar = () => {
               <Image
                 src={logo}
                 alt="TrabaHanap"
-                h={{ base: 8, sm: 10 }}
+                h={{ base: 6, sm: 7 }}
                 w="auto"
                 transition="all 0.3s ease"
                 _hover={{ 
@@ -177,13 +177,13 @@ const GuestNavbar = () => {
               h={12}
               px={8}
               ml={2}
-              bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+              bg="#2563eb"
               color="white"
               fontWeight="600"
               fontSize="sm"
               letterSpacing="0.025em"
               borderRadius="2xl"
-              boxShadow="0 4px 15px rgba(102, 126, 234, 0.4)"
+              boxShadow="0 4px 15px rgba(21, 60, 245, 0.4)"
               position="relative"
               overflow="hidden"
               _before={{
@@ -193,13 +193,13 @@ const GuestNavbar = () => {
                 left: 0,
                 right: 0,
                 bottom: 0,
-                bgGradient: "linear(135deg, #764ba2 0%, #667eea 100%)",
+                bg: "#0F2ECC",
                 opacity: 0,
                 transition: 'opacity 0.3s ease'
               }}
               _hover={{
                 transform: 'translateY(-2px)',
-                boxShadow: '0 8px 25px rgba(102, 126, 234, 0.6)',
+                boxShadow: '0 8px 25px rgba(21, 60, 245, 0.6)',
                 _before: {
                   opacity: 1
                 }
@@ -354,16 +354,16 @@ const GuestNavbar = () => {
                     size="lg"
                     h={14}
                     w="full"
-                    bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+                    bg="#2563eb"
                     color="white"
                     fontWeight="600"
                     letterSpacing="0.025em"
                     borderRadius="2xl"
-                    boxShadow="0 4px 15px rgba(102, 126, 234, 0.4)"
+                    boxShadow="0 4px 15px rgba(21, 60, 245, 0.4)"
                     _hover={{
-                      bgGradient: "linear(135deg, #764ba2 0%, #667eea 100%)",
+                      bg: "#0F2ECC",
                       transform: 'translateY(-2px)',
-                      boxShadow: "0 8px 25px rgba(102, 126, 234, 0.6)"
+                      boxShadow: "0 8px 25px rgba(21, 60, 245, 0.6)"
                     }}
                     transition="all 0.3s ease"
                     onClick={closeMenu}

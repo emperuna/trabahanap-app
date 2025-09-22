@@ -69,11 +69,11 @@ const Register = () => {
           <VStack spacing={6}>
             <Box
               p={4}
-              bg="green.100"
+              bgGradient="linear(135deg, #ffeaa7 0%, #fab1a0 100%)"
               borderRadius="full"
               display="inline-flex"
             >
-              <HiCheckCircle size={48} color="green" />
+              <HiCheckCircle size={48} color="white" />
             </Box>
             <VStack spacing={2}>
               <Heading size="lg" color={headingColor}>
@@ -137,7 +137,7 @@ const Register = () => {
         >
           {/* Header Section */}
           <Box
-            bgGradient="linear(135deg, purple.500, blue.500)"
+            bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
             px={8}
             py={8}
             textAlign="center"
@@ -202,10 +202,10 @@ const Register = () => {
                   <Button
                     size="lg"
                     onClick={handleNext}
-                    bgGradient="linear(135deg, purple.500, blue.500)"
+                    bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
                     color="white"
                     _hover={{
-                      bgGradient: "linear(135deg, purple.600, blue.600)",
+                      bgGradient: "linear(135deg, #002a96 12%, #0f3fd1 63%, #5983ff 100%)",
                       transform: 'translateY(-1px)'
                     }}
                     borderRadius="xl"
@@ -218,12 +218,12 @@ const Register = () => {
                     type="submit"
                     size="lg"
                     onClick={handleSubmit}
-                    bgGradient="linear(135deg, purple.500, blue.500)"
+                    bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
                     color="white"
                     isLoading={isLoading}
                     loadingText="Creating Account..."
                     _hover={{
-                      bgGradient: "linear(135deg, purple.600, blue.600)",
+                      bgGradient: "linear(135deg, #002a96 12%, #0f3fd1 63%, #5983ff 100%)",
                       transform: 'translateY(-1px)'
                     }}
                     borderRadius="xl"
@@ -248,10 +248,10 @@ const Register = () => {
                 variant="ghost"
                 size="lg"
                 w="full"
-                color="purple.500"
+                color="#1554F5"
                 fontWeight="600"
                 borderRadius="xl"
-                _hover={{ bg: 'purple.50', transform: 'translateY(-1px)' }}
+                _hover={{ bg: 'blue.50', transform: 'translateY(-1px)' }}
               >
                 Sign In Instead
               </Button>
@@ -260,9 +260,9 @@ const Register = () => {
                 <Link
                   as={RouterLink}
                   to="/"
-                  color="purple.500"
+                  color="#1554F5"
                   fontWeight="medium"
-                  _hover={{ color: 'purple.600', textDecoration: 'none' }}
+                  _hover={{ color: "#0038C9", textDecoration: 'none' }}
                 >
                   ← Back to Home
                 </Link>
