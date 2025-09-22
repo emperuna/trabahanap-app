@@ -10,6 +10,7 @@ import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/jobseeker/JobSeekerDashboard";
 import JobSeekerProfile from "./pages/jobseeker/JobSeekerProfile";
+import EmployerDashboard from "./pages/employer/EmployerDashboard";
 import ComingSoon from "./pages/common/ComingSoon";
 
 // Components
@@ -22,7 +23,7 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* 🔒 Guest-Only Routes (redirect to dashboard if authenticated) */}
+            {/* 🔒 Guest-Only Routes */}
             <Route path="/" element={
               <GuestOnlyRoute>
                 <Home />
@@ -41,14 +42,13 @@ function App() {
               </GuestOnlyRoute>
             } />
             
-            {/* Protected Routes - Dashboard */}
+            {/* 🔐 Job Seeker Protected Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
               </ProtectedRoute>
             } />
             
-            {/* Protected Routes - Profile */}
             <Route path="/dashboard/profile" element={
               <ProtectedRoute>
                 <JobSeekerProfile />
@@ -73,19 +73,64 @@ function App() {
               </ProtectedRoute>
             } />
             
+            {/* 🏢 Employer Protected Routes */}
             <Route path="/employer-dashboard" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <EmployerDashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Employer sub-routes (all Coming Soon for now) */}
+            <Route path="/employer/post-job" element={
               <ProtectedRoute requiredRole="ROLE_EMPLOYER">
                 <ComingSoon />
               </ProtectedRoute>
             } />
             
+            <Route path="/employer/jobs" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <ComingSoon />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/employer/applications" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <ComingSoon />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/employer/candidates" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <ComingSoon />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/employer/analytics" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <ComingSoon />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/employer/settings" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <ComingSoon />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/employer/pricing" element={
+              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+                <ComingSoon />
+              </ProtectedRoute>
+            } />
+            
+            {/* 👑 Admin Protected Routes */}
             <Route path="/admin" element={
               <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <ComingSoon />
               </ProtectedRoute>
             } />
             
-            {/* 🌐 Public Routes (accessible to everyone) */}
+            {/* 🌐 Public Routes */}
             <Route path="/jobs" element={<ComingSoon />} />
             <Route path="/companies" element={<ComingSoon />} />
             <Route path="/post-job" element={<ComingSoon />} />
