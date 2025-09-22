@@ -37,10 +37,15 @@ api.interceptors.response.use(
 export const authAPI = {
   login: async (credentials) => {
     try {
+      console.log('🌐 API: Sending login request:', credentials);
       const response = await api.post('/auth/signin', credentials);
+      console.log('📨 API: Login response:', response.data);
+      
+      // Return the full response data
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Login failed');
+      console.error('🚨 API: Login error:', error.response?.data || error.message);
+      throw error;
     }
   },
 

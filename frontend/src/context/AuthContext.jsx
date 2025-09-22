@@ -140,35 +140,64 @@ export const AuthProvider = ({ children }) => {
   };
 
   const login = async (credentials) => {
-    dispatch({ type: AUTH_ACTIONS.LOGIN_START });
     try {
+      dispatch({ type: AUTH_ACTIONS.LOGIN_START });
+      console.log('🔐 AuthContext: Starting login with credentials:', credentials);
+      
       const response = await authAPI.login(credentials);
+      console.log('📡 AuthContext: API response:', response);
       
-      const token = response.accessToken || response.token;
-      localStorage.setItem('token', token);
-      
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_SUCCESS,
-        payload: {
-          user: {
-            id: response.id,
-            username: response.username,
-            email: response.email,
-            firstName: response.firstName,
-            lastName: response.lastName,
-            roles: response.roles
-          },
-          token: token
-        },
-      });
-
-      return { success: true };
+      if (response.token) {
+        // Store token
+        localStorage.setItem('token', response.token);
+        
+        // Extract user data - check multiple possible locations
+        const userData = response.user || response.userInfo || response.data?.user || response;
+        console.log('👤 AuthContext: Extracted user data:', userData);
+        
+        if (userData && userData.id) {
+          dispatch({
+            type: AUTH_ACTIONS.LOGIN_SUCCESS,
+            payload: {
+              user: {
+                id: userData.id,
+                username: userData.username,
+                email: userData.email,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                roles: userData.roles
+              },
+              token: response.token
+            },
+          });
+          
+          return {
+            success: true,
+            user: userData,
+            data: response
+          };
+        } else {
+          console.error('❌ AuthContext: No valid user data in response');
+          return {
+            success: false,
+            error: 'Invalid user data received'
+          };
+        }
+      } else {
+        console.error('❌ AuthContext: No token in response');
+        return {
+          success: false,
+          error: response.message || 'Login failed'
+        };
+      }
     } catch (error) {
-      dispatch({
-        type: AUTH_ACTIONS.LOGIN_FAILURE,
-        payload: error.message || 'Login failed',
-      });
-      return { success: false, error: error.message };
+      console.error('💥 AuthContext: Login error:', error);
+      return {
+        success: false,
+        error: error.response?.data?.message || error.message || 'Network error'
+      };
+    } finally {
+      dispatch({ type: AUTH_ACTIONS.SET_LOADING_FALSE });
     }
   };
 
