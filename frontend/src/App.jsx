@@ -16,6 +16,8 @@ import ComingSoon from "./pages/common/ComingSoon";
 // Components
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import GuestOnlyRoute from "./components/auth/GuestOnlyRoute";
+import JobSeekerOnlyRoute from "./components/auth/JobSeekerOnlyRoute"; // 👈 NEW
+import EmployerOnlyRoute from "./components/auth/EmployerOnlyRoute";   // 👈 NEW
 
 function App() {
   return (
@@ -42,95 +44,100 @@ function App() {
               </GuestOnlyRoute>
             } />
             
-            {/* 🔐 Job Seeker Protected Routes */}
+            {/* 🔐 Job Seeker ONLY Routes */}
             <Route path="/dashboard" element={
-              <ProtectedRoute>
+              <JobSeekerOnlyRoute>
                 <Dashboard />
-              </ProtectedRoute>
+              </JobSeekerOnlyRoute>
             } />
             
             <Route path="/dashboard/profile" element={
-              <ProtectedRoute>
+              <JobSeekerOnlyRoute>
                 <JobSeekerProfile />
-              </ProtectedRoute>
+              </JobSeekerOnlyRoute>
             } />
             
             <Route path="/dashboard/profile/edit" element={
-              <ProtectedRoute>
+              <JobSeekerOnlyRoute>
                 <JobSeekerProfile />
-              </ProtectedRoute>
+              </JobSeekerOnlyRoute>
             } />
             
             <Route path="/dashboard/settings/profile" element={
-              <ProtectedRoute>
+              <JobSeekerOnlyRoute>
                 <JobSeekerProfile />
-              </ProtectedRoute>
+              </JobSeekerOnlyRoute>
             } />
             
             <Route path="/dashboard/*" element={
-              <ProtectedRoute>
+              <JobSeekerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </JobSeekerOnlyRoute>
             } />
             
-            {/* 🏢 Employer Protected Routes */}
+            {/* 🏢 Employer ONLY Routes */}
             <Route path="/employer-dashboard" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <EmployerDashboard />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
-            {/* Employer sub-routes (all Coming Soon for now) */}
             <Route path="/employer/post-job" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
             <Route path="/employer/jobs" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
             <Route path="/employer/applications" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
             <Route path="/employer/candidates" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
             <Route path="/employer/analytics" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
             <Route path="/employer/settings" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
             <Route path="/employer/pricing" element={
-              <ProtectedRoute requiredRole="ROLE_EMPLOYER">
+              <EmployerOnlyRoute>
                 <ComingSoon />
-              </ProtectedRoute>
+              </EmployerOnlyRoute>
             } />
             
-            {/* 👑 Admin Protected Routes */}
+            <Route path="/employer/interviews" element={
+              <EmployerOnlyRoute>
+                <ComingSoon />
+              </EmployerOnlyRoute>
+            } />
+            
+            {/* 👑 Admin ONLY Routes */}
             <Route path="/admin" element={
               <ProtectedRoute requiredRole="ROLE_ADMIN">
                 <ComingSoon />
               </ProtectedRoute>
             } />
             
-            {/* 🌐 Public Routes */}
+            {/* 🌐 Public Routes (accessible to everyone) */}
             <Route path="/jobs" element={<ComingSoon />} />
             <Route path="/companies" element={<ComingSoon />} />
             <Route path="/post-job" element={<ComingSoon />} />
