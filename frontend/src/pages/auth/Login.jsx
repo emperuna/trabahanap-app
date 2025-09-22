@@ -91,11 +91,37 @@ const Login = () => {
       return;
     }
 
+    console.log('🚀 Starting login process...');
     const result = await login(formData);
     
+    console.log('📦 Full login result:', result);
+    
     if (result.success) {
-      // ✅ FIXED: Redirect to dashboard or intended page
-      navigate(from, { replace: true });
+      const user = result.user || result.data?.user || result.data;
+      console.log('🔍 Extracted user:', user);
+      
+      const userRoles = user?.roles || [];
+      console.log('🎭 User roles:', userRoles);
+      
+      // ✅ Add a small delay to ensure auth context is updated
+      setTimeout(() => {
+        if (userRoles.includes('ROLE_EMPLOYER')) {
+          console.log('🏢 Redirecting to employer dashboard');
+          window.location.href = '/employer-dashboard'; 
+        } else if (userRoles.includes('ROLE_ADMIN')) {
+          console.log('👑 Redirecting to admin dashboard');
+          window.location.href = '/admin';
+        } else {
+          console.log('💼 Redirecting to job seeker dashboard');
+          window.location.href = '/dashboard';
+        }
+      }, 100);
+      
+    } else {
+      console.error('❌ Login failed:', result.error);
+      setErrors({
+        submit: result.error || 'Login failed. Please try again.'
+      });
     }
   };
 
