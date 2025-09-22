@@ -14,6 +14,7 @@ import ComingSoon from "./pages/common/ComingSoon";
 
 // Components
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import GuestOnlyRoute from "./components/auth/GuestOnlyRoute";
 
 function App() {
   return (
@@ -21,10 +22,24 @@ function App() {
       <AuthProvider>
         <Router>
           <Routes>
-            {/* Public Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            {/* 🔒 Guest-Only Routes (redirect to dashboard if authenticated) */}
+            <Route path="/" element={
+              <GuestOnlyRoute>
+                <Home />
+              </GuestOnlyRoute>
+            } />
+            
+            <Route path="/login" element={
+              <GuestOnlyRoute>
+                <Login />
+              </GuestOnlyRoute>
+            } />
+            
+            <Route path="/register" element={
+              <GuestOnlyRoute>
+                <Register />
+              </GuestOnlyRoute>
+            } />
             
             {/* Protected Routes - Dashboard */}
             <Route path="/dashboard" element={
@@ -70,7 +85,7 @@ function App() {
               </ProtectedRoute>
             } />
             
-            {/* Coming Soon Routes */}
+            {/* 🌐 Public Routes (accessible to everyone) */}
             <Route path="/jobs" element={<ComingSoon />} />
             <Route path="/companies" element={<ComingSoon />} />
             <Route path="/post-job" element={<ComingSoon />} />
@@ -92,9 +107,6 @@ function App() {
             <Route path="/terms" element={<ComingSoon />} />
             <Route path="/cookies" element={<ComingSoon />} />
             <Route path="/forgot-password" element={<ComingSoon />} />
-            
-            {/* 404 Route - Must be last */}
-            {/* <Route path="*" element={<NotFound />} /> */}
           </Routes>
         </Router>
       </AuthProvider>
