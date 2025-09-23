@@ -23,6 +23,7 @@ import JobSeekerProfile from "./pages/jobseeker/JobSeekerProfile";
 import EmployerDashboard from "./pages/employer/EmployerDashboard";
 import ComingSoon from "./pages/common/ComingSoon";
 import NotFound from "./pages/common/NotFound";
+import PostJob from './pages/employer/EmployerPostJob';
 
 function App() {
   return (
@@ -89,9 +90,9 @@ function App() {
               } />
               
               <Route path="/employer/post-job" element={
-                <EmployerOnlyRoute>
-                  <ComingSoon />
-                </EmployerOnlyRoute>
+                <ProtectedRoute requiredRoles={['ROLE_EMPLOYER']}>
+                  <PostJob />
+                </ProtectedRoute>
               } />
               
               <Route path="/employer/jobs" element={
