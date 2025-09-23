@@ -101,6 +101,29 @@ export const jobsAPI = {
       throw new Error(error.response?.data?.message || 'Failed to create job');
     }
   },
+  
+  // Add this method to fetch all jobs
+  getAllJobs: async (params = {}) => {
+    try {
+      console.log('📡 Fetching all jobs...');
+      const response = await api.get('/jobs', { params });
+      console.log('📨 Jobs received:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching jobs:', error);
+      throw new Error(error.response?.data?.message || 'Failed to fetch jobs');
+    }
+  },
+
+  // Get job by ID
+  getJobById: async (id) => {
+    try {
+      const response = await api.get(`/jobs/${id}`);
+      return response.data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || 'Failed to fetch job');
+    }
+  },
 };
 
 // Companies API calls
