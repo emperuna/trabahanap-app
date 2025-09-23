@@ -16,6 +16,8 @@ import { HiMenu, HiX } from 'react-icons/hi';
 import logo from '../../../assets/logo/TrabaHanap-Brandname.svg';
 
 const GuestNavbar = () => {
+  // Detect if current page is home
+  const isHome = window.location.pathname === '/';
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -23,16 +25,17 @@ const GuestNavbar = () => {
 
   return (
     <Box
-      position="relative"
+      position="fixed"
       top={0}
       left={0}
       right={0}
       zIndex={50}
-      bg="rgba(255, 255, 255, 0.95)"
-      backdropFilter="blur(20px)"
-      borderBottom="1px solid"
-      borderColor="gray.100"
+      bg={isHome ? "rgba(255, 255, 255, 0.95)" : "#153CF5"}
+      backdropFilter={isHome ? "blur(20px)" : undefined}
+      borderBottom={isHome ? "1px solid" : undefined}
+      borderColor={isHome ? "gray.100" : undefined}
       boxShadow="sm"
+      w="100%"
     >
       <Container maxW="7xl" px={{ base: 4, md: 6 }}>
         <Flex align="center" h={20}>
@@ -45,9 +48,10 @@ const GuestNavbar = () => {
                 h={{ base: 6, sm: 7 }}
                 w="auto"
                 transition="all 0.3s ease"
+                filter={isHome ? undefined : 'brightness(0) invert(1)'}
                 _hover={{ 
                   transform: 'scale(1.05)',
-                  filter: 'brightness(1.1)'
+                  filter: isHome ? 'brightness(1.1)' : 'brightness(1.2) invert(1)'
                 }}
               />
             </Link>
@@ -61,7 +65,7 @@ const GuestNavbar = () => {
               as={Link}
               to="/"
               variant="ghost"
-              color="gray.600"
+              color={isHome ? "gray.600" : "white"}
               fontWeight="500"
               fontSize="sm"
               px={5}
@@ -69,8 +73,8 @@ const GuestNavbar = () => {
               h={10}
               borderRadius="xl"
               _hover={{ 
-                color: 'gray.900',
-                bg: 'gray.50',
+                color: isHome ? 'gray.900' : 'white',
+                bg: isHome ? 'gray.50' : 'rgba(21, 60, 245, 0.8)',
                 transform: 'translateY(-1px)'
               }}
               transition="all 0.2s ease"
@@ -81,7 +85,7 @@ const GuestNavbar = () => {
               as={Link}
               to="/jobs"
               variant="ghost"
-              color="gray.600"
+              color={isHome ? "gray.600" : "white"}
               fontWeight="500"
               fontSize="sm"
               px={5}
@@ -101,7 +105,7 @@ const GuestNavbar = () => {
               as={Link}
               to="/companies"
               variant="ghost"
-              color="gray.600"
+              color={isHome ? "gray.600" : "white"}
               fontWeight="500"
               fontSize="sm"
               px={5}
@@ -121,7 +125,7 @@ const GuestNavbar = () => {
               as={Link}
               to="/about"
               variant="ghost"
-              color="gray.600"
+              color={isHome ? "gray.600" : "white"}
               fontWeight="500"
               fontSize="sm"
               px={5}
@@ -142,77 +146,79 @@ const GuestNavbar = () => {
             <Box 
               w="1px" 
               h={6} 
-              bg="gray.200" 
+              bg={isHome ? "gray.200" : "whiteAlpha.700"} 
               mx={4}
               opacity={0.7}
             />
 
             {/* Auth Buttons */}
-            <Button
-              as={Link}
-              to="/login"
-              variant="ghost"
-              color="gray.700"
-              fontWeight="600"
-              fontSize="sm"
-              px={5}
-              py={2}
-              h={10}
-              borderRadius="xl"
-              _hover={{ 
-                color: 'gray.900',
-                bg: 'gray.50',
-                transform: 'translateY(-1px)'
-              }}
-              transition="all 0.2s ease"
-            >
-              Sign In
-            </Button>
-            
-            {/* Premium Get Started Button */}
-            <Button
-              as={Link}
-              to="/register"
-              size="lg"
-              h={12}
-              px={8}
-              ml={2}
-              bg="#2563eb"
-              color="white"
-              fontWeight="600"
-              fontSize="sm"
-              letterSpacing="0.025em"
-              borderRadius="2xl"
-              boxShadow="0 4px 15px rgba(21, 60, 245, 0.4)"
-              position="relative"
-              overflow="hidden"
-              _before={{
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                bg: "#0F2ECC",
-                opacity: 0,
-                transition: 'opacity 0.3s ease'
-              }}
-              _hover={{
-                transform: 'translateY(-2px)',
-                boxShadow: '0 8px 25px rgba(21, 60, 245, 0.6)',
-                _before: {
-                  opacity: 1
-                }
-              }}
-              _active={{
-                transform: 'translateY(-1px)',
-              }}
-              transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
-            >
-              <Text position="relative" zIndex={1}>
-                Get Started
-              </Text>
-            </Button>
+            {isHome && (
+              <>
+                <Button
+                  as={Link}
+                  to="/login"
+                  variant="ghost"
+                  color={isHome ? "gray.600" : "white"}
+                  fontWeight="600"
+                  fontSize="sm"
+                  px={5}
+                  py={2}
+                  h={10}
+                  borderRadius="xl"
+                  _hover={{ 
+                    color: 'gray.900',
+                    bg: 'gray.50',
+                    transform: 'translateY(-1px)'
+                  }}
+                  transition="all 0.2s ease"
+                >
+                  Sign In
+                </Button>
+                <Button
+                  as={Link}
+                  to="/register"
+                  size="lg"
+                  h={12}
+                  px={8}
+                  ml={2}
+                  bg="#2563eb"
+                  color="white"
+                  fontWeight="600"
+                  fontSize="sm"
+                  letterSpacing="0.025em"
+                  borderRadius="2xl"
+                  boxShadow="0 4px 15px rgba(21, 60, 245, 0.4)"
+                  position="relative"
+                  overflow="hidden"
+                  _before={{
+                    content: '""',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    bg: "#0F2ECC",
+                    opacity: 0,
+                    transition: 'opacity 0.3s ease'
+                  }}
+                  _hover={{
+                    transform: 'translateY(-2px)',
+                    boxShadow: '0 8px 25px rgba(21, 60, 245, 0.6)',
+                    _before: {
+                      opacity: 1
+                    }
+                  }}
+                  _active={{
+                    transform: 'translateY(-1px)',
+                  }}
+                  transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                >
+                  <Text position="relative" zIndex={1}>
+                    Get Started
+                  </Text>
+                </Button>
+              </>
+            )}
           </HStack>
 
           {/* Mobile Menu Button */}
