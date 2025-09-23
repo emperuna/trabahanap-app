@@ -62,7 +62,7 @@ const Navbar = () => {
               to={user ? "/dashboard" : "/"}
               variant="ghost"
               color="gray.800"
-              _hover={{ color: 'purple.400' }}
+              _hover={{ color: 'blue.400' }}
               px={3}
               py={2}
               fontSize="sm"
@@ -75,7 +75,7 @@ const Navbar = () => {
               to="/jobs"
               variant="ghost"
               color="gray.800"
-              _hover={{ color: 'purple.400' }}
+              _hover={{ color: 'blue.400' }}
               px={3}
               py={2}
               fontSize="sm"
@@ -88,7 +88,7 @@ const Navbar = () => {
               to="/companies"
               variant="ghost"
               color="gray.800"
-              _hover={{ color: 'purple.400' }}
+              _hover={{ color: 'blue.400' }}
               px={3}
               py={2}
               fontSize="sm"
@@ -101,7 +101,7 @@ const Navbar = () => {
               to="/about"
               variant="ghost"
               color="gray.800"
-              _hover={{ color: 'purple.400' }}
+              _hover={{ color: 'blue.400' }}
               px={3}
               py={2}
               fontSize="sm"
@@ -134,7 +134,7 @@ const Navbar = () => {
                   to="/login"
                   variant="ghost"
                   color="gray.800"
-                  _hover={{ color: 'purple.400' }}
+                  _hover={{ color: 'blue.400' }}
                   px={3}
                   py={2}
                   fontSize="sm"
@@ -184,12 +184,12 @@ const Navbar = () => {
             zIndex={40}
           >
             <VStack spacing={2} align="stretch">
-              <Button as={Link} to={user ? "/dashboard" : "/"} variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>
+              <Button as={Link} to={user ? "/dashboard" : "/"} variant="ghost" color="gray.800" _hover={{ color: 'blue.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>
                 {user ? "Dashboard" : "Home"}
               </Button>
-              <Button as={Link} to="/jobs" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Find Jobs</Button>
-              <Button as={Link} to="/companies" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>For Employers</Button>
-              <Button as={Link} to="/about" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>About</Button>
+              <Button as={Link} to="/jobs" variant="ghost" color="gray.800" _hover={{ color: 'blue.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Find Jobs</Button>
+              <Button as={Link} to="/companies" variant="ghost" color="gray.800" _hover={{ color: 'blue.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>For Employers</Button>
+              <Button as={Link} to="/about" variant="ghost" color="gray.800" _hover={{ color: 'blue.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>About</Button>
               {user ? (
                 <>
                   <Text color="gray.500" fontSize="sm" px={3}>
@@ -199,7 +199,7 @@ const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Button as={Link} to="/login" variant="ghost" color="gray.800" _hover={{ color: 'purple.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Sign In</Button>
+                  <Button as={Link} to="/login" variant="ghost" color="gray.800" _hover={{ color: 'blue.400', bg: 'whiteAlpha.100' }} onClick={closeMenu}>Sign In</Button>
                   <Button as={Link} to="/register" variant="primaryGradient" w="full" onClick={closeMenu}>Get Started</Button>
                 </>
               )}

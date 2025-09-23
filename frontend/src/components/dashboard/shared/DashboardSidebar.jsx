@@ -56,8 +56,8 @@ const DashboardSidebar = () => {
   };
 
   const cardBg = useColorModeValue('white', 'gray.800');
-  const activeBg = useColorModeValue('purple.50', 'purple.900');
-  const activeColor = useColorModeValue('purple.600', 'purple.300');
+  const activeBg = useColorModeValue('blue.50', 'blue.900');
+  const activeColor = useColorModeValue('blue.600', 'blue.300');
 
   const menuItems = [
     {

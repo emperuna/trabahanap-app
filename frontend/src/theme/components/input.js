@@ -28,7 +28,7 @@ const Input = {
         border: '1px solid',
         borderColor: 'border.subtle',
         _focus: {
-          borderColor: 'purple.400',
+          borderColor: 'blue.400',
           boxShadow: '0 0 0 1px rgba(139, 92, 246, 0.2)',
         },
       },

@@ -13,7 +13,7 @@ import {
 
 const features = [
   { name: 'Advanced Search', icon: HiSearch, color: 'blue.400' },
-  { name: 'AI Matching', icon: HiCog, color: 'purple.400' },
+  { name: 'AI Matching', icon: HiCog, color: 'blue.400' },
   { name: 'Real-time Chat', icon: HiChat, color: 'green.400' },
   { name: 'Video Interviews', icon: HiVideoCamera, color: 'red.400' },
   { name: 'Skill Assessment', icon: HiChartBar, color: 'orange.400' },

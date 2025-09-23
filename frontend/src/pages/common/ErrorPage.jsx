@@ -24,7 +24,7 @@ const ErrorPage = ({
   return (
     <Box 
       minH="100vh" 
-      bgGradient="linear(135deg, purple.500, blue.500, purple.600)" 
+      bgGradient="linear(135deg, blue.500, blue.500, blue.600)" 
       position="relative"
       overflow="hidden"
     >

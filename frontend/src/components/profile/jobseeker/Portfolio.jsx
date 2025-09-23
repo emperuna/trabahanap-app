@@ -36,7 +36,7 @@ const Portfolio = () => {
       type: 'Project',
       category: 'project',
       description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-      gradient: 'linear(135deg, purple.500, blue.500)'
+      gradient: 'linear(135deg, blue.500, blue.500)'
     },
     {
       id: 2,

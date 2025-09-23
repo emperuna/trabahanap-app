@@ -98,15 +98,15 @@ const SecurityStep = ({
         <Checkbox
           isChecked={agreeTerms}
           onChange={(e) => setAgreeTerms(e.target.checked)}
-          colorScheme="purple"
+          colorScheme="blue"
         >
           <Text fontSize="sm" color={textColor}>
             I agree to the{' '}
-            <Link as={RouterLink} to="/terms" color="purple.500" fontWeight="medium">
+            <Link as={RouterLink} to="/terms" color="blue.500" fontWeight="medium">
               Terms of Service
             </Link>{' '}
             and{' '}
-            <Link as={RouterLink} to="/privacy" color="purple.500" fontWeight="medium">
+            <Link as={RouterLink} to="/privacy" color="blue.500" fontWeight="medium">
               Privacy Policy
             </Link>
           </Text>

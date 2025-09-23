@@ -155,7 +155,7 @@ const Dashboard = () => {
               <Text fontSize="sm" mt={1}>{error}</Text>
             </Box>
           </Alert>
-          <Button mt={6} onClick={fetchUserData} colorScheme="purple" size="lg" borderRadius="xl">
+          <Button mt={6} onClick={fetchUserData} colorScheme="blue" size="lg" borderRadius="xl">
             Try Again
           </Button>
         </Container>
