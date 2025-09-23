@@ -27,6 +27,9 @@ import PostJob from './pages/employer/EmployerPostJob';
 import FindJobs from './pages/jobseeker/JobSeekerFindJobs';
 
 function App() {
+  // Temporary dev button state
+  const [showDevButton, setShowDevButton] = React.useState(true);
+
   return (
     <ErrorBoundary>
       <ChakraProvider theme={theme}>

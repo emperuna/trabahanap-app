@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import GuestNavbar from '../../components/layout/GuestNavbar';
 import {
   Box,
   Container,
@@ -28,6 +29,36 @@ import {
 import { Loading } from '../../components/common/feedback';
 
 const Dashboard = () => {
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .hide-scrollbar {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { document.head.removeChild(style); };
+  }, []);
+
+
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      .dashboard-content-scrollbar {
+        scrollbar-width: none !important;
+        -ms-overflow-style: none !important;
+      }
+      .dashboard-content-scrollbar::-webkit-scrollbar {
+        display: none !important;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { document.head.removeChild(style); };
+  }, []);
   const { user } = useAuth();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -136,7 +167,8 @@ const Dashboard = () => {
 
   return (
     <Box bg={bgColor} minH="100vh">
-      <Container maxW="8xl" p={6}>
+      <GuestNavbar />
+      <Container maxW="8xl" p={6} pt={{ base: 28, md: 28 }}>
         <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
           {/* Sidebar */}
           <GridItem display={{ base: 'none', lg: 'block' }}>
@@ -145,34 +177,33 @@ const Dashboard = () => {
             </Box>
           </GridItem>
 
-          {/* Main Content */}
+          {/* Main Content - scrollable only */}
           <GridItem>
-            <VStack spacing={6} align="stretch">
-              {/* Welcome Section */}
-              <WelcomeSection user={currentUser} />
-
-              {/* Stats Grid */}
-              <StatsGrid stats={stats} />
-
-              {/* Main Content Grid */}
-              <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
-                {/* Left Column */}
-                <GridItem>
-                  <VStack spacing={6}>
-                    <QuickActionsCard />
-                    <RecentActivityCard />
-                  </VStack>
-                </GridItem>
-
-                {/* Right Column */}
-                <GridItem>
-                  <VStack spacing={6}>
-                    <ProfileCompletionCard completion={stats.profileCompletion} />
-                    <JobRecommendationsCard />
-                  </VStack>
-                </GridItem>
-              </Grid>
-            </VStack>
+            <Box
+              maxH="calc(100vh - 48px)"
+              overflowY="auto"
+              className="dashboard-content-scrollbar hide-scrollbar"
+              position="relative"
+            >
+              <VStack spacing={6} align="stretch">
+                <WelcomeSection user={currentUser} />
+                <StatsGrid stats={stats} />
+                <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
+                  <GridItem>
+                    <VStack spacing={6}>
+                      <QuickActionsCard />
+                      <RecentActivityCard />
+                    </VStack>
+                  </GridItem>
+                  <GridItem>
+                    <VStack spacing={6}>
+                      <ProfileProgressCard completion={stats.profileCompletion} />
+                      <JobRecommendationsCard />
+                    </VStack>
+                  </GridItem>
+                </Grid>
+              </VStack>
+            </Box>
           </GridItem>
         </Grid>
       </Container>

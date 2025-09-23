@@ -27,16 +27,16 @@ const StatsGrid = ({ stats }) => {
   const statsConfig = [
     {
       icon: HiBriefcase,
-      color: 'purple.500',
+      color: 'blue.600',
       label: 'THIS MONTH',
       value: stats.applications,
       title: 'Applications',
       helpText: '+23% from last month',
-      helpColor: 'green.500',
+      helpColor: 'blue.500',
     },
     {
       icon: HiHeart,
-      color: 'blue.500',
+      color: 'blue.600',
       label: 'SAVED',
       value: stats.savedJobs,
       title: 'Saved Jobs',
@@ -45,21 +45,21 @@ const StatsGrid = ({ stats }) => {
     },
     {
       icon: HiEye,
-      color: 'green.500',
+      color: 'blue.600',
       label: 'VIEWS',
       value: stats.profileViews,
       title: 'Profile Views',
       helpText: '+12 this week',
-      helpColor: 'green.500',
+      helpColor: 'blue.500',
     },
     {
       icon: HiTrendingUp,
-      color: 'orange.500',
+      color: 'blue.600',
       label: 'PROFILE',
       value: `${stats.profileCompletion}%`,
       title: 'Completion',
       helpText: 'Complete to boost visibility',
-      helpColor: 'orange.500',
+      helpColor: 'blue.500',
     },
   ];
 

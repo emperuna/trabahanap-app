@@ -96,25 +96,25 @@ const Footer = () => {
             {/* Contact Info */}
             <VStack align="flex-start" spacing={3}>
               <HStack spacing={3}>
-                <Box color="purple.400">
+                <Box color="#1554F5">
                   <HiMail size={18} />
                 </Box>
-                <Link href="mailto:hello@trabahanap.com" _hover={{ color: 'purple.400' }}>
+                <Link href="mailto:hello@trabahanap.com" _hover={{ color: '#1554F5' }}>
                   hello@trabahanap.com
                 </Link>
               </HStack>
               
               <HStack spacing={3}>
-                <Box color="purple.400">
+                <Box color="#1554F5">
                   <HiPhone size={18} />
                 </Box>
-                <Link href="tel:+639123456789" _hover={{ color: 'purple.400' }}>
+                <Link href="tel:+639123456789" _hover={{ color: '#1554F5' }}>
                   +63 912 345 6789
                 </Link>
               </HStack>
               
               <HStack spacing={3}>
-                <Box color="purple.400">
+                <Box color="#1554F5">
                   <HiLocationMarker size={18} />
                 </Box>
                 <Text fontSize="sm">
@@ -137,7 +137,7 @@ const Footer = () => {
                     href={link.href}
                     fontSize="sm"
                     _hover={{ 
-                      color: 'purple.400',
+                      color: '#1554F5',
                       textDecoration: 'none',
                       transform: 'translateX(4px)'
                     }}
@@ -188,7 +188,7 @@ const Footer = () => {
                   size="lg"
                   borderRadius="full"
                   _hover={{ 
-                    color: 'purple.400',
+                    color: '#1554F5',
                     bg: 'gray.800',
                     transform: 'translateY(-2px)'
                   }}
