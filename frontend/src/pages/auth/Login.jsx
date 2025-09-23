@@ -288,7 +288,7 @@ const Login = () => {
                       as={RouterLink}
                       to="/forgot-password"
                       fontSize="sm"
-                      color="#1554F5"
+                      color="blue.500"
                       fontWeight="medium"
                       _hover={{ color: "#0038C9", textDecoration: 'none' }}
                     >

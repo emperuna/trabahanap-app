@@ -104,7 +104,7 @@ const DashboardSidebar = () => {
     },
   ];
 
-  const isActive = (path) => {
+  const isActivePath = (path) => {
     if (path === '/dashboard') {
       return location.pathname === '/dashboard';
     }
@@ -143,12 +143,12 @@ const DashboardSidebar = () => {
             justifyContent="flex-start"
             h={12}
             borderRadius="xl"
-            bg={isActive(item.path) ? activeBg : 'transparent'}
-            color={isActive(item.path) ? activeColor : 'gray.600'}
-            fontWeight={isActive(item.path) ? 'semibold' : 'medium'}
+            bg={isActivePath(item.path) ? activeBg : 'transparent'}
+            color={isActivePath(item.path) ? activeColor : 'gray.700'}
+            fontWeight={isActivePath(item.path) ? 'semibold' : 'medium'}
             _hover={{
-              bg: isActive(item.path) ? activeBg : 'gray.50',
-              color: isActive(item.path) ? activeColor : 'gray.800',
+              bg: isActivePath(item.path) ? 'blue.100' : 'gray.100',
+              color: isActivePath(item.path) ? activeColor : 'gray.800',
               transform: 'translateX(4px)',
             }}
             transition="all 0.2s ease"

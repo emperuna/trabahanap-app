@@ -17,19 +17,19 @@ const HowItWorks = () => {
       icon: HiSearch,
       title: 'Search & Discover',
       description: 'Browse thousands of job opportunities from top companies across the Philippines.',
-      color: '#153CF5'
+      color: 'blue.500' 
     },
     {
       icon: HiUserAdd,
       title: 'Create Profile',
       description: 'Build your professional profile and let employers find you with ease.',
-      color: '#153CF5'
+      color: 'blue.500' 
     },
     {
       icon: HiBriefcase,
       title: 'Get Hired',
       description: 'Apply to jobs, interview with confidence, and land your dream career.',
-      color: '#153CF5'
+      color: 'blue.500' 
     }
   ];
 
