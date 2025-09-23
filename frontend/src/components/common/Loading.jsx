@@ -1,53 +1,37 @@
 import React from 'react';
-import { 
-  Box, 
-  Spinner, 
-  VStack, 
-  Text, 
-  Center 
+import {
+  Box,
+  Spinner,
+  VStack,
+  Text,
+  useColorModeValue,
 } from '@chakra-ui/react';
 
-const Loading = ({ 
-  size = 'lg', 
-  text = 'Loading...', 
-  fullScreen = false 
-}) => {
-  const content = (
-    <VStack spacing={4}>
-      <Spinner 
-        size={size} 
-        color="purple.500" 
-        thickness="3px"
-        speed="0.8s"
-      />
-      {text && (
-        <Text color="text.secondary" fontSize="sm">
-          {text}
-        </Text>
-      )}
-    </VStack>
-  );
-
-  if (fullScreen) {
-    return (
-      <Center 
-        position="fixed" 
-        top={0} 
-        left={0} 
-        w="100vw" 
-        h="100vh" 
-        bg="bg.canvas"
-        zIndex={9999}
-      >
-        {content}
-      </Center>
-    );
-  }
+const Loading = ({ message = "Loading..." }) => {
+  const bgColor = useColorModeValue('white', 'gray.900');
+  const textColor = useColorModeValue('gray.600', 'gray.400');
 
   return (
-    <Center py={8}>
-      {content}
-    </Center>
+    <Box
+      bg={bgColor}
+      minH="100vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
+      <VStack spacing={4}>
+        <Spinner
+          thickness="4px"
+          speed="0.65s"
+          emptyColor="gray.200"
+          color="blue.500"
+          size="xl"
+        />
+        <Text color={textColor} fontSize="lg">
+          {message}
+        </Text>
+      </VStack>
+    </Box>
   );
 };
 
