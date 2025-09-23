@@ -93,24 +93,6 @@ export const authAPI = {
 
 // Jobs API calls
 export const jobsAPI = {
-  getAllJobs: async (params = {}) => {
-    try {
-      const response = await api.get('/jobs', { params });
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch jobs');
-    }
-  },
-
-  getJobById: async (id) => {
-    try {
-      const response = await api.get(`/jobs/${id}`);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch job details');
-    }
-  },
-
   createJob: async (jobData) => {
     try {
       const response = await api.post('/jobs', jobData);
@@ -119,31 +101,27 @@ export const jobsAPI = {
       throw new Error(error.response?.data?.message || 'Failed to create job');
     }
   },
-
-  updateJob: async (id, jobData) => {
+  
+  // Add this method to fetch all jobs
+  getAllJobs: async (params = {}) => {
     try {
-      const response = await api.put(`/jobs/${id}`, jobData);
+      console.log('📡 Fetching all jobs...');
+      const response = await api.get('/jobs', { params });
+      console.log('📨 Jobs received:', response.data);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update job');
+      console.error('❌ Error fetching jobs:', error);
+      throw new Error(error.response?.data?.message || 'Failed to fetch jobs');
     }
   },
 
-  deleteJob: async (id) => {
+  // Get job by ID
+  getJobById: async (id) => {
     try {
-      const response = await api.delete(`/jobs/${id}`);
+      const response = await api.get(`/jobs/${id}`);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to delete job');
-    }
-  },
-
-  applyToJob: async (jobId, applicationData) => {
-    try {
-      const response = await api.post(`/jobs/${jobId}/apply`, applicationData);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to apply to job');
+      throw new Error(error.response?.data?.message || 'Failed to fetch job');
     }
   },
 };

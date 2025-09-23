@@ -26,7 +26,7 @@ const QuickActionsCard = () => {
   const textColor = useColorModeValue('gray.800', 'white');
 
   const actions = [
-    { icon: HiSearch, label: 'Find Jobs', color: 'purple', path: '/jobs' },
+    { icon: HiSearch, label: 'Find Jobs', color: 'purple', path: '/find-jobs' },
     { icon: HiDocumentText, label: 'Update Resume', color: 'blue', path: '/dashboard/resume' },
     { icon: HiUser, label: 'Edit Profile', color: 'green', path: '/dashboard/settings/profile' },
     { icon: HiBell, label: 'Job Alerts', color: 'orange', path: '/dashboard/alerts' },
