@@ -24,7 +24,7 @@ import {
   HiChartBar,
 } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 const DashboardSidebar = () => {
   const location = useLocation();

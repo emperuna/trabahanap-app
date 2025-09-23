@@ -12,8 +12,8 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { HiMenu, HiX } from 'react-icons/hi';
-import { useAuth } from '../../context/AuthContext';
-import logo from '../../assets/logo/TrabaHanap-Logo.svg';
+import { useAuth } from '../../../context/AuthContext';
+import logo from '../../../assets/logo/TrabaHanap-Logo.svg';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
