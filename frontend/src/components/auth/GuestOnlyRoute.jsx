@@ -27,6 +27,10 @@ const GuestOnlyRoute = ({ children }) => {
         duration: 3000,
         isClosable: true,
         position: 'top',
+        containerStyle: {
+          bg: 'blue.500',
+          color: 'white',
+        }
       });
     }
   }, [isAuthenticated, isLoading, user, toast]);
