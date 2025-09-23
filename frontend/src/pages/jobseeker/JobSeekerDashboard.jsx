@@ -15,14 +15,17 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { authAPI } from '../../services/api';
 
-// Import dashboard components
-import DashboardSidebar from '../../components/dashboard/DashboardSidebar';
-import WelcomeSection from '../../components/dashboard/WelcomeSection';
-import StatsGrid from '../../components/dashboard/StatsGrid';
-import QuickActionsCard from '../../components/dashboard/QuickActionsCard';
-import RecentActivityCard from '../../components/dashboard/RecentActivityCard';
-import ProfileProgressCard from '../../components/dashboard/ProfileProgressCard';
-import JobRecommendationsCard from '../../components/dashboard/JobRecommendationsCard';
+import {
+  DashboardSidebar,
+  ProfileCompletionCard,
+  StatsGrid,
+  WelcomeSection,
+  JobRecommendationsCard,
+  QuickActionsCard,
+  RecentActivityCard
+} from '../../components/dashboard';
+
+import { Loading } from '../../components/common/feedback';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -164,7 +167,7 @@ const Dashboard = () => {
                 {/* Right Column */}
                 <GridItem>
                   <VStack spacing={6}>
-                    <ProfileProgressCard completion={stats.profileCompletion} />
+                    <ProfileCompletionCard completion={stats.profileCompletion} />
                     <JobRecommendationsCard />
                   </VStack>
                 </GridItem>

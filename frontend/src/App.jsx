@@ -3,7 +3,16 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "./theme";
 import { AuthProvider } from "./context/AuthContext";
-import ErrorBoundary from "./components/common/ErrorBoundary";
+
+// Components
+import {
+  ProtectedRoute,
+  GuestOnlyRoute,
+  JobSeekerOnlyRoute,
+  EmployerOnlyRoute
+} from "./components/auth";
+
+import { ErrorBoundary } from "./components/common/feedback";
 
 // Pages
 import Home from "./pages/common/Home";
@@ -14,12 +23,6 @@ import JobSeekerProfile from "./pages/jobseeker/JobSeekerProfile";
 import EmployerDashboard from "./pages/employer/EmployerDashboard";
 import ComingSoon from "./pages/common/ComingSoon";
 import NotFound from "./pages/common/NotFound";
-
-// Components
-import ProtectedRoute from "./components/auth/ProtectedRoute";
-import GuestOnlyRoute from "./components/auth/GuestOnlyRoute";
-import JobSeekerOnlyRoute from "./components/auth/JobSeekerOnlyRoute";
-import EmployerOnlyRoute from "./components/auth/EmployerOnlyRoute";
 
 function App() {
   return (

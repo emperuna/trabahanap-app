@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import Loading from '../common/Loading';
+import Loading from '../common/feedback/Loading';
 
 const JobSeekerOnlyRoute = ({ children }) => {
   const { isAuthenticated, user, isLoading } = useAuth();

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { useToast } from '@chakra-ui/react';
 import { useAuth } from '../../context/AuthContext';
-import Loading from '../common/Loading';
+import Loading from '../common/feedback/Loading';
 
 const GuestOnlyRoute = ({ children }) => {
   const { isAuthenticated, user, isLoading } = useAuth();
