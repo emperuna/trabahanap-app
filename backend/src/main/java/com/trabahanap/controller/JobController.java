@@ -1,5 +1,6 @@
 package com.trabahanap.controller;
 
+import com.trabahanap.dto.JobDTO;
 import com.trabahanap.model.Job;
 import com.trabahanap.model.User;
 import com.trabahanap.repository.JobRepository;
@@ -8,9 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/jobs")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class JobController {
 
     @Autowired
@@ -19,16 +25,20 @@ public class JobController {
     @Autowired
     private UserRepository userRepository;
 
-    // @PostMapping
-    // public ResponseEntity<?> postJob(@AuthenticationPrincipal User user, @RequestBody Job job) {
-    //     if (!user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_EMPLOYER"))) {
-    //         return ResponseEntity.status(403).body("Only employers can post jobs.");
-    //     }
-
-    //     job.setPostedBy(user);
-    //     jobRepository.save(job);
-    //     return ResponseEntity.ok("Job posted successfully.");
-    // }
+    @GetMapping
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<JobDTO>> getAllJobs() {
+        try {
+            List<Job> jobs = jobRepository.findAll();
+            List<JobDTO> jobDTOs = jobs.stream()
+                    .map(JobDTO::fromJob)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(jobDTOs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
     @PostMapping
     public ResponseEntity<?> postJob(@AuthenticationPrincipal com.trabahanap.service.UserPrincipal userPrincipal,
