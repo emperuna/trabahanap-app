@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import GuestNavbar from '../../components/layout/GuestNavbar';
 import {
   Box,
   Container,
@@ -18,6 +17,7 @@ import { authAPI } from '../../services/api';
 
 import {
   DashboardSidebar,
+  ProfileProgressCard,
   ProfileCompletionCard,
   StatsGrid,
   WelcomeSection,
@@ -167,8 +167,7 @@ const Dashboard = () => {
 
   return (
     <Box bg={bgColor} minH="100vh">
-      <GuestNavbar />
-      <Container maxW="8xl" p={6} pt={{ base: 28, md: 28 }}>
+      <Container maxW="8xl" p={6}>
         <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
           {/* Sidebar */}
           <GridItem display={{ base: 'none', lg: 'block' }}>
