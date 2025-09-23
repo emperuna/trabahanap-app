@@ -1,3 +1,4 @@
-export { default as Button } from './Button'
-export { default as Input } from './Input'
-export { default as Loading } from './Loading'
+export * from './ui';
+export * from './layout';
+export * from './feedback';
+export * from './forms';

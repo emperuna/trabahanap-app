@@ -10,15 +10,17 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useEmployerDashboard } from '../../hooks/useEmployerDashboard';
 
-// Components
-import EmployerSidebar from '../../components/dashboard/EmployerSidebar';
-import WelcomeHeader from '../../components/dashboard/employer/WelcomeHeader';
-import ActionAlert from '../../components/dashboard/employer/ActionAlert';
-import QuickActions from '../../components/dashboard/employer/QuickActions';
-import RecentJobs from '../../components/dashboard/employer/RecentJobs';
-import HiringPipeline from '../../components/dashboard/employer/HiringPipeline';
-import UpcomingInterviews from '../../components/dashboard/employer/UpcomingInterviews';
-import Loading from '../../components/common/Loading';
+import {
+  EmployerSidebar,
+  WelcomeHeader,
+  QuickActions,
+  RecentJobs,
+  HiringPipeline,
+  UpcomingInterviews,
+  ActionAlert
+} from '../../components/dashboard';
+
+import { Loading } from '../../components/common/feedback';
 
 const EmployerDashboard = () => {
   const { user } = useAuth();

@@ -13,7 +13,7 @@ import {
   Spacer,
 } from '@chakra-ui/react';
 import { HiMenu, HiX } from 'react-icons/hi';
-import logo from '../../assets/logo/TrabaHanap-Brandname.svg';
+import logo from '../../../assets/logo/TrabaHanap-Brandname.svg';
 
 const GuestNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
