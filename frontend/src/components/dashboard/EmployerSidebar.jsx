@@ -9,6 +9,7 @@ import {
   Icon,
   Card,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import {
   HiHome,
@@ -27,6 +28,7 @@ import { useAuth } from '../../context/AuthContext';
 const EmployerSidebar = () => {
   const location = useLocation();
   const { logout } = useAuth();
+  const toast = useToast();
   const cardBg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
 
@@ -80,6 +82,29 @@ const EmployerSidebar = () => {
       return location.pathname === '/employer-dashboard';
     }
     return location.pathname.startsWith(path);
+  };
+
+  const handleLogout = async () => {
+    try {
+      toast({
+        title: 'Logging out...',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+      });
+
+      console.log('🚪 Sidebar: Logout button clicked');
+      await logout();
+    } catch (error) {
+      console.error('❌ Sidebar: Logout failed:', error);
+      toast({
+        title: 'Logout failed',
+        description: 'Please try again',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -166,7 +191,7 @@ const EmployerSidebar = () => {
             </Button>
 
             <Button
-              onClick={logout}
+              onClick={handleLogout}
               variant="ghost"
               justifyContent="flex-start"
               h={10}
