@@ -9,9 +9,9 @@ import {
   Icon,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { HiExclamationTriangle } from 'react-icons/hi';
+import { HiExclamation } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../context/AuthContext';
 
 const RoleAccessDenied = ({ attemptedRole, userRole }) => {
   const { user } = useAuth();

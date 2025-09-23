@@ -25,7 +25,7 @@ import {
   HiPhone, 
   HiLocationMarker 
 } from 'react-icons/hi';
-import logo from '../../assets/logo/TrabaHanap-Logo.svg';
+import logo from '../../../assets/logo/TrabaHanap-Logo.svg';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
