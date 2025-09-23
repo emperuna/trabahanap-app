@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { authAPI } from '../services/api';
 
 const AuthContext = createContext();
@@ -107,6 +107,9 @@ const authReducer = (state, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
+  const [user, setUser] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Verify token on app startup
   useEffect(() => {
@@ -116,6 +119,44 @@ export const AuthProvider = ({ children }) => {
     } else {
       dispatch({ type: AUTH_ACTIONS.SET_LOADING_FALSE });
     }
+  }, []);
+
+  // Initialize authentication state
+  useEffect(() => {
+    const initializeAuth = async () => {
+      try {
+        console.log('🔄 AuthContext: Initializing authentication...');
+        const token = localStorage.getItem('token');
+        
+        if (token) {
+          console.log('🔑 AuthContext: Token found, verifying...');
+          try {
+            const userData = await authAPI.verifyToken();
+            console.log('✅ AuthContext: User verified:', userData);
+            setUser(userData);
+            setIsAuthenticated(true);
+          } catch (error) {
+            console.error('❌ AuthContext: Token verification failed:', error);
+            localStorage.removeItem('token');
+            setUser(null);
+            setIsAuthenticated(false);
+          }
+        } else {
+          console.log('🚫 AuthContext: No token found');
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      } catch (error) {
+        console.error('💥 AuthContext: Initialization error:', error);
+        setUser(null);
+        setIsAuthenticated(false);
+      } finally {
+        setIsLoading(false);
+        console.log('✅ AuthContext: Initialization complete');
+      }
+    };
+
+    initializeAuth();
   }, []);
 
   const verifyToken = async () => {
@@ -216,9 +257,45 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    dispatch({ type: AUTH_ACTIONS.LOGOUT });
+  const logout = async () => {
+    try {
+      console.log('🚪 AuthContext: Starting logout process...');
+      
+      // Clear localStorage
+      localStorage.removeItem('token');
+      console.log('🗑️ AuthContext: Token removed from localStorage');
+      
+      // Clear sessionStorage as well (just in case)
+      sessionStorage.clear();
+      
+      // Reset state
+      setUser(null);
+      setIsAuthenticated(false);
+      console.log('✅ AuthContext: User state cleared');
+      
+      // Optional: Call backend logout endpoint if you have one
+      try {
+        await authAPI.logout();
+      } catch (error) {
+        console.warn('Backend logout failed, but continuing with client logout');
+      }
+      
+      // Force reload to ensure all state is cleared
+      setTimeout(() => {
+        window.location.href = '/login';
+      }, 100);
+      
+      console.log('🔄 AuthContext: Redirecting to login page');
+      
+    } catch (error) {
+      console.error('❌ AuthContext: Logout error:', error);
+      // Even if there's an error, clear the state and redirect
+      localStorage.removeItem('token');
+      sessionStorage.clear();
+      setUser(null);
+      setIsAuthenticated(false);
+      window.location.href = '/login';
+    }
   };
 
   const clearError = () => {
@@ -237,5 +314,25 @@ export const AuthProvider = ({ children }) => {
     clearError,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const contextValue = {
+    user,
+    isAuthenticated,
+    isLoading,
+    login,
+    logout,
+    register
+  };
+
+  console.log('🔍 AuthContext State:', {
+    isAuthenticated,
+    isLoading,
+    hasUser: !!user,
+    userRoles: user?.roles || []
+  });
+
+  return (
+    <AuthContext.Provider value={contextValue}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

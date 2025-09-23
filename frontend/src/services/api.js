@@ -76,6 +76,19 @@ export const authAPI = {
       throw new Error('Token refresh failed');
     }
   },
+
+  logout: async () => {
+    try {
+      console.log('🌐 API: Sending logout request');
+      const response = await api.post('/auth/logout');
+      console.log('📨 API: Logout response:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('🚨 API: Logout error:', error.response?.data || error.message);
+      // Don't throw error for logout - continue with client-side logout
+      return { success: false };
+    }
+  },
 };
 
 // Jobs API calls

@@ -2,12 +2,15 @@ import React from 'react';
 import {
   Box,
   VStack,
-  Button,
+  HStack,
   Text,
-  Icon,
+  Button,
   Badge,
   Divider,
+  Icon,
+  Card,
   useColorModeValue,
+  useToast,
 } from '@chakra-ui/react';
 import {
   HiHome,
@@ -26,6 +29,32 @@ import { useAuth } from '../../context/AuthContext';
 const DashboardSidebar = () => {
   const location = useLocation();
   const { logout } = useAuth();
+  const toast = useToast(); // 👈 ADD THIS
+
+  // 👈 ADD THIS LOGOUT HANDLER
+  const handleLogout = async () => {
+    try {
+      toast({
+        title: 'Logging out...',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+      });
+
+      console.log('🚪 Job Seeker Sidebar: Logout button clicked');
+      await logout();
+    } catch (error) {
+      console.error('❌ Job Seeker Sidebar: Logout failed:', error);
+      toast({
+        title: 'Logout failed',
+        description: 'Please try again',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   const cardBg = useColorModeValue('white', 'gray.800');
   const activeBg = useColorModeValue('purple.50', 'purple.900');
   const activeColor = useColorModeValue('purple.600', 'purple.300');
@@ -176,22 +205,21 @@ const DashboardSidebar = () => {
         </Button>
 
         <Button
+          onClick={handleLogout} // 👈 CHANGED: Use handleLogout
           variant="ghost"
           justifyContent="flex-start"
-          h={12}
+          h={10}
+          px={4}
           borderRadius="xl"
-          color="red.500"
           fontWeight="medium"
-          _hover={{
-            bg: 'red.50',
-            color: 'red.600',
-            transform: 'translateX(4px)',
-          }}
+          color="red.600"
+          _hover={{ bg: 'red.50', transform: 'translateX(4px)' }}
           transition="all 0.2s ease"
-          leftIcon={<Icon as={HiLogout} />}
-          onClick={logout}
         >
-          Logout
+          <HStack spacing={3}>
+            <Icon as={HiLogout} boxSize={4} />
+            <Text fontSize="sm">Logout</Text>
+          </HStack>
         </Button>
       </VStack>
     </Box>
