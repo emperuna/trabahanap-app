@@ -75,7 +75,7 @@ const DashboardSidebar = () => {
     {
       label: 'Find Jobs',
       icon: HiSearch,
-      path: '/jobs',
+      path: '/find-jobs',
       badge: 'New',
     },
     {

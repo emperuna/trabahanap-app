@@ -145,7 +145,7 @@ const JobRecommendationsCard = () => {
         {jobs.length > 0 && (
           <Button
             as={Link}
-            to="/jobs"
+            to="/find-jobs"
             w="full"
             mt={4}
             size="sm"
