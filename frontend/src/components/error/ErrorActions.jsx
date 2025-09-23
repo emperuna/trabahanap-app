@@ -39,7 +39,7 @@ const ErrorActions = ({ onGoBack, onGoHome, onRefresh }) => {
             size="lg"
             h={14}
             bg="white"
-            color="purple.600"
+            color="blue.600"
             borderRadius="xl"
             flex={1}
             fontWeight="bold"

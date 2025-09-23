@@ -37,10 +37,10 @@ const QuickActionsCard = () => {
       <CardBody p={6}>
         <HStack justify="space-between" mb={6}>
           <HStack>
-            <Icon as={HiSparkles} color="purple.500" boxSize={6} />
+            <Icon as={HiSparkles} color="blue.500" boxSize={6} />
             <Heading size="md" color={textColor}>Quick Actions</Heading>
           </HStack>
-          <Badge colorScheme="purple" variant="subtle" borderRadius="full" px={3}>
+          <Badge colorScheme="blue" variant="subtle" borderRadius="full" px={3}>
             4 Actions
           </Badge>
         </HStack>

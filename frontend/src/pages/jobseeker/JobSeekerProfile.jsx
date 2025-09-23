@@ -92,7 +92,7 @@ const JobSeekerProfile = () => {
             <VStack spacing={6} align="stretch">
               {/* Profile Header Card */}
               <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} overflow="hidden">
-                <Box bgGradient="linear(135deg, purple.500, blue.500)" p={8} color="white">
+                <Box bgGradient="linear(135deg, blue.500, blue.500)" p={8} color="white">
                   <ProfileHeader profileData={profileData} />
                 </Box>
               </Card>
@@ -143,7 +143,7 @@ const JobSeekerProfile = () => {
                         index={activeTab} 
                         onChange={setActiveTab}
                         variant="enclosed"
-                        colorScheme="purple"
+                        colorScheme="blue"
                       >
                         <TabList borderBottom="1px" borderColor={borderColor} px={6} pt={6}>
                           {tabItems.map((tab, index) => (

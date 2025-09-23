@@ -82,7 +82,7 @@ const FindJobs = () => {
     return (
       <Box bg={bgColor} minH="100vh" display="flex" justifyContent="center" alignItems="center">
         <VStack spacing={4}>
-          <Spinner size="xl" color="purple.500" />
+          <Spinner size="xl" color="blue.500" />
           <Text color="gray.600">Loading available jobs...</Text>
         </VStack>
       </Box>
@@ -141,7 +141,7 @@ const FindJobs = () => {
               <HStack spacing={3} w="full" justify="space-between">
                 <HStack spacing={2}>
                   {searchTerm && (
-                    <Badge colorScheme="purple" variant="subtle">
+                    <Badge colorScheme="blue" variant="subtle">
                       Search: {searchTerm}
                     </Badge>
                   )}
@@ -168,7 +168,7 @@ const FindJobs = () => {
                   </Button>
                   <Button 
                     size="sm" 
-                    colorScheme="purple" 
+                    colorScheme="blue" 
                     onClick={handleSearch}
                   >
                     Search
@@ -224,7 +224,7 @@ const FindJobs = () => {
                   }
                 </Text>
                 <HStack spacing={3}>
-                  <Button colorScheme="purple" onClick={fetchJobs}>
+                  <Button colorScheme="blue" onClick={fetchJobs}>
                     Refresh Jobs
                   </Button>
                   {(searchTerm || locationFilter || jobTypeFilter) && (
