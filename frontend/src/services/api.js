@@ -93,57 +93,12 @@ export const authAPI = {
 
 // Jobs API calls
 export const jobsAPI = {
-  getAllJobs: async (params = {}) => {
-    try {
-      const response = await api.get('/jobs', { params });
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch jobs');
-    }
-  },
-
-  getJobById: async (id) => {
-    try {
-      const response = await api.get(`/jobs/${id}`);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch job details');
-    }
-  },
-
   createJob: async (jobData) => {
     try {
       const response = await api.post('/jobs', jobData);
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to create job');
-    }
-  },
-
-  updateJob: async (id, jobData) => {
-    try {
-      const response = await api.put(`/jobs/${id}`, jobData);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update job');
-    }
-  },
-
-  deleteJob: async (id) => {
-    try {
-      const response = await api.delete(`/jobs/${id}`);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to delete job');
-    }
-  },
-
-  applyToJob: async (jobId, applicationData) => {
-    try {
-      const response = await api.post(`/jobs/${jobId}/apply`, applicationData);
-      return response.data;
-    } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to apply to job');
     }
   },
 };
