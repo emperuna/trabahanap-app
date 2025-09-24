@@ -25,6 +25,7 @@ import ComingSoon from "./pages/common/ComingSoon";
 import NotFound from "./pages/common/NotFound";
 import PostJob from './pages/employer/EmployerPostJob';
 import FindJobs from './pages/jobseeker/JobSeekerFindJobs';
+import JobDetail from './pages/jobseeker/JobSeekerJobDetail';
 
 function App() {
   return (
@@ -64,10 +65,11 @@ function App() {
                   <FindJobs />
                 </JobSeekerOnlyRoute>
               } />
-              
-              <Route path="/dashboard/profile" element={
+
+              {/* Add Job Detail Route */}
+              <Route path="/jobs/:id" element={
                 <JobSeekerOnlyRoute>
-                  <JobSeekerProfile />
+                  <JobDetail />
                 </JobSeekerOnlyRoute>
               } />
               
