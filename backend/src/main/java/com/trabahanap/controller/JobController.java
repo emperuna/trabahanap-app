@@ -61,4 +61,30 @@ public class JobController {
         return ResponseEntity.ok("Job posted successfully.");
     }
 
+    @GetMapping("/{id}")
+    @Transactional(readOnly = true)
+    public ResponseEntity<JobDTO> getJobById(@PathVariable Long id) {
+        try {
+            System.out.println("📡 Fetching job with ID: " + id);
+            
+            Job job = jobRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Job not found"));
+            
+            // Force initialization of lazy-loaded properties
+            if (job.getPostedBy() != null) {
+                job.getPostedBy().getUsername(); // This triggers lazy loading
+            }
+                    
+            JobDTO jobDTO = JobDTO.fromJob(job);
+            System.out.println("✅ Job found: " + jobDTO.getTitle());
+            
+            return ResponseEntity.ok(jobDTO);
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error fetching job: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
 }
