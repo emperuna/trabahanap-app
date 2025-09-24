@@ -29,9 +29,8 @@ import { useAuth } from '../../../context/AuthContext';
 const DashboardSidebar = () => {
   const location = useLocation();
   const { logout } = useAuth();
-  const toast = useToast(); // 👈 ADD THIS
+  const toast = useToast();
 
-  // 👈 ADD THIS LOGOUT HANDLER
   const handleLogout = async () => {
     try {
       toast({
@@ -159,7 +158,7 @@ const DashboardSidebar = () => {
             </Box>
             {item.badge && (
               <Badge
-                colorScheme={item.badge === 'New' ? 'green' : 'purple'}
+                colorScheme={item.badge === 'New' ? 'green' : 'blue'}
                 variant="solid"
                 borderRadius="full"
                 fontSize="xs"
@@ -190,12 +189,12 @@ const DashboardSidebar = () => {
           justifyContent="flex-start"
           h={12}
           borderRadius="xl"
-          bg={isActive('/dashboard/settings') ? activeBg : 'transparent'}
-          color={isActive('/dashboard/settings') ? activeColor : 'gray.600'}
-          fontWeight={isActive('/dashboard/settings') ? 'semibold' : 'medium'}
+          bg={isActivePath('/dashboard/settings') ? activeBg : 'transparent'}
+          color={isActivePath('/dashboard/settings') ? activeColor : 'gray.600'}
+          fontWeight={isActivePath('/dashboard/settings') ? 'semibold' : 'medium'}
           _hover={{
-            bg: isActive('/dashboard/settings') ? activeBg : 'gray.50',
-            color: isActive('/dashboard/settings') ? activeColor : 'gray.800',
+            bg: isActivePath('/dashboard/settings') ? activeBg : 'gray.50',
+            color: isActivePath('/dashboard/settings') ? activeColor : 'gray.800',
             transform: 'translateX(4px)',
           }}
           transition="all 0.2s ease"
@@ -205,7 +204,7 @@ const DashboardSidebar = () => {
         </Button>
 
         <Button
-          onClick={handleLogout} // 👈 CHANGED: Use handleLogout
+          onClick={handleLogout}
           variant="ghost"
           justifyContent="flex-start"
           h={10}
