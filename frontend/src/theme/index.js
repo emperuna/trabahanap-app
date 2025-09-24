@@ -9,54 +9,66 @@ import radii from './foundations/radii';
 // Semantic tokens
 import semanticTokens from './semantic-tokens';
 
-// Component overrides
+// Component customizations
 import Button from './components/button';
-import Input from './components/input';
 import Card from './components/card';
 import Container from './components/container';
 import Heading from './components/heading';
+import Input from './components/input';
 import Link from './components/link';
 import Select from './components/select';
 
 const theme = extendTheme({
-  colors,
-  fonts: typography,
-  shadows,
-  radii,
-  semanticTokens,
-  components: {
-    Button,
-    Input,
-    Card,
-    Container,
-    Heading,
-    Link,
-    Select,
-  },
+  // ✅ UPDATED: Set blue as primary color scheme
   config: {
     initialColorMode: 'light',
     useSystemColorMode: false,
   },
+  
+  // ✅ NEW: Default color scheme is now blue
+  colors: {
+    ...colors,
+    // Override Chakra's default blue with our corporate blue
+    primary: colors.blue,
+  },
+  
+  fonts: typography.fonts,
+  fontSizes: typography.fontSizes,
+  fontWeights: typography.fontWeights,
+  lineHeights: typography.lineHeights,
+  
+  radii,
+  shadows,
+  semanticTokens,
+  
+  // ✅ UPDATED: Component overrides with blue theme
+  components: {
+    Button: {
+      ...Button,
+      defaultProps: {
+        colorScheme: 'blue', // Default buttons are now blue
+      },
+    },
+    Card,
+    Container,
+    Heading,
+    Input,
+    Link,
+    Select,
+  },
+  
+  // ✅ NEW: Global styles with corporate feel
   styles: {
     global: {
-      // Custom scrollbar using Chakra tokens
-      '::-webkit-scrollbar': {
-        width: '6px',
-        height: '6px',
+      body: {
+        bg: 'slate.50',
+        color: 'slate.900',
       },
-      '::-webkit-scrollbar-track': {
-        background: 'transparent',
+      '*::placeholder': {
+        color: 'slate.400',
       },
-      '::-webkit-scrollbar-thumb': {
-        background: 'purple.400',
-        borderRadius: '3px',
-      },
-      '::-webkit-scrollbar-thumb:hover': {
-        background: 'purple.500',
-      },
-      html: {
-        scrollbarWidth: 'thin',
-        scrollbarColor: 'purple.400 transparent',
+      '*, *::before, &::after': {
+        borderColor: 'slate.200',
       },
     },
   },

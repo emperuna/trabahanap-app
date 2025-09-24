@@ -38,8 +38,8 @@ const semanticTokens = {
       _dark: 'gray.700',
     },
     'border.accent': {
-      default: 'purple.200',
-      _dark: 'purple.700',
+      default: 'blue.200',
+      _dark: 'blue.700',
     },
   },
 };

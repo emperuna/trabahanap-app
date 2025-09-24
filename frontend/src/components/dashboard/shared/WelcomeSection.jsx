@@ -24,7 +24,7 @@ const WelcomeSection = ({ user }) => {
 
   return (
     <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} overflow="hidden">
-      <Box bgGradient="linear(135deg, purple.500, blue.500)" p={8} color="white">
+      <Box bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)" p={8} color="white">
         <HStack spacing={6}>
           <Avatar
             size="xl"

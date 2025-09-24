@@ -26,7 +26,7 @@ const WelcomeHeader = ({ user, greeting, stats }) => {
     <Card bg={cardBg} borderRadius="2xl" overflow="hidden">
       {/* Header Section */}
       <Box
-        bgGradient="linear(135deg, blue.500, purple.500)"
+        bgGradient="linear(135deg, blue.500, blue.500)"
         p={8}
         color="white"
       >
@@ -86,7 +86,7 @@ const WelcomeHeader = ({ user, greeting, stats }) => {
 
           <Stat textAlign="center">
             <StatLabel color="gray.600" fontSize="sm">Interviews</StatLabel>
-            <StatNumber color="purple.500" fontSize="2xl">
+            <StatNumber color="blue.500" fontSize="2xl">
               {stats.interviewsScheduled}
             </StatNumber>
             <StatHelpText>

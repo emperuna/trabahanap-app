@@ -44,7 +44,7 @@ const ProfileProgressCard = ({ completion }) => {
         <Box mb={6}>
           <Box bg="gray.200" borderRadius="full" h="3" overflow="hidden">
             <Box 
-              bg="linear-gradient(90deg, #9333ea, #3b82f6)" 
+              bg="linear-gradient(90deg, #153CF5, #3b82f6)" 
               h="full" 
               w={`${completion}%`}
               borderRadius="full"
@@ -67,7 +67,7 @@ const ProfileProgressCard = ({ completion }) => {
                 {item.task}
               </Text>
               {!item.completed && (
-                <Button size="xs" colorScheme="orange" variant="ghost">
+                <Button size="xs" colorScheme="blue" variant="ghost">
                   Add
                 </Button>
               )}
@@ -78,7 +78,7 @@ const ProfileProgressCard = ({ completion }) => {
         <Button
           as={Link}
           to="/dashboard/profile/edit"
-          colorScheme="purple"
+          colorScheme="blue"
           size="sm"
           w="full"
           mt={4}

@@ -71,7 +71,7 @@ const JobRecommendationsCard = () => {
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} w="full">
         <CardBody p={6}>
           <VStack spacing={4}>
-            <Spinner color="purple.500" />
+            <Spinner color="blue.500" />
             <Text fontSize="sm" color={mutedColor}>Loading job recommendations...</Text>
           </VStack>
         </CardBody>
@@ -97,7 +97,7 @@ const JobRecommendationsCard = () => {
                   <Text fontSize="sm" fontWeight="semibold" color={textColor} noOfLines={1}>
                     {job.title}
                   </Text>
-                  <Badge colorScheme="purple" variant="subtle" fontSize="xs">
+                  <Badge colorScheme="blue" variant="subtle" fontSize="xs">
                     {job.jobType || 'Full-time'}
                   </Badge>
                 </HStack>
@@ -115,7 +115,7 @@ const JobRecommendationsCard = () => {
                     as={Link}
                     to={`/jobs/${job.id}`}
                     size="xs"
-                    colorScheme="purple"
+                    colorScheme="blue"
                     variant="outline"
                   >
                     View
@@ -132,7 +132,7 @@ const JobRecommendationsCard = () => {
                 as={Link}
                 to="/jobs"
                 size="sm"
-                colorScheme="purple"
+                colorScheme="blue"
                 variant="outline"
                 mt={3}
               >
@@ -149,7 +149,7 @@ const JobRecommendationsCard = () => {
             w="full"
             mt={4}
             size="sm"
-            colorScheme="purple"
+            colorScheme="blue"
             variant="outline"
           >
             View All Jobs

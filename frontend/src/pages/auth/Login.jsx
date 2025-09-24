@@ -140,7 +140,7 @@ const Login = () => {
         >
           {/* Header Section */}
           <Box
-            bgGradient="linear(135deg, purple.500, blue.500)"
+            bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
             px={8}
             py={12}
             textAlign="center"
@@ -222,8 +222,8 @@ const Login = () => {
                         borderColor="gray.200"
                         _hover={{ borderColor: 'gray.300' }}
                         _focus={{ 
-                          borderColor: 'purple.400', 
-                          boxShadow: '0 0 0 1px rgba(128, 90, 213, 0.4)' 
+                          borderColor: '#1554F5', 
+                          boxShadow: '0 0 0 1px rgba(21, 84, 245, 0.4)' 
                         }}
                       />
                     </InputGroup>
@@ -252,8 +252,8 @@ const Login = () => {
                         borderColor="gray.200"
                         _hover={{ borderColor: 'gray.300' }}
                         _focus={{ 
-                          borderColor: 'purple.400', 
-                          boxShadow: '0 0 0 1px rgba(128, 90, 213, 0.4)' 
+                          borderColor: '#1554F5', 
+                          boxShadow: '0 0 0 1px rgba(21, 84, 245, 0.4)' 
                         }}
                       />
                       <InputRightElement>
@@ -276,7 +276,7 @@ const Login = () => {
                     <Checkbox
                       isChecked={rememberMe}
                       onChange={(e) => setRememberMe(e.target.checked)}
-                      colorScheme="purple"
+                      colorScheme="blue"
                       size="sm"
                     >
                       <Text fontSize="sm" color={textColor}>
@@ -288,9 +288,9 @@ const Login = () => {
                       as={RouterLink}
                       to="/forgot-password"
                       fontSize="sm"
-                      color="purple.500"
+                      color="blue.500"
                       fontWeight="medium"
-                      _hover={{ color: 'purple.600', textDecoration: 'none' }}
+                      _hover={{ color: "#0038C9", textDecoration: 'none' }}
                     >
                       Forgot password?
                     </Link>
@@ -302,14 +302,14 @@ const Login = () => {
                     size="lg"
                     w="full"
                     h={12}
-                    bgGradient="linear(135deg, purple.500, blue.500)"
+                    bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
                     color="white"
                     fontWeight="600"
                     borderRadius="xl"
                     isLoading={isLoading}
                     loadingText="Signing in..."
                     _hover={{
-                      bgGradient: "linear(135deg, purple.600, blue.600)",
+                      bgGradient: "linear(135deg, #002a96 12%, #0f3fd1 63%, #5983ff 100%)",
                       transform: 'translateY(-2px)',
                       boxShadow: 'lg'
                     }}
@@ -340,13 +340,13 @@ const Login = () => {
                 size="lg"
                 w="full"
                 h={12}
-                borderColor="purple.200"
-                color="purple.500"
+                borderColor="#1554F5"
+                color="#1554F5"
                 fontWeight="600"
                 borderRadius="xl"
                 _hover={{
-                  bg: 'purple.50',
-                  borderColor: 'purple.300',
+                  bg: 'blue.50',
+                  borderColor: '#0038C9',
                   transform: 'translateY(-1px)'
                 }}
                 transition="all 0.2s ease"
@@ -359,9 +359,9 @@ const Login = () => {
                 <Link
                   as={RouterLink}
                   to="/"
-                  color="purple.500"
+                  color="#1554F5"
                   fontWeight="medium"
-                  _hover={{ color: 'purple.600', textDecoration: 'none' }}
+                  _hover={{ color: "#0038C9", textDecoration: 'none' }}
                 >
                   ← Back to Home
                 </Link>
@@ -373,11 +373,11 @@ const Login = () => {
         {/* Footer Text */}
         <Text mt={8} fontSize="sm" color={textColor} textAlign="center">
           By signing in, you agree to our{' '}
-          <Link color="purple.500" fontWeight="medium">
+          <Link color="#1554F5" fontWeight="medium">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link color="purple.500" fontWeight="medium">
+          <Link color="#1554F5" fontWeight="medium">
             Privacy Policy
           </Link>
         </Text>

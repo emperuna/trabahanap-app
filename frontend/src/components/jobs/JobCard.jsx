@@ -37,7 +37,7 @@ const JobCard = ({ job }) => {
       _hover={{ 
         boxShadow: 'lg', 
         transform: 'translateY(-2px)',
-        borderColor: 'purple.200'
+        borderColor: 'blue.200'
       }}
       transition="all 0.3s ease"
       h="fit-content"
@@ -65,7 +65,7 @@ const JobCard = ({ job }) => {
 
           {/* Badges */}
           <HStack spacing={2} flexWrap="wrap">
-            <Badge colorScheme="purple" variant="subtle" borderRadius="full">
+            <Badge colorScheme="blue" variant="subtle" borderRadius="full">
               {job.jobType || 'Full-time'}
             </Badge>
             {job.salary && (
@@ -104,7 +104,7 @@ const JobCard = ({ job }) => {
               as={Link}
               to={`/jobs/${job.id}`}
               size="sm"
-              colorScheme="purple"
+              colorScheme="blue"
               variant="solid"
               borderRadius="full"
               _hover={{ transform: 'scale(1.05)' }}

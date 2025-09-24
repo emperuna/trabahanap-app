@@ -17,24 +17,24 @@ const HowItWorks = () => {
       icon: HiSearch,
       title: 'Search & Discover',
       description: 'Browse thousands of job opportunities from top companies across the Philippines.',
-      color: 'purple.500'
+      color: 'blue.500' 
     },
     {
       icon: HiUserAdd,
       title: 'Create Profile',
       description: 'Build your professional profile and let employers find you with ease.',
-      color: 'blue.500'
+      color: 'blue.500' 
     },
     {
       icon: HiBriefcase,
       title: 'Get Hired',
       description: 'Apply to jobs, interview with confidence, and land your dream career.',
-      color: 'green.500'
+      color: 'blue.500' 
     }
   ];
 
   return (
-    <Box py={20} bg="white">
+    <Box py={20} bgGradient="linear(135deg, white 0%, #f7fafc 100%)">
       <Container maxW="7xl">
         <VStack spacing={16} textAlign="center">
           <VStack spacing={4}>
