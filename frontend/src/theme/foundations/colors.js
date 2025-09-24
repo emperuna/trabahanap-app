@@ -70,28 +70,25 @@ const colors = {
     900: '#111827',
   },
   
-  // ✅ UPDATED: Corporate background tokens
   bg: {
     glass: 'rgba(255, 255, 255, 0.95)',
-    glassDark: 'rgba(15, 23, 42, 0.95)', // Darker corporate feel
+    glassDark: 'rgba(15, 23, 42, 0.95)',
     card: 'white',
     cardDark: 'slate.800',
-    subtle: 'slate.50', // More corporate than gray
+    subtle: 'slate.50',
     subtleDark: 'slate.900',
-    primary: 'blue.500', // Primary brand background
+    primary: 'blue.500',
     primarySubtle: 'blue.50',
   },
   
-  // ✅ UPDATED: Corporate border tokens
   border: {
     subtle: 'slate.200',
     subtleDark: 'slate.700',
-    accent: 'blue.200', // Blue accent borders
+    accent: 'blue.200',
     accentDark: 'blue.700',
     primary: 'blue.500',
   },
   
-  // ✅ NEW: Corporate semantic colors
   corporate: {
     primary: '#2563eb',      // Main corporate blue
     secondary: '#64748b',    // Corporate slate
