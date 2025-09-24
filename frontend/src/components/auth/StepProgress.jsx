@@ -20,7 +20,7 @@ const StepProgress = ({ steps, currentStep }) => {
               h={10}
               borderRadius="full"
               bg={currentStep >= step.number ? 'white' : 'whiteAlpha.300'}
-              color={currentStep >= step.number ? 'purple.500' : 'whiteAlpha.700'}
+              color={currentStep >= step.number ? 'blue.500' : 'whiteAlpha.700'}
               display="flex"
               alignItems="center"
               justifyContent="center"

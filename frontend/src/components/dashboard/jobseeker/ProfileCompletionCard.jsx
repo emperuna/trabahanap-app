@@ -149,7 +149,7 @@ const ProfileCompletionCard = ({ completion = 75 }) => {
           <Button
             as={Link}
             to="/dashboard/profile/edit"
-            colorScheme="purple"
+            colorScheme="blue"
             size="lg"
             w="full"
             borderRadius="xl"

@@ -88,7 +88,7 @@ const RecentJobs = ({ jobs = [] }) => {
             as={Link}
             to="/employer/jobs"
             variant="ghost"
-            colorScheme="purple"
+            colorScheme="blue"
             size="sm"
             _hover={{
               transform: 'translateX(2px)'

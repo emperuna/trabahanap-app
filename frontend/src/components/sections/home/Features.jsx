@@ -32,7 +32,7 @@ const Features = () => {
       title: 'AI-Powered Job Matching',
       description: 'Our smart algorithm matches you with jobs that perfectly fit your skills and preferences.',
       stats: '95% accuracy',
-      color: 'yellow',
+      color: 'blue',
       image: '⚡'
     },
     {
@@ -50,25 +50,25 @@ const Features = () => {
       icon: HiShieldCheck,
       title: 'Secure & Private',
       description: 'Your data is encrypted and protected',
-      color: 'green.500'
+      color: '#153CF5'
     },
     {
       icon: HiTrendingUp,
       title: 'Salary Insights',
       description: 'Real-time salary data and trends',
-      color: 'purple.500'
+      color: '#153CF5'
     },
     {
       icon: HiChatAlt,
       title: 'Direct Messaging',
       description: 'Chat directly with recruiters',
-      color: 'blue.500'
+      color: '#153CF5'
     },
     {
       icon: HiGlobe,
       title: 'Remote-Friendly',
       description: 'Find remote work opportunities',
-      color: 'orange.500'
+      color: '#153CF5'
     }
   ];
 
@@ -79,8 +79,9 @@ const Features = () => {
           {/* Header Section */}
           <VStack spacing={4} textAlign="center">
             <Badge
-              colorScheme="purple"
-              variant="subtle"
+              bg="#2563eb"
+              color="white"
+              variant="solid"
               px={4}
               py={2}
               borderRadius="full"
@@ -107,7 +108,7 @@ const Features = () => {
             {mainFeatures.map((feature, index) => (
               <Box
                 key={index}
-                bg={cardBg}
+                bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
                 p={8}
                 borderRadius="3xl"
                 border="1px solid"
@@ -117,7 +118,8 @@ const Features = () => {
                 _hover={{
                   transform: 'translateY(-8px)',
                   boxShadow: '2xl',
-                  borderColor: `${feature.color}.200`
+                  borderColor: `${feature.color}.200`,
+                  bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
                 }}
                 position="relative"
                 overflow="hidden"
@@ -190,15 +192,16 @@ const Features = () => {
                     direction="column"
                     align="center"
                     p={6}
-                    bg={cardBg}
+                    bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
                     borderRadius="2xl"
                     border="1px solid"
                     borderColor="gray.200"
                     transition="all 0.3s ease"
                     _hover={{
                       transform: 'translateY(-4px)',
-                      borderColor: 'purple.200',
-                      boxShadow: 'md'
+                      borderColor: '#153CF5',
+                      boxShadow: 'md',
+                      bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
                     }}
                     cursor="pointer"
                   >
@@ -231,7 +234,7 @@ const Features = () => {
           {/* Bottom CTA Section */}
           <Box
             w="full"
-            bg="purple.500"
+            bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
             borderRadius="3xl"
             p={8}
             textAlign="center"
@@ -244,7 +247,7 @@ const Features = () => {
               left={0}
               w="full"
               h="full"
-              bgGradient="linear(135deg, purple.500, blue.500)"
+              bgGradient="linear(to-br, #2563eb 0%, #1d4ed8 30%, #1e40af 100%)"
               opacity={0.9}
             />
             <VStack spacing={4} position="relative" zIndex={1}>

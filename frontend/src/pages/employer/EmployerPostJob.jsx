@@ -68,7 +68,7 @@ const PostJob = () => {
               <FormLabel>Salary</FormLabel>
               <Input name="salary" type="number" value={form.salary} onChange={handleChange} />
             </FormControl>
-            <Button type="submit" colorScheme="purple">Post Job</Button>
+            <Button type="submit" colorScheme="blue">Post Job</Button>
           </VStack>
         </form>
       </Container>

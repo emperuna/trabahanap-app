@@ -58,7 +58,7 @@ const Contact = ({ profileData }) => {
       label: 'Viber',
       value: profileData.contacts.viber,
       icon: FaViber,
-      color: 'purple.500'
+      color: 'blue.500'
     }
   ];
 

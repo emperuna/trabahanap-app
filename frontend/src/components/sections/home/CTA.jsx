@@ -54,33 +54,33 @@ const CTA = () => {
       title: "Verified Companies",
       description:
         "All employers are pre-screened and verified for your safety",
-      color: "green.500",
+      color: "#153CF5",
     },
     {
       icon: HiLightningBolt,
       title: "Instant Matching",
       description:
         "AI-powered job matching finds opportunities that fit your skills",
-      color: "yellow.500",
+      color: "#153CF5",
     },
     {
       icon: HiUserGroup,
       title: "Career Support",
       description: "Get guidance from our team of career development experts",
-      color: "blue.500",
+      color: "#153CF5",
     },
     {
       icon: HiTrendingUp,
       title: "Salary Insights",
       description: "Access real salary data to negotiate better compensation",
-      color: "purple.500",
+      color: "#153CF5",
     },
   ];
 
   return (
     <Box
       py={20}
-      bgGradient="linear(135deg, #667eea 0%, #764ba2 100%)"
+      bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
       color="white"
     >
       <Container maxW="7xl">
@@ -143,15 +143,15 @@ const CTA = () => {
                 <InputRightElement width="auto" pr={2}>
                   <Button
                     size="sm"
-                    bg="white"
-                    color="purple.600"
+                    bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
+                    color="#153CF5"
                     fontWeight="600"
                     borderRadius="lg"
                     px={6}
                     isLoading={isLoading}
                     onClick={handleSubscribe}
                     _hover={{
-                      bg: "gray.50",
+                      bgGradient: "linear(135deg, #f7fafc 0%, #edf2f7 100%)",
                       transform: "translateY(-1px)",
                     }}
                   >
@@ -222,7 +222,7 @@ const CTA = () => {
                   key={index}
                   gap={4}
                   p={6}
-                  bg="whiteAlpha.100"
+                  bgGradient="linear(135deg, whiteAlpha.100 0%, whiteAlpha.150 100%)"
                   backdropFilter="blur(20px)"
                   borderRadius="2xl"
                   border="1px solid"
@@ -230,7 +230,7 @@ const CTA = () => {
                   w="full"
                   transition="all 0.3s ease"
                   _hover={{
-                    bg: "whiteAlpha.200",
+                    bgGradient: "linear(135deg, whiteAlpha.150 0%, whiteAlpha.200 100%)",
                     transform: "translateY(-2px)",
                   }}
                 >
@@ -238,7 +238,7 @@ const CTA = () => {
                     p={3}
                     bg="whiteAlpha.200"
                     borderRadius="xl"
-                    color={benefit.color}
+                    color="white"
                     flexShrink={0}
                   >
                     <Icon as={benefit.icon} boxSize={6} />
