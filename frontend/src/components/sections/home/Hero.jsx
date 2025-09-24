@@ -29,45 +29,42 @@ import {
 } from 'react-icons/hi';
 
 const Hero = () => {
-  const bgGradient = useColorModeValue(
-    'linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)',
-    'linear(135deg, #2d3748 0%, #4a5568 100%)'
-  );
+  const bgColor = useColorModeValue('white', 'gray.900');
+  const accentBg = useColorModeValue('blue.50', 'blue.900');
 
   const StatCard = ({ icon, number, label, trend }) => (
     <Box
-      bg="whiteAlpha.100"
-      backdropFilter="blur(20px)"
+      bg={useColorModeValue('white', 'gray.800')}
       p={6}
       borderRadius="2xl"
       border="1px solid"
-      borderColor="whiteAlpha.200"
+      borderColor={useColorModeValue('gray.200', 'gray.700')}
       textAlign="center"
       transition="all 0.3s ease"
+      boxShadow="sm"
       _hover={{
         transform: 'translateY(-8px)',
-        bg: 'whiteAlpha.200',
-        borderColor: 'whiteAlpha.300',
-        boxShadow: '0 20px 40px rgba(0,0,0,0.1)'
+        boxShadow: 'xl',
+        borderColor: useColorModeValue('blue.200', 'blue.600'),
       }}
     >
       <VStack spacing={3}>
         <Box
           p={3}
-          bg="whiteAlpha.200"
+          bg={useColorModeValue('blue.50', 'blue.900')}
           borderRadius="xl"
           display="inline-block"
         >
-          <Icon as={icon} boxSize={6} color="white" />
+          <Icon as={icon} boxSize={6} color="blue.500" />
         </Box>
         <VStack spacing={1}>
           <Flex align="center" gap={2}>
-            <Text fontSize="3xl" fontWeight="bold" color="white">
+            <Text fontSize="3xl" fontWeight="bold" color={useColorModeValue('slate.900', 'white')}>
               {number}
             </Text>
             {trend && (
               <Badge
-                colorScheme="yellow"
+                colorScheme="green"
                 variant="solid"
                 fontSize="xs"
                 borderRadius="full"
@@ -77,7 +74,7 @@ const Hero = () => {
               </Badge>
             )}
           </Flex>
-          <Text fontSize="sm" color="whiteAlpha.800" fontWeight="medium">
+          <Text fontSize="sm" color={useColorModeValue('slate.600', 'slate.400')} fontWeight="medium">
             {label}
           </Text>
         </VStack>
@@ -88,34 +85,35 @@ const Hero = () => {
   return (
     <Box
       minH="100vh"
-      bgGradient={bgGradient}
+      bg={bgColor}
       position="relative"
       overflow="hidden"
       display="flex"
       alignItems="center"
     >
-      {/* Animated Background Elements */}
       <Box
         position="absolute"
         top="10%"
-        left="5%"
-        w="400px"
-        h="400px"
-        bg="whiteAlpha.100"
+        right="5%"
+        w="500px"
+        h="500px"
+        bg={useColorModeValue('blue.50', 'blue.900')}
         borderRadius="full"
-        filter="blur(80px)"
-        animation="float 6s ease-in-out infinite"
+        filter="blur(100px)"
+        opacity={0.3}
+        zIndex={0}
       />
       <Box
         position="absolute"
         bottom="20%"
-        right="10%"
-        w="300px"
-        h="300px"
-        bg="whiteAlpha.150"
+        left="0%"
+        w="400px"
+        h="400px"
+        bg={useColorModeValue('slate.100', 'slate.800')}
         borderRadius="full"
-        filter="blur(60px)"
-        animation="float 8s ease-in-out infinite reverse"
+        filter="blur(80px)"
+        opacity={0.2}
+        zIndex={0}
       />
 
       <Container maxW="7xl" position="relative" zIndex={1} py={20}>
@@ -124,16 +122,14 @@ const Hero = () => {
           <VStack spacing={8} align="flex-start" textAlign="left">
             {/* Badge */}
             <Badge
-              bg="whiteAlpha.200"
+              bg="blue.500"
               color="white"
               px={4}
               py={2}
               borderRadius="full"
               fontSize="sm"
               fontWeight="medium"
-              backdropFilter="blur(10px)"
-              border="1px solid"
-              borderColor="whiteAlpha.300"
+              boxShadow="md"
             >
               #1 Job Platform in the Philippines
             </Badge>
@@ -144,25 +140,23 @@ const Hero = () => {
                 as="h1"
                 fontSize={{ base: '4xl', md: '5xl', lg: '6xl' }}
                 fontWeight="800"
-                color="white"
+                color={useColorModeValue('slate.900', 'white')}
                 lineHeight="shorter"
                 letterSpacing="-0.02em"
               >
-                Find Your{' '}
+                Hanap Trabaho{' '}
                 <Text
                   as="span"
-                  bgGradient="linear(135deg, #ffeaa7 0%, #fab1a0 100%)"
-                  bgClip="text"
+                  color="blue.500"
                   display="inline-block"
                 >
-                  Dream Job
+                  Hanap Kinabukasan
                 </Text>{' '}
-                Today
               </Heading>
               
               <Text
                 fontSize={{ base: 'lg', md: 'xl' }}
-                color="whiteAlpha.900"
+                color={useColorModeValue('slate.600', 'slate.300')}
                 maxW="600px"
                 lineHeight="tall"
                 fontWeight="400"
@@ -178,15 +172,13 @@ const Hero = () => {
                 size="lg"
                 h={14}
                 px={8}
-                bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
-                color="#153CF5"
+                colorScheme="blue"
                 fontWeight="600"
                 borderRadius="2xl"
-                boxShadow="0 8px 32px rgba(0,0,0,0.12)"
+                boxShadow="lg"
                 _hover={{
                   transform: 'translateY(-2px)',
-                  boxShadow: '0 12px 40px rgba(0,0,0,0.16)',
-                  bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
+                  boxShadow: 'xl',
                 }}
                 transition="all 0.3s ease"
                 leftIcon={<Icon as={HiSearch} />}
@@ -198,15 +190,12 @@ const Hero = () => {
                 size="lg"
                 h={14}
                 px={8}
-                variant="ghost"
-                color="white"
+                variant="outline"
+                colorScheme="blue"
                 fontWeight="600"
                 borderRadius="2xl"
-                border="2px solid"
-                borderColor="whiteAlpha.300"
                 _hover={{
-                  bg: 'whiteAlpha.200',
-                  borderColor: 'whiteAlpha.400',
+                  bg: 'blue.50',
                   transform: 'translateY(-2px)'
                 }}
                 transition="all 0.3s ease"
@@ -224,18 +213,18 @@ const Hero = () => {
                     <Icon key={i} as={HiStar} color="yellow.400" boxSize={4} />
                   ))}
                 </HStack>
-                <Text fontSize="sm" color="whiteAlpha.800">
+                <Text fontSize="sm" color={useColorModeValue('slate.600', 'slate.400')}>
                   4.9/5 from 10k+ users
                 </Text>
               </VStack>
               
-              <Box w="1px" h={8} bg="whiteAlpha.300" />
+              <Box w="1px" h={8} bg={useColorModeValue('gray.300', 'gray.600')} />
               
               <VStack spacing={1} align="flex-start">
-                <Text fontSize="lg" fontWeight="bold" color="white">
+                <Text fontSize="lg" fontWeight="bold" color={useColorModeValue('slate.900', 'white')}>
                   50K+
                 </Text>
-                <Text fontSize="sm" color="whiteAlpha.800">
+                <Text fontSize="sm" color={useColorModeValue('slate.600', 'slate.400')}>
                   Jobs posted daily
                 </Text>
               </VStack>
@@ -245,20 +234,19 @@ const Hero = () => {
           {/* Right Content - Search Card */}
           <VStack>
             <Box
-              bg="whiteAlpha.100"
-              backdropFilter="blur(30px)"
+              bg={useColorModeValue('white', 'gray.800')}
               p={8}
               borderRadius="3xl"
               border="1px solid"
-              borderColor="whiteAlpha.200"
-              boxShadow="0 20px 60px rgba(0,0,0,0.1)"
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              boxShadow="2xl"
             >
               <VStack spacing={6}>
                 <VStack spacing={2} textAlign="center">
-                  <Heading size="lg" color="white" fontWeight="700">
+                  <Heading size="lg" color={useColorModeValue('slate.900', 'white')} fontWeight="700">
                     Start Your Search
                   </Heading>
-                  <Text color="whiteAlpha.800" fontSize="sm">
+                  <Text color={useColorModeValue('slate.600', 'slate.400')} fontSize="sm">
                     Find the perfect opportunity for you
                   </Text>
                 </VStack>
@@ -266,78 +254,76 @@ const Hero = () => {
                 <VStack spacing={4} w="full">
                   <InputGroup>
                     <InputLeftElement pointerEvents="none" h={12}>
-                      <Icon as={HiSearch} color="whiteAlpha.600" />
+                      <Icon as={HiSearch} color={useColorModeValue('gray.400', 'gray.500')} />
                     </InputLeftElement>
                     <Input
                       h={12}
-                      bg="whiteAlpha.200"
+                      bg={useColorModeValue('gray.50', 'gray.700')} // ✅ CHANGED: Light gray background
                       border="1px solid"
-                      borderColor="whiteAlpha.300"
+                      borderColor={useColorModeValue('gray.200', 'gray.600')}
                       borderRadius="xl"
-                      color="white"
+                      color={useColorModeValue('slate.900', 'white')}
                       placeholder="Job title or keywords"
-                      _placeholder={{ color: 'whiteAlpha.600' }}
+                      _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                       _focus={{
-                        borderColor: 'whiteAlpha.500',
-                        bg: 'whiteAlpha.300',
-                        boxShadow: '0 0 0 1px rgba(255,255,255,0.2)'
+                        borderColor: 'blue.500', // ✅ CHANGED: Blue focus
+                        bg: useColorModeValue('white', 'gray.600'),
+                        boxShadow: '0 0 0 1px rgba(59, 130, 246, 0.2)'
                       }}
                     />
                   </InputGroup>
 
                   <InputGroup>
                     <InputLeftElement pointerEvents="none" h={12}>
-                      <Icon as={HiLocationMarker} color="whiteAlpha.600" />
+                      <Icon as={HiLocationMarker} color={useColorModeValue('gray.400', 'gray.500')} />
                     </InputLeftElement>
                     <Input
                       h={12}
-                      bg="whiteAlpha.200"
+                      bg={useColorModeValue('gray.50', 'gray.700')}
                       border="1px solid"
-                      borderColor="whiteAlpha.300"
+                      borderColor={useColorModeValue('gray.200', 'gray.600')}
                       borderRadius="xl"
-                      color="white"
+                      color={useColorModeValue('slate.900', 'white')}
                       placeholder="City or remote"
-                      _placeholder={{ color: 'whiteAlpha.600' }}
+                      _placeholder={{ color: useColorModeValue('gray.500', 'gray.400') }}
                       _focus={{
-                        borderColor: 'whiteAlpha.500',
-                        bg: 'whiteAlpha.300',
-                        boxShadow: '0 0 0 1px rgba(255,255,255,0.2)'
+                        borderColor: 'blue.500',
+                        bg: useColorModeValue('white', 'gray.600'),
+                        boxShadow: '0 0 0 1px rgba(59, 130, 246, 0.2)'
                       }}
                     />
                   </InputGroup>
 
                   <Select
                     h={12}
-                    bg="whiteAlpha.200"
+                    bg={useColorModeValue('gray.50', 'gray.700')}
                     border="1px solid"
-                    borderColor="whiteAlpha.300"
+                    borderColor={useColorModeValue('gray.200', 'gray.600')}
                     borderRadius="xl"
-                    color="white"
+                    color={useColorModeValue('slate.900', 'white')}
                     placeholder="Select job type"
                     _focus={{
-                      borderColor: 'whiteAlpha.500',
-                      bg: 'whiteAlpha.300'
+                      borderColor: 'blue.500',
+                      bg: useColorModeValue('white', 'gray.600')
                     }}
                   >
-                    <option value="full-time" style={{ color: 'black' }}>Full Time</option>
-                    <option value="part-time" style={{ color: 'black' }}>Part Time</option>
-                    <option value="contract" style={{ color: 'black' }}>Contract</option>
-                    <option value="remote" style={{ color: 'black' }}>Remote</option>
+                    <option value="full-time">Full Time</option>
+                    <option value="part-time">Part Time</option>
+                    <option value="contract">Contract</option>
+                    <option value="remote">Remote</option>
                   </Select>
 
                   <Button
                     w="full"
                     size="lg"
                     h={14}
-                    bgGradient="linear(135deg, white 0%, #f7fafc 100%)"
-                    color="#153CF5"
+                    colorScheme="blue"
                     fontWeight="600"
                     borderRadius="xl"
-                    boxShadow="0 8px 25px rgba(0,0,0,0.15)"
+                    boxShadow="lg"
                     _hover={{
                       transform: 'translateY(-2px)',
-                      boxShadow: '0 12px 35px rgba(0,0,0,0.2)',
-                      bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
+                      boxShadow: 'xl',
                     }}
                     transition="all 0.3s ease"
                     leftIcon={<Icon as={HiSearch} />}
