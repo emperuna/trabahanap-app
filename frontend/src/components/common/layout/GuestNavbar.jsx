@@ -11,6 +11,7 @@ import {
   IconButton,
   VStack,
   Spacer,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { HiMenu, HiX } from 'react-icons/hi';
 import logo from '../../../assets/logo/TrabaHanap-Brandname.svg';
@@ -23,6 +24,10 @@ const GuestNavbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  const navBg = isHome 
+    ? useColorModeValue("rgba(255, 255, 255, 0.95)", "rgba(26, 32, 44, 0.95)")
+    : useColorModeValue("blue.500", "blue.600");
+
   return (
     <Box
       position="relative"
@@ -30,7 +35,7 @@ const GuestNavbar = () => {
       left={0}
       right={0}
       zIndex={50}
-      bg={isHome ? "rgba(255, 255, 255, 0.95)" : "#153CF5"}
+      bg={navBg}
       backdropFilter={isHome ? "blur(20px)" : undefined}
       borderBottom={isHome ? "1px solid" : undefined}
       borderColor={isHome ? "gray.100" : undefined}
@@ -73,8 +78,12 @@ const GuestNavbar = () => {
               h={10}
               borderRadius="xl"
               _hover={{ 
-                color: isHome ? 'gray.900' : 'white',
-                bg: isHome ? 'gray.50' : 'rgba(21, 60, 245, 0.8)',
+                color: isHome 
+                  ? useColorModeValue('gray.900', 'white')
+                  : useColorModeValue('white', 'gray.100'),
+                bg: isHome 
+                  ? useColorModeValue('gray.50', 'gray.700')
+                  : useColorModeValue('blue.600', 'blue.500'),
                 transform: 'translateY(-1px)'
               }}
               transition="all 0.2s ease"
@@ -181,41 +190,20 @@ const GuestNavbar = () => {
                   h={12}
                   px={8}
                   ml={2}
-                  bg="#2563eb"
-                  color="white"
+                  colorScheme="blue"
                   fontWeight="600"
                   fontSize="sm"
                   letterSpacing="0.025em"
                   borderRadius="2xl"
-                  boxShadow="0 4px 15px rgba(21, 60, 245, 0.4)"
-                  position="relative"
-                  overflow="hidden"
-                  _before={{
-                    content: '""',
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    bg: "#0F2ECC",
-                    opacity: 0,
-                    transition: 'opacity 0.3s ease'
-                  }}
                   _hover={{
                     transform: 'translateY(-2px)',
-                    boxShadow: '0 8px 25px rgba(21, 60, 245, 0.6)',
-                    _before: {
-                      opacity: 1
-                    }
                   }}
                   _active={{
                     transform: 'translateY(-1px)',
                   }}
-                  transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+                  transition="all 0.3s ease"
                 >
-                  <Text position="relative" zIndex={1}>
-                    Get Started
-                  </Text>
+                  Get Started
                 </Button>
               </>
             )}
@@ -360,16 +348,15 @@ const GuestNavbar = () => {
                     size="lg"
                     h={14}
                     w="full"
-                    bg="#2563eb"
-                    color="white"
+                    colorScheme="blue"
                     fontWeight="600"
                     letterSpacing="0.025em"
                     borderRadius="2xl"
-                    boxShadow="0 4px 15px rgba(21, 60, 245, 0.4)"
                     _hover={{
-                      bg: "#0F2ECC",
                       transform: 'translateY(-2px)',
-                      boxShadow: "0 8px 25px rgba(21, 60, 245, 0.6)"
+                    }}
+                    _active={{
+                      transform: 'translateY(-1px)',
                     }}
                     transition="all 0.3s ease"
                     onClick={closeMenu}

@@ -69,7 +69,7 @@ const Register = () => {
           <VStack spacing={6}>
             <Box
               p={4}
-              bgGradient="linear(135deg, #ffeaa7 0%, #fab1a0 100%)"
+              bgGradient="linear(135deg, green.400 0%, green.500 100%)"
               borderRadius="full"
               display="inline-flex"
             >
@@ -137,19 +137,33 @@ const Register = () => {
         >
           {/* Header Section */}
           <Box
-            bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
+            bgGradient={useColorModeValue(
+              'linear(135deg, blue.400 0%, blue.500 50%, blue.600 100%)',
+              'linear(135deg, blue.500 0%, blue.600 50%, blue.700 100%)'
+            )}
             px={8}
             py={8}
             textAlign="center"
             position="relative"
             overflow="hidden"
           >
+            <Box
+              position="absolute"
+              inset={0}
+              backgroundImage={`radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.1) 1px, transparent 0)`}
+              backgroundSize="30px 30px"
+              opacity={0.3}
+              zIndex={0}
+            />
+
             <VStack spacing={4} position="relative" zIndex={1}>
               <Box
                 p={3}
                 bg="whiteAlpha.200"
                 borderRadius="2xl"
                 backdropFilter="blur(10px)"
+                border="1px solid"
+                borderColor="whiteAlpha.300"
               >
                 <Image
                   src={logo}
@@ -194,6 +208,7 @@ const Register = () => {
                   isDisabled={currentStep === 1}
                   borderRadius="xl"
                   flex={1}
+                  colorScheme="gray"
                 >
                   Previous
                 </Button>
@@ -202,14 +217,12 @@ const Register = () => {
                   <Button
                     size="lg"
                     onClick={handleNext}
-                    bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
-                    color="white"
-                    _hover={{
-                      bgGradient: "linear(135deg, #002a96 12%, #0f3fd1 63%, #5983ff 100%)",
-                      transform: 'translateY(-1px)'
-                    }}
+                    colorScheme="blue"
                     borderRadius="xl"
                     flex={1}
+                    _hover={{
+                      transform: 'translateY(-1px)'
+                    }}
                   >
                     Next
                   </Button>
@@ -218,16 +231,14 @@ const Register = () => {
                     type="submit"
                     size="lg"
                     onClick={handleSubmit}
-                    bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
-                    color="white"
+                    colorScheme="blue"
                     isLoading={isLoading}
                     loadingText="Creating Account..."
-                    _hover={{
-                      bgGradient: "linear(135deg, #002a96 12%, #0f3fd1 63%, #5983ff 100%)",
-                      transform: 'translateY(-1px)'
-                    }}
                     borderRadius="xl"
                     flex={1}
+                    _hover={{
+                      transform: 'translateY(-1px)'
+                    }}
                   >
                     Create Account
                   </Button>
@@ -248,10 +259,13 @@ const Register = () => {
                 variant="ghost"
                 size="lg"
                 w="full"
-                color="#1554F5"
+                color="blue.500"
                 fontWeight="600"
                 borderRadius="xl"
-                _hover={{ bg: 'blue.50', transform: 'translateY(-1px)' }}
+                _hover={{ 
+                  bg: useColorModeValue('blue.50', 'blue.900'),
+                  transform: 'translateY(-1px)' 
+                }}
               >
                 Sign In Instead
               </Button>
@@ -260,9 +274,12 @@ const Register = () => {
                 <Link
                   as={RouterLink}
                   to="/"
-                  color="#1554F5"
+                  color="blue.500"
                   fontWeight="medium"
-                  _hover={{ color: "#0038C9", textDecoration: 'none' }}
+                  _hover={{ 
+                    color: "blue.600",
+                    textDecoration: 'none' 
+                  }}
                 >
                   ← Back to Home
                 </Link>
