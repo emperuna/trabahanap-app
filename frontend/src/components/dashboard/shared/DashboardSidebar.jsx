@@ -55,8 +55,12 @@ const DashboardSidebar = () => {
   };
 
   const cardBg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700'); 
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.300');
+  const textColor = useColorModeValue('gray.700', 'gray.200'); 
+  const mutedColor = useColorModeValue('gray.500', 'gray.400'); 
+  const hoverBg = useColorModeValue('gray.100', 'gray.700'); 
 
   const menuItems = [
     {
@@ -117,7 +121,7 @@ const DashboardSidebar = () => {
       p={6}
       boxShadow="sm"
       border="1px"
-      borderColor="gray.100"
+      borderColor={borderColor} 
       position="sticky"
       top={8}
     >
@@ -125,7 +129,7 @@ const DashboardSidebar = () => {
         <Text
           fontSize="xs"
           fontWeight="bold"
-          color="gray.500"
+          color={mutedColor}
           textTransform="uppercase"
           letterSpacing="wider"
           mb={4}
@@ -143,11 +147,11 @@ const DashboardSidebar = () => {
             h={12}
             borderRadius="xl"
             bg={isActivePath(item.path) ? activeBg : 'transparent'}
-            color={isActivePath(item.path) ? activeColor : 'gray.700'}
+            color={isActivePath(item.path) ? activeColor : textColor} 
             fontWeight={isActivePath(item.path) ? 'semibold' : 'medium'}
             _hover={{
-              bg: isActivePath(item.path) ? 'blue.100' : 'gray.100',
-              color: isActivePath(item.path) ? activeColor : 'gray.800',
+              bg: isActivePath(item.path) ? 'blue.100' : hoverBg, 
+              color: isActivePath(item.path) ? activeColor : useColorModeValue('gray.800', 'gray.100'), 
               transform: 'translateX(4px)',
             }}
             transition="all 0.2s ease"
@@ -174,7 +178,7 @@ const DashboardSidebar = () => {
         <Text
           fontSize="xs"
           fontWeight="bold"
-          color="gray.500"
+          color={mutedColor} 
           textTransform="uppercase"
           letterSpacing="wider"
           mb={4}
@@ -190,11 +194,11 @@ const DashboardSidebar = () => {
           h={12}
           borderRadius="xl"
           bg={isActivePath('/dashboard/settings') ? activeBg : 'transparent'}
-          color={isActivePath('/dashboard/settings') ? activeColor : 'gray.600'}
+          color={isActivePath('/dashboard/settings') ? activeColor : useColorModeValue('gray.600', 'gray.300')}
           fontWeight={isActivePath('/dashboard/settings') ? 'semibold' : 'medium'}
           _hover={{
-            bg: isActivePath('/dashboard/settings') ? activeBg : 'gray.50',
-            color: isActivePath('/dashboard/settings') ? activeColor : 'gray.800',
+            bg: isActivePath('/dashboard/settings') ? activeBg : useColorModeValue('gray.50', 'gray.700'),
+            color: isActivePath('/dashboard/settings') ? activeColor : useColorModeValue('gray.800', 'gray.100'),
             transform: 'translateX(4px)',
           }}
           transition="all 0.2s ease"
@@ -211,8 +215,11 @@ const DashboardSidebar = () => {
           px={4}
           borderRadius="xl"
           fontWeight="medium"
-          color="red.600"
-          _hover={{ bg: 'red.50', transform: 'translateX(4px)' }}
+          color={useColorModeValue('red.600', 'red.400')} 
+          _hover={{ 
+            bg: useColorModeValue('red.50', 'red.900'), 
+            transform: 'translateX(4px)' 
+          }}
           transition="all 0.2s ease"
         >
           <HStack spacing={3}>

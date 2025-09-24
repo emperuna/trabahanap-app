@@ -32,7 +32,7 @@ const Features = () => {
       title: 'AI-Powered Job Matching',
       description: 'Our smart algorithm matches you with jobs that perfectly fit your skills and preferences.',
       stats: '95% accuracy',
-      color: 'blue',
+      color: 'yellow',
       image: '⚡'
     },
     {
@@ -50,25 +50,25 @@ const Features = () => {
       icon: HiShieldCheck,
       title: 'Secure & Private',
       description: 'Your data is encrypted and protected',
-      color: '#153CF5'
+      color: 'blue.500'
     },
     {
       icon: HiTrendingUp,
-      title: 'Salary Insights',
+      title: 'Salary Insights', 
       description: 'Real-time salary data and trends',
-      color: '#153CF5'
+      color: 'green.500' 
     },
     {
       icon: HiChatAlt,
       title: 'Direct Messaging',
-      description: 'Chat directly with recruiters',
-      color: '#153CF5'
+      description: 'Chat directly with recruiters', 
+      color: 'purple.500' 
     },
     {
       icon: HiGlobe,
       title: 'Remote-Friendly',
       description: 'Find remote work opportunities',
-      color: '#153CF5'
+      color: 'orange.500' 
     }
   ];
 
@@ -199,9 +199,9 @@ const Features = () => {
                     transition="all 0.3s ease"
                     _hover={{
                       transform: 'translateY(-4px)',
-                      borderColor: '#153CF5',
+                      borderColor: useColorModeValue('blue.300', 'blue.600'),
                       boxShadow: 'md',
-                      bgGradient: 'linear(135deg, #f7fafc 0%, #edf2f7 100%)'
+                      bg: useColorModeValue('blue.50', 'blue.900'),
                     }}
                     cursor="pointer"
                   >

@@ -45,11 +45,26 @@ const Login = () => {
   // Get the page user was trying to access, or default to dashboard
   const from = location.state?.from?.pathname || '/dashboard';
 
-  // Color mode values
   const bgColor = useColorModeValue('gray.50', 'gray.900');
   const cardBg = useColorModeValue('white', 'gray.800');
   const textColor = useColorModeValue('gray.600', 'gray.300');
   const headingColor = useColorModeValue('gray.800', 'white');
+  
+  const headerGradient = useColorModeValue(
+    'linear(135deg, blue.600 12%, blue.500 63%, blue.400 100%)',
+    'linear(135deg, blue.700 12%, blue.600 63%, blue.500 100%)'
+  );
+  
+  // ✅ ADDED: Button gradients
+  const buttonGradient = useColorModeValue(
+    'linear(135deg, blue.600 12%, blue.500 63%, blue.400 100%)',
+    'linear(135deg, blue.700 12%, blue.600 63%, blue.500 100%)'
+  );
+  
+  const buttonHoverGradient = useColorModeValue(
+    'linear(135deg, blue.700 12%, blue.600 63%, blue.500 100%)',
+    'linear(135deg, blue.800 12%, blue.700 63%, blue.600 100%)'
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -103,7 +118,7 @@ const Login = () => {
       const userRoles = user?.roles || [];
       console.log('🎭 User roles:', userRoles);
       
-      // ✅ Add a small delay to ensure auth context is updated
+      // Add a small delay to ensure auth context is updated
       setTimeout(() => {
         if (userRoles.includes('ROLE_EMPLOYER')) {
           console.log('🏢 Redirecting to employer dashboard');
@@ -135,12 +150,12 @@ const Login = () => {
           boxShadow="2xl"
           borderRadius="3xl"
           border="1px solid"
-          borderColor="gray.200"
+          borderColor={useColorModeValue('gray.200', 'gray.700')}
           overflow="hidden"
         >
           {/* Header Section */}
           <Box
-            bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
+            bgGradient={headerGradient}
             px={8}
             py={12}
             textAlign="center"
@@ -191,9 +206,15 @@ const Login = () => {
             <VStack spacing={6}>
               {/* Error Alert */}
               {error && (
-                <Alert status="error" borderRadius="xl" bg="red.50" border="1px" borderColor="red.200">
-                  <AlertIcon color="red.500" />
-                  <Text color="red.700" fontSize="sm">
+                <Alert 
+                  status="error" 
+                  borderRadius="xl" 
+                  bg={useColorModeValue('red.50', 'red.900')}
+                  border="1px" 
+                  borderColor={useColorModeValue('red.200', 'red.700')}
+                >
+                  <AlertIcon color={useColorModeValue('red.500', 'red.400')} /> 
+                  <Text color={useColorModeValue('red.700', 'red.300')} fontSize="sm">
                     {error}
                   </Text>
                 </Alert>
@@ -209,7 +230,7 @@ const Login = () => {
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement pointerEvents="none">
-                        <HiUser color="gray.400" />
+                        <HiUser color={useColorModeValue('gray.400', 'gray.500')} /> 
                       </InputLeftElement>
                       <Input
                         name="username"
@@ -219,11 +240,14 @@ const Login = () => {
                         placeholder="Enter your username"
                         size="lg"
                         borderRadius="xl"
-                        borderColor="gray.200"
-                        _hover={{ borderColor: 'gray.300' }}
-                        _focus={{ 
-                          borderColor: '#1554F5', 
-                          boxShadow: '0 0 0 1px rgba(21, 84, 245, 0.4)' 
+                        borderColor={useColorModeValue('gray.200', 'gray.600')}
+                        _hover={{ borderColor: useColorModeValue('gray.300', 'gray.500') }}
+                        _focus={{
+                          borderColor: 'blue.500',
+                          boxShadow: useColorModeValue(
+                            '0 0 0 1px rgba(59, 130, 246, 0.4)',
+                            '0 0 0 1px rgba(96, 165, 250, 0.4)'
+                          )
                         }}
                       />
                     </InputGroup>
@@ -239,7 +263,7 @@ const Login = () => {
                     </FormLabel>
                     <InputGroup>
                       <InputLeftElement pointerEvents="none">
-                        <HiLockClosed color="gray.400" />
+                        <HiLockClosed color={useColorModeValue('gray.400', 'gray.500')} />
                       </InputLeftElement>
                       <Input
                         name="password"
@@ -249,11 +273,14 @@ const Login = () => {
                         placeholder="Enter your password"
                         size="lg"
                         borderRadius="xl"
-                        borderColor="gray.200"
-                        _hover={{ borderColor: 'gray.300' }}
-                        _focus={{ 
-                          borderColor: '#1554F5', 
-                          boxShadow: '0 0 0 1px rgba(21, 84, 245, 0.4)' 
+                        borderColor={useColorModeValue('gray.200', 'gray.600')}
+                        _hover={{ borderColor: useColorModeValue('gray.300', 'gray.500') }}
+                        _focus={{
+                          borderColor: 'blue.500',
+                          boxShadow: useColorModeValue(
+                            '0 0 0 1px rgba(59, 130, 246, 0.4)',
+                            '0 0 0 1px rgba(96, 165, 250, 0.4)'
+                          )
                         }}
                       />
                       <InputRightElement>
@@ -262,7 +289,7 @@ const Login = () => {
                           size="sm"
                           onClick={() => setShowPassword(!showPassword)}
                           icon={showPassword ? <HiEyeOff /> : <HiEye />}
-                          color="gray.400"
+                          color={useColorModeValue('gray.400', 'gray.500')}
                         />
                       </InputRightElement>
                     </InputGroup>
@@ -290,7 +317,10 @@ const Login = () => {
                       fontSize="sm"
                       color="blue.500"
                       fontWeight="medium"
-                      _hover={{ color: "#0038C9", textDecoration: 'none' }}
+                      _hover={{
+                        color: "blue.600",
+                        textDecoration: 'none'
+                      }}
                     >
                       Forgot password?
                     </Link>
@@ -302,14 +332,14 @@ const Login = () => {
                     size="lg"
                     w="full"
                     h={12}
-                    bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)"
+                    bgGradient={buttonGradient}
                     color="white"
                     fontWeight="600"
                     borderRadius="xl"
                     isLoading={isLoading}
                     loadingText="Signing in..."
                     _hover={{
-                      bgGradient: "linear(135deg, #002a96 12%, #0f3fd1 63%, #5983ff 100%)",
+                      bgGradient: buttonHoverGradient,
                       transform: 'translateY(-2px)',
                       boxShadow: 'lg'
                     }}
@@ -318,7 +348,7 @@ const Login = () => {
                     }}
                     transition="all 0.2s ease"
                   >
-                    Sign In to Dashboard
+                    Sign In
                   </Button>
                 </VStack>
               </Box>
@@ -340,13 +370,13 @@ const Login = () => {
                 size="lg"
                 w="full"
                 h={12}
-                borderColor="#1554F5"
-                color="#1554F5"
+                borderColor="blue.500"
+                color="blue.500"
                 fontWeight="600"
                 borderRadius="xl"
                 _hover={{
-                  bg: 'blue.50',
-                  borderColor: '#0038C9',
+                  bg: useColorModeValue('blue.50', 'blue.900'),
+                  borderColor: 'blue.600',
                   transform: 'translateY(-1px)'
                 }}
                 transition="all 0.2s ease"
@@ -359,9 +389,12 @@ const Login = () => {
                 <Link
                   as={RouterLink}
                   to="/"
-                  color="#1554F5"
+                  color="blue.500"
                   fontWeight="medium"
-                  _hover={{ color: "#0038C9", textDecoration: 'none' }}
+                  _hover={{
+                    color: "blue.600",
+                    textDecoration: 'none'
+                  }}
                 >
                   ← Back to Home
                 </Link>
@@ -373,11 +406,11 @@ const Login = () => {
         {/* Footer Text */}
         <Text mt={8} fontSize="sm" color={textColor} textAlign="center">
           By signing in, you agree to our{' '}
-          <Link color="#1554F5" fontWeight="medium">
+          <Link color="blue.500" fontWeight="medium">
             Terms of Service
           </Link>{' '}
           and{' '}
-          <Link color="#1554F5" fontWeight="medium">
+          <Link color="blue.500" fontWeight="medium">
             Privacy Policy
           </Link>
         </Text>
