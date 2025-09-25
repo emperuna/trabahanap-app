@@ -1,16 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Container, VStack, HStack, Heading, Text, Button, Badge, 
-  Spinner, useToast, useColorModeValue, Divider, Card, CardBody,
-  Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, 
-  ModalBody, ModalCloseButton, Textarea, useDisclosure, Icon
+  Box, 
+  Container, 
+  VStack, 
+  HStack, 
+  Heading, 
+  Text, 
+  Button, 
+  Badge, 
+  Spinner, 
+  useToast, 
+  useColorModeValue, 
+  Divider, 
+  Card, 
+  CardBody,
+  Stack, 
+  Icon, 
+  Flex, 
+  Grid, 
+  GridItem, 
+  Avatar, 
+  useDisclosure
 } from '@chakra-ui/react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
-  HiLocationMarker, HiOfficeBuilding, HiClock, HiCurrencyDollar,
-  HiUser, HiArrowLeft, HiHeart, HiShare
+  HiLocationMarker, 
+  HiOfficeBuilding, 
+  HiClock, 
+  HiCurrencyDollar,
+  HiUser, 
+  HiArrowLeft, 
+  HiHeart, 
+  HiShare
 } from 'react-icons/hi';
 import { jobsAPI, applicationsAPI } from '../../services/api';
+import ApplyNowCard from '../../components/jobs/ApplyNowCard';
+import AboutCompanyCard from '../../components/jobs/AboutCompanyCard';
+import JobDetailCard from '../../components/jobs/JobDetailCard';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -132,215 +158,39 @@ const JobDetail = () => {
   }
 
   return (
-    <>
-      <Box bg={bgColor} minH="100vh" py={8}>
-        <Container maxW="4xl">
-          <VStack spacing={6} align="stretch">
-            {/* Back Button */}
-            <Button
-              leftIcon={<HiArrowLeft />}
-              variant="ghost"
-              alignSelf="flex-start"
-              onClick={() => navigate(-1)}
-              color={mutedColor}
-            >
-              Back to Jobs
-            </Button>
-
-            {/* Job Header */}
-            <Card bg={cardBg} borderRadius="xl" shadow="md">
-              <CardBody p={8}>
-                <VStack spacing={6} align="stretch">
-                  {/* Title and Company */}
-                  <VStack align="start" spacing={2}>
-                    <Heading size="lg" color={textColor}>
-                      {job.title}
-                    </Heading>
-                    <HStack spacing={4} flexWrap="wrap">
-                      <HStack spacing={1}>
-                        <Icon as={HiOfficeBuilding} color={mutedColor} />
-                        <Text color={mutedColor} fontWeight="medium">
-                          {job.company}
-                        </Text>
-                      </HStack>
-                      <HStack spacing={1}>
-                        <Icon as={HiLocationMarker} color={mutedColor} />
-                        <Text color={mutedColor}>
-                          {job.location}
-                        </Text>
-                      </HStack>
-                      <HStack spacing={1}>
-                        <Icon as={HiClock} color={mutedColor} />
-                        <Text color={mutedColor}>
-                          {formatDate(job.createdAt)}
-                        </Text>
-                      </HStack>
-                    </HStack>
-                  </VStack>
-
-                  {/* Job Details */}
-                  <HStack spacing={4} flexWrap="wrap">
-                    <Badge colorScheme="purple" variant="subtle" p={2} borderRadius="full">
-                      {job.jobType || 'Full-time'}
-                    </Badge>
-                    {job.salary && (
-                      <Badge colorScheme="green" variant="outline" p={2} borderRadius="full">
-                        <HStack spacing={1}>
-                          <Icon as={HiCurrencyDollar} boxSize={3} />
-                          <Text>{formatSalary(job.salary)}</Text>
-                        </HStack>
-                      </Badge>
-                    )}
-                    {job.postedByUsername && (
-                      <Badge colorScheme="blue" variant="subtle" p={2} borderRadius="full">
-                        <HStack spacing={1}>
-                          <Icon as={HiUser} boxSize={3} />
-                          <Text>Posted by {job.postedByUsername}</Text>
-                        </HStack>
-                      </Badge>
-                    )}
-                  </HStack>
-
-                  {/* Action Buttons */}
-                  <HStack spacing={3}>
-                    {hasApplied ? (
-                      <Button 
-                        colorScheme="green" 
-                        size="lg" 
-                        flex={1}
-                        isDisabled
-                      >
-                        ✓ Applied
-                      </Button>
-                    ) : (
-                      <Button 
-                        colorScheme="purple" 
-                        size="lg" 
-                        onClick={onOpen}
-                        flex={1}
-                      >
-                        Apply Now
-                      </Button>
-                    )}
-                    <Button 
-                      variant="outline" 
-                      leftIcon={<HiHeart />}
-                    >
-                      Save
-                    </Button>
-                    <Button 
-                      variant="outline" 
-                      leftIcon={<HiShare />}
-                    >
-                      Share
-                    </Button>
-                  </HStack>
-                </VStack>
-              </CardBody>
-            </Card>
-
-            {/* Job Description */}
-            <Card bg={cardBg} borderRadius="xl" shadow="sm">
-              <CardBody p={8}>
-                <VStack spacing={6} align="stretch">
-                  <Heading size="md" color={textColor}>Job Description</Heading>
-                  <Text color={textColor} lineHeight="1.8" whiteSpace="pre-line">
-                    {job.description || 'No description provided.'}
-                  </Text>
-                </VStack>
-              </CardBody>
-            </Card>
-
-            {/* Requirements */}
-            {job.requirements && (
-              <Card bg={cardBg} borderRadius="xl" shadow="sm">
-                <CardBody p={8}>
-                  <VStack spacing={6} align="stretch">
-                    <Heading size="md" color={textColor}>Requirements</Heading>
-                    <Text color={textColor} lineHeight="1.8" whiteSpace="pre-line">
-                      {job.requirements}
-                    </Text>
-                  </VStack>
-                </CardBody>
-              </Card>
-            )}
-
-            {/* Apply Section */}
-            <Card bg={cardBg} borderRadius="xl" shadow="sm" borderWidth="2px" borderColor="purple.200">
-              <CardBody p={8}>
-                <VStack spacing={4} textAlign="center">
-                  <Heading size="md" color={textColor}>
-                    Interested in this position?
-                  </Heading>
-                  <Text color={mutedColor}>
-                    Apply now and take the next step in your career!
-                  </Text>
-                  <HStack spacing={3}>
-                    <Button 
-                      colorScheme="purple" 
-                      size="lg" 
-                      onClick={handleApply}
-                    >
-                      Apply for this Job
-                    </Button>
-                    <Button 
-                      as={Link}
-                      to="/find-jobs"
-                      variant="outline"
-                      size="lg"
-                    >
-                      Browse More Jobs
-                    </Button>
-                  </HStack>
-                </VStack>
-              </CardBody>
-            </Card>
-          </VStack>
-        </Container>
-      </Box>
-
-      {/* Apply Modal */}
-      <Modal isOpen={isOpen} onClose={onClose} size="lg">
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Apply for {job?.title}</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <VStack spacing={4} align="stretch">
-              <Text color={mutedColor}>
-                Write a cover letter to introduce yourself and explain why you're interested in this position.
-              </Text>
-              <Textarea
-                placeholder="Dear Hiring Manager,
-
-I am writing to express my interest in the [job title] position at [company name]. I believe my skills and experience make me a strong candidate for this role...
-
-Best regards,
-[Your name]"
-                value={coverLetter}
-                onChange={(e) => setCoverLetter(e.target.value)}
-                rows={8}
-                resize="vertical"
+    <Box bg={bgColor} minH="100vh" py={8}>
+      <Container maxW="7xl">
+        {/* View Other Jobs Button */}
+        <Box mb={4}>
+          <Button as={Link} to="/find-jobs" colorScheme="blue" variant="ghost" leftIcon={<HiArrowLeft />}>
+            See all jobs
+          </Button>
+        </Box>
+        <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={8}>
+          {/* Main Job Card */}
+          <GridItem>
+            <VStack spacing={6} align="stretch">
+              <JobDetailCard
+                job={job}
+                cardBg={cardBg}
+                textColor={textColor}
+                mutedColor={mutedColor}
+                formatSalary={formatSalary}
+                formatDate={formatDate}
               />
             </VStack>
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="ghost" mr={3} onClick={onClose}>
-              Cancel
-            </Button>
-            <Button 
-              colorScheme="purple" 
-              onClick={handleApply}
-              isLoading={applying}
-              loadingText="Submitting..."
-              isDisabled={!coverLetter.trim()}
-            >
-              Submit Application
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </>
+          </GridItem>
+
+          {/* Sidebar */}
+          <GridItem display={{ base: 'none', lg: 'block' }}>
+            <VStack spacing={8} align="stretch" position="sticky" top="8">
+              <ApplyNowCard company={job.company} onApply={handleApply} />
+              <AboutCompanyCard company={job.company} companyDescription={job.companyDescription} />
+            </VStack>
+          </GridItem>
+        </Grid>
+      </Container>
+    </Box>
   );
 };
 
