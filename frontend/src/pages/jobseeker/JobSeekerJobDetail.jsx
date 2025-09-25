@@ -1,15 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Container, VStack, HStack, Heading, Text, Button, Badge, 
-  Spinner, useToast, useColorModeValue, Divider, Card, CardBody,
-  Stack, Icon, Flex, Grid, GridItem, Avatar
+  Box, 
+  Container, 
+  VStack, 
+  HStack, 
+  Heading, 
+  Text, 
+  Button, 
+  Badge, 
+  Spinner, 
+  useToast, 
+  useColorModeValue, 
+  Divider, 
+  Card, 
+  CardBody,
+  Stack, 
+  Icon, 
+  Flex, 
+  Grid, 
+  GridItem, 
+  Avatar, 
+  useDisclosure
 } from '@chakra-ui/react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
-  HiLocationMarker, HiOfficeBuilding, HiClock, HiCurrencyDollar,
-  HiUser, HiArrowLeft, HiHeart, HiShare
+  HiLocationMarker, 
+  HiOfficeBuilding, 
+  HiClock, 
+  HiCurrencyDollar,
+  HiUser, 
+  HiArrowLeft, 
+  HiHeart, 
+  HiShare
 } from 'react-icons/hi';
-import { jobsAPI } from '../../services/api';
+import { jobsAPI, applicationsAPI } from '../../services/api';
 import ApplyNowCard from '../../components/jobs/ApplyNowCard';
 import AboutCompanyCard from '../../components/jobs/AboutCompanyCard';
 import JobDetailCard from '../../components/jobs/JobDetailCard';

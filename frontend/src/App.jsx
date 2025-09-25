@@ -79,11 +79,11 @@ function App() {
                 </JobSeekerOnlyRoute>
               } />
 
-              <Route path="/dashboard/profile" element={
+              {/* <Route path="/dashboard/profile" element={
                 <JobSeekerOnlyRoute>
                   <JobSeekerProfile />
                 </JobSeekerOnlyRoute>
-              } />
+              } /> */}
               
               <Route path="/dashboard/profile/edit" element={
                 <JobSeekerOnlyRoute>
