@@ -201,30 +201,50 @@ export const usersAPI = {
 
 // Applications API calls
 export const applicationsAPI = {
-  getMyApplications: async (params = {}) => {
+  // Apply for a job
+  applyForJob: async (jobId, coverLetter) => {
     try {
-      const response = await api.get('/applications', { params });
+      console.log('📝 Applying for job:', jobId);
+      const response = await api.post('/applications/apply', {
+        jobId,
+        coverLetter
+      });
+      console.log('✅ Application submitted:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error applying for job:', error);
+      throw new Error(error.response?.data || 'Failed to apply for job');
+    }
+  },
+
+  // Get user's applications
+  getMyApplications: async () => {
+    try {
+      const response = await api.get('/applications/my-applications');
       return response.data;
     } catch (error) {
       throw new Error(error.response?.data?.message || 'Failed to fetch applications');
     }
   },
 
-  getApplicationById: async (id) => {
+  // Check if user has applied for a job
+  checkApplication: async (jobId) => {
     try {
-      const response = await api.get(`/applications/${id}`);
-      return response.data;
+      const response = await api.get(`/applications/check/${jobId}`);
+      return response.data.hasApplied;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch application details');
+      console.error('Error checking application:', error);
+      return false;
     }
   },
 
-  withdrawApplication: async (id) => {
+  // Get applications for employer
+  getEmployerApplications: async () => {
     try {
-      const response = await api.delete(`/applications/${id}`);
+      const response = await api.get('/applications/employer/applications');
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to withdraw application');
+      throw new Error(error.response?.data?.message || 'Failed to fetch applications');
     }
   },
 };
