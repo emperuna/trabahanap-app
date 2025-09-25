@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Container, Heading, SimpleGrid, Spinner, Text, VStack,
+  Box, Heading, SimpleGrid, Spinner, Text, VStack,
   HStack, Input, Select, Button, useColorModeValue, useToast,
   InputGroup, InputLeftElement, Badge
 } from '@chakra-ui/react';
@@ -80,7 +80,7 @@ const FindJobs = () => {
 
   if (loading) {
     return (
-      <Box bg={bgColor} minH="100vh" display="flex" justifyContent="center" alignItems="center">
+      <Box display="flex" justifyContent="center" alignItems="center" py={20}>
         <VStack spacing={4}>
           <Spinner size="xl" color="blue.500" />
           <Text color="gray.600">Loading available jobs...</Text>
@@ -90,21 +90,64 @@ const FindJobs = () => {
   }
 
   return (
-    <Box bg={bgColor} minH="100vh" py={8}>
-      <Container maxW="7xl">
-        <VStack spacing={6} align="stretch">
-          {/* Header */}
-          <VStack spacing={2} align="start">
-            <Heading size="lg" color="gray.800">Find Your Dream Job</Heading>
-            <Text color="gray.600">
-              Discover {jobs.length} job opportunities waiting for you
-            </Text>
-          </VStack>
-          
-          {/* Search and Filters */}
-          <Box bg={cardBg} p={6} borderRadius="xl" shadow="sm" border="1px" borderColor="gray.200">
-            <VStack spacing={4}>
-              <HStack spacing={4} w="full">
+    <VStack spacing={6} align="stretch">
+          {/* Header with Colorful Gradient Design and Integrated Search */}
+          <Box
+            bg="brand.400"
+            borderRadius="2xl"
+            overflow="hidden"
+            position="relative"
+          >
+            {/* Diagonal Color Bands */}
+            <Box
+              position="absolute"
+              top={0}
+              left={0}
+              width="100%"
+              height="100%"
+              bgGradient="linear(120deg, brand.500 0%, brand.500 50%, blue.600 50%, blue.600 66.67%, blue.700 66.67%, blue.700 83.33%, blue.800 83.33%, blue.800 100%)"
+              zIndex={0}
+            />
+            
+            {/* Content */}
+            <VStack spacing={8} p={10} position="relative" zIndex={1}>
+              {/* Header Text */}
+              <VStack spacing={4} align="start" w="full">
+                <Heading 
+                  size="4xl" 
+                  fontWeight="800"
+                  letterSpacing="-0.025em"
+                  lineHeight="1"
+                  color="white"
+                >
+                  Find Your
+                  <br />
+                  <Text as="span" fontWeight="800">
+                    Dream Job
+                  </Text>
+                </Heading>
+                <Text 
+                  fontSize="lg" 
+                  opacity={0.9}
+                  fontWeight="400"
+                  color="white"
+                >
+                  Discover {jobs.length} job opportunities waiting for you
+                </Text>
+              </VStack>
+
+              {/* Integrated Search Section */}
+              <Box 
+                bg="white" 
+                p={6} 
+                borderRadius="xl" 
+                shadow="xl" 
+                w="full"
+                border="1px" 
+                borderColor="gray.100"
+              >
+                <VStack spacing={4}>
+                  <HStack spacing={4} w="full">
                 <InputGroup flex={2}>
                   <InputLeftElement>
                     <HiSearch color="gray.400" /> {/* Changed from SearchIcon */}
@@ -180,8 +223,10 @@ const FindJobs = () => {
                   >
                     Refresh
                   </Button>
+                  </HStack>
                 </HStack>
-              </HStack>
+              </VStack>
+              </Box>
             </VStack>
           </Box>
 
@@ -242,9 +287,7 @@ const FindJobs = () => {
               ))}
             </SimpleGrid>
           )}
-        </VStack>
-      </Container>
-    </Box>
+    </VStack>
   );
 };
 

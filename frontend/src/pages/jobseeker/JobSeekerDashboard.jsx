@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import {
   Box,
-  Container,
   Grid,
   GridItem,
   VStack,
-  useColorModeValue,
   Skeleton,
   Alert,
   AlertIcon,
@@ -16,7 +14,6 @@ import { useAuth } from '../../context/AuthContext';
 import { authAPI } from '../../services/api';
 
 import {
-  DashboardSidebar,
   ProfileProgressCard,
   ProfileCompletionCard,
   StatsGrid,
@@ -28,37 +25,7 @@ import {
 
 import { Loading } from '../../components/common/feedback';
 
-const Dashboard = () => {
-  React.useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .hide-scrollbar {
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-      }
-      .hide-scrollbar::-webkit-scrollbar {
-        display: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => { document.head.removeChild(style); };
-  }, []);
-
-
-  React.useEffect(() => {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .dashboard-content-scrollbar {
-        scrollbar-width: none !important;
-        -ms-overflow-style: none !important;
-      }
-      .dashboard-content-scrollbar::-webkit-scrollbar {
-        display: none !important;
-      }
-    `;
-    document.head.appendChild(style);
-    return () => { document.head.removeChild(style); };
-  }, []);
+const Dashboard = ({ user: propUser, stats: propStats }) => {
   const { user } = useAuth();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -70,8 +37,7 @@ const Dashboard = () => {
     profileCompletion: 75
   });
 
-  // Design system colors
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
+
 
   useEffect(() => {
     fetchUserData();
@@ -116,97 +82,63 @@ const Dashboard = () => {
   // Loading state
   if (loading) {
     return (
-      <Box bg={bgColor} minH="100vh" p={6}>
-        <Container maxW="8xl">
-          <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
-            <GridItem display={{ base: 'none', lg: 'block' }}>
-              <Skeleton height="600px" borderRadius="xl" />
-            </GridItem>
-            <GridItem>
-              <VStack spacing={6}>
-                <Skeleton height="200px" width="100%" borderRadius="xl" />
-                <Grid templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }} gap={6} w="full">
-                  <Skeleton height="120px" borderRadius="xl" />
-                  <Skeleton height="120px" borderRadius="xl" />
-                  <Skeleton height="120px" borderRadius="xl" />
-                  <Skeleton height="120px" borderRadius="xl" />
-                </Grid>
-                <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6} w="full">
-                  <Skeleton height="400px" borderRadius="xl" />
-                  <Skeleton height="400px" borderRadius="xl" />
-                </Grid>
-              </VStack>
-            </GridItem>
-          </Grid>
-        </Container>
-      </Box>
+      <VStack spacing={6}>
+        <Skeleton height="200px" width="100%" borderRadius="xl" />
+        <Grid templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }} gap={6} w="full">
+          <Skeleton height="120px" borderRadius="xl" />
+          <Skeleton height="120px" borderRadius="xl" />
+          <Skeleton height="120px" borderRadius="xl" />
+          <Skeleton height="120px" borderRadius="xl" />
+        </Grid>
+        <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6} w="full">
+          <Skeleton height="400px" borderRadius="xl" />
+          <Skeleton height="400px" borderRadius="xl" />
+        </Grid>
+      </VStack>
     );
   }
 
   // Error state
   if (error && !userData && !user) {
     return (
-      <Box bg={bgColor} minH="100vh" display="flex" alignItems="center" justifyContent="center">
-        <Container maxW="md" textAlign="center">
-          <Alert status="error" borderRadius="xl" p={6}>
-            <AlertIcon />
-            <Box>
-              <Text fontWeight="semibold">Failed to load dashboard</Text>
-              <Text fontSize="sm" mt={1}>{error}</Text>
-            </Box>
-          </Alert>
-          <Button mt={6} onClick={fetchUserData} colorScheme="blue" size="lg" borderRadius="xl">
-            Try Again
-          </Button>
-        </Container>
+      <Box textAlign="center" py={10}>
+        <Alert status="error" borderRadius="xl" p={6} maxW="md" mx="auto">
+          <AlertIcon />
+          <Box>
+            <Text fontWeight="semibold">Failed to load dashboard</Text>
+            <Text fontSize="sm" mt={1}>{error}</Text>
+          </Box>
+        </Alert>
+        <Button mt={6} onClick={fetchUserData} colorScheme="blue" size="lg" borderRadius="xl">
+          Try Again
+        </Button>
       </Box>
     );
   }
 
-  const currentUser = userData || user;
+  // Use props if available, otherwise fallback to fetched data
+  const currentUser = propUser || userData || user;
+  const currentStats = propStats || stats;
 
   return (
-    <Box bg={bgColor} minH="100vh">
-      <Container maxW="8xl" p={6}>
-        <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
-          {/* Sidebar */}
-          <GridItem display={{ base: 'none', lg: 'block' }}>
-            <Box position="sticky" top={6}>
-              <DashboardSidebar />
-            </Box>
-          </GridItem>
-
-          {/* Main Content - scrollable only */}
-          <GridItem>
-            <Box
-              maxH="calc(100vh - 48px)"
-              overflowY="auto"
-              className="dashboard-content-scrollbar hide-scrollbar"
-              position="relative"
-            >
-              <VStack spacing={6} align="stretch">
-                <WelcomeSection user={currentUser} />
-                <StatsGrid stats={stats} />
-                <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
-                  <GridItem>
-                    <VStack spacing={6}>
-                      <QuickActionsCard />
-                      <RecentActivityCard />
-                    </VStack>
-                  </GridItem>
-                  <GridItem>
-                    <VStack spacing={6}>
-                      <ProfileProgressCard completion={stats.profileCompletion} />
-                      <JobRecommendationsCard />
-                    </VStack>
-                  </GridItem>
-                </Grid>
-              </VStack>
-            </Box>
-          </GridItem>
-        </Grid>
-      </Container>
-    </Box>
+    <VStack spacing={6} align="stretch">
+      <WelcomeSection user={currentUser} />
+      <StatsGrid stats={currentStats} />
+      <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
+        <GridItem>
+          <VStack spacing={6}>
+            <QuickActionsCard />
+            <RecentActivityCard />
+          </VStack>
+        </GridItem>
+        <GridItem>
+          <VStack spacing={6}>
+            <ProfileProgressCard completion={currentStats.profileCompletion} />
+            <JobRecommendationsCard />
+          </VStack>
+        </GridItem>
+      </Grid>
+    </VStack>
   );
 };
 
