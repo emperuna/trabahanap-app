@@ -56,7 +56,7 @@ const GuestNavbar = () => {
                 filter={isHome ? undefined : 'brightness(0) invert(1)'}
                 _hover={{ 
                   transform: 'scale(1.05)',
-                  filter: isHome ? 'brightness(1.1)' : 'brightness(1.2) invert(1)'
+                  filter: isHome ? undefined : 'brightness(0) invert(1)'
                 }}
               />
             </Link>

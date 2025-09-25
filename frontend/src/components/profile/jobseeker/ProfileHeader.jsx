@@ -54,8 +54,8 @@ const ProfileHeader = ({ profileData }) => {
               Welcome back! 👋
             </Text>
             <Heading 
-              size={{ base: 'xl', md: '2xl' }} 
-              fontWeight="bold" 
+              size={{ base: '2xl', md: '3xl' }} 
+              fontWeight="800" 
               color="white"
               lineHeight="shorter"
             >

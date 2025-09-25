@@ -23,8 +23,25 @@ const WelcomeSection = ({ user }) => {
   };
 
   return (
-    <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} overflow="hidden">
-      <Box bgGradient="linear(135deg, #0038C9 12%, #1554F5 63%, #6F97FF 100%)" p={8} color="white">
+    <Box
+      bg="brand.400"
+      borderRadius="2xl"
+      overflow="hidden"
+      position="relative"
+    >
+      {/* Diagonal Color Bands */}
+      <Box
+        position="absolute"
+        top={0}
+        left={0}
+        width="100%"
+        height="100%"
+        bgGradient="linear(120deg, brand.500 0%, brand.500 50%, blue.600 50%, blue.600 66.67%, blue.700 66.67%, blue.700 83.33%, blue.800 83.33%, blue.800 100%)"
+        zIndex={0}
+      />
+      
+      {/* Content */}
+      <Box p={8} position="relative" zIndex={1} color="white">
         <HStack spacing={6}>
           <Avatar
             size="xl"
@@ -33,10 +50,10 @@ const WelcomeSection = ({ user }) => {
             color="white"
           />
           <VStack align="start" spacing={2} flex="1">
-            <Text fontSize="lg" opacity={0.9}>
+            <Text fontSize="lg" opacity={0.9} fontWeight="400">
               {getGreeting()}, 👋
             </Text>
-            <Heading size="lg" fontWeight="bold">
+            <Heading size="2xl" fontWeight="800" letterSpacing="-0.025em">
               {user?.firstName && user?.lastName 
                 ? `${user.firstName} ${user.lastName}`
                 : user?.username || 'User'
@@ -48,7 +65,7 @@ const WelcomeSection = ({ user }) => {
           </VStack>
         </HStack>
       </Box>
-    </Card>
+    </Box>
   );
 };
 
