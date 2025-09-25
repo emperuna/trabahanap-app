@@ -18,7 +18,7 @@ import { useLocation } from 'react-router-dom';
 
 // Import components
 import { DashboardSidebar } from '../../components/dashboard';
-import { Navbar } from '../../components/common/layout';
+import JobSeekerNavbar from '../../components/common/layout/JobSeekerNavbar'; // ✅ CHANGED: Use new navbar
 import JobSeekerDashboard from './JobSeekerDashboard';
 import JobSeekerFindJobs from './JobSeekerFindJobs';
 import JobSeekerProfile from './JobSeekerProfile';
@@ -173,8 +173,8 @@ const JobSeekerPage = () => {
   if (loading) {
     return (
       <Box bg={bgColor} minH="100vh">
-        <Navbar />
-        <Container maxW="8xl" p={6} pt="4rem">
+        <JobSeekerNavbar /> {/* ✅ CHANGED: Use job seeker specific navbar */}
+        <Container maxW="8xl" p={6} pt="5rem"> {/* ✅ CHANGED: Adjusted padding for fixed navbar */}
           <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
             <GridItem display={{ base: 'none', lg: 'block' }}>
               <Skeleton height="600px" borderRadius="xl" />
@@ -204,7 +204,7 @@ const JobSeekerPage = () => {
   if (error && !userData && !user) {
     return (
       <Box bg={bgColor} minH="100vh">
-        <Navbar />
+        <JobSeekerNavbar /> {/* ✅ CHANGED: Use job seeker specific navbar */}
         <Box display="flex" alignItems="center" justifyContent="center" pt="4rem" minH="calc(100vh - 4rem)">
           <Container maxW="md" textAlign="center">
           <Alert status="error" borderRadius="xl" p={6}>
@@ -225,8 +225,8 @@ const JobSeekerPage = () => {
 
   return (
     <Box bg={bgColor} minH="100vh">
-      <Navbar />
-      <Container maxW="8xl" p={6} pt="4rem">
+      <JobSeekerNavbar /> {/* ✅ CHANGED: Use job seeker specific navbar */}
+      <Container maxW="8xl" p={6} pt="5rem"> {/* ✅ CHANGED: Adjusted padding for fixed navbar */}
         <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
           {/* Fixed Sidebar */}
           <GridItem display={{ base: 'none', lg: 'block' }}>
