@@ -75,6 +75,12 @@ function App() {
                   <JobDetail />
                 </JobSeekerOnlyRoute>
               } />
+
+              <Route path="/dashboard/profile" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerProfile />
+                </JobSeekerOnlyRoute>
+              } />
               
               <Route path="/dashboard/profile/edit" element={
                 <JobSeekerOnlyRoute>
