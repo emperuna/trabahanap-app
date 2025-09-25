@@ -6,7 +6,7 @@ import { Hero, Features, CTA, HowItWorks } from "../../components/sections/home"
 const Home = () => {
   return (
     <Flex direction="column" minH="100vh">
-      <GuestNavbar />
+      <Navbar />
       <Box flex="1">
         <Hero />
         <Features />
