@@ -18,13 +18,11 @@ import { ErrorBoundary } from "./components/common/feedback";
 import Home from "./pages/common/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Dashboard from "./pages/jobseeker/JobSeekerDashboard";
-import JobSeekerProfile from "./pages/jobseeker/JobSeekerProfile";
+import JobSeekerPage from "./pages/jobseeker/JobSeekerPage";
 import EmployerDashboard from "./pages/employer/EmployerDashboard";
 import ComingSoon from "./pages/common/ComingSoon";
 import NotFound from "./pages/common/NotFound";
 import PostJob from './pages/employer/EmployerPostJob';
-import FindJobs from './pages/jobseeker/JobSeekerFindJobs';
 import JobDetail from './pages/jobseeker/JobSeekerJobDetail';
 
 function App() {
@@ -56,23 +54,28 @@ function App() {
                 </GuestOnlyRoute>
               } />
               
-              {/* 🔐 Job Seeker ONLY Routes */}
+              {/* 🔐 Job Seeker ONLY Routes - Unified Layout */}
               <Route path="/dashboard" element={
                 <JobSeekerOnlyRoute>
-                  <Dashboard />
+                  <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
               
               <Route path="/find-jobs" element={
                 <JobSeekerOnlyRoute>
-                  <FindJobs />
+                  <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
 
-              {/* Add Job Detail Route */}
               <Route path="/jobs/:id" element={
                 <JobSeekerOnlyRoute>
-                  <JobDetail />
+                  <JobSeekerPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/dashboard/profile" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
 
@@ -84,19 +87,43 @@ function App() {
               
               <Route path="/dashboard/profile/edit" element={
                 <JobSeekerOnlyRoute>
-                  <JobSeekerProfile />
+                  <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
               
               <Route path="/dashboard/settings/profile" element={
                 <JobSeekerOnlyRoute>
-                  <JobSeekerProfile />
+                  <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
               
-              <Route path="/dashboard/*" element={
+              <Route path="/dashboard/applications" element={
                 <JobSeekerOnlyRoute>
-                  <ComingSoon />
+                  <JobSeekerPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/dashboard/saved" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/dashboard/resume" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/dashboard/analytics" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/dashboard/settings" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
               

@@ -79,21 +79,15 @@ const JobSeekerProfile = () => {
   return (
     <Box bg={bgColor} minH="100vh">
       <Container maxW="8xl" p={6}>
-        <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
-          {/* Sidebar */}
-          <GridItem display={{ base: 'none', lg: 'block' }}>
-            <Box position="sticky" top={6}>
-              <DashboardSidebar />
-            </Box>
-          </GridItem>
-
-          {/* Main Content */}
-          <GridItem>
+        {/* Main Content */}
+        <Box>
             <VStack spacing={6} align="stretch">
               {/* Profile Header Card */}
               <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} overflow="hidden">
-                <Box bgGradient="linear(135deg, blue.500, blue.500)" p={8} color="white">
-                  <ProfileHeader profileData={profileData} />
+                <Box bgGradient="linear(120deg, brand.500 0%, brand.500 50%, blue.600 50%, blue.600 66.67%, blue.700 66.67%, blue.700 83.33%, blue.800 83.33%, blue.800 100%)" p={8} color="white">
+                  <Box w="full" p={0} bg="transparent">
+                    <ProfileHeader profileData={profileData} />
+                  </Box>
                 </Box>
               </Card>
 
@@ -187,8 +181,7 @@ const JobSeekerProfile = () => {
                 </GridItem>
               </Grid>
             </VStack>
-          </GridItem>
-        </Grid>
+        </Box>
       </Container>
     </Box>
   );
