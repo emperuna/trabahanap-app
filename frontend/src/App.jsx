@@ -24,6 +24,7 @@ import ComingSoon from "./pages/common/ComingSoon";
 import NotFound from "./pages/common/NotFound";
 import PostJob from './pages/employer/EmployerPostJob';
 import JobDetail from './pages/jobseeker/JobSeekerJobDetail';
+import EmployerApplications from './pages/employer/EmployerApplications';
 
 function App() {
   // Temporary dev button state
@@ -148,7 +149,7 @@ function App() {
               
               <Route path="/employer/applications" element={
                 <EmployerOnlyRoute>
-                  <ComingSoon />
+                  <EmployerApplications />
                 </EmployerOnlyRoute>
               } />
               
