@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -145,6 +146,124 @@ public class ApplicationController {
             System.err.println("❌ Error fetching employer applications: " + e.getMessage());
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);
+        }
+    }
+
+    // Update application status (Employer only)
+    @PutMapping("/update-status/{applicationId}")
+    @Transactional
+    public ResponseEntity<?> updateApplicationStatus(
+            @PathVariable Long applicationId,
+            @RequestBody Map<String, String> request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            String newStatus = request.get("status");
+
+            System.out.println("🔄 Updating application " + applicationId + " to status: " + newStatus);
+
+            // Get the employer
+            User employer = userRepository.findById(userPrincipal.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Check if user is employer
+            boolean isEmployer = employer.getRoles().stream()
+                    .anyMatch(role -> role.getName().toString().equals("ROLE_EMPLOYER"));
+
+            if (!isEmployer) {
+                return ResponseEntity.status(403).body("Only employers can update application status");
+            }
+
+            // Get the application
+            JobApplication application = applicationRepository.findById(applicationId)
+                    .orElseThrow(() -> new RuntimeException("Application not found"));
+
+            // Verify this application belongs to employer's job
+            if (!application.getJob().getPostedBy().getId().equals(employer.getId())) {
+                return ResponseEntity.status(403).body("You can only update applications for your own jobs");
+            }
+
+            // Validate status
+            try {
+                JobApplication.ApplicationStatus status = JobApplication.ApplicationStatus.valueOf(newStatus.toUpperCase());
+                application.setStatus(status);
+                application.setUpdatedAt(LocalDateTime.now());
+
+                JobApplication updatedApplication = applicationRepository.save(application);
+
+                System.out.println("✅ Application status updated successfully");
+                return ResponseEntity.ok(ApplicationDTO.fromApplication(updatedApplication));
+
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(400).body("Invalid status: " + newStatus);
+            }
+
+        } catch (Exception e) {
+            System.err.println("❌ Error updating application status: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to update application status: " + e.getMessage());
+        }
+    }
+
+    // Bulk update application status (Optional - for future use)
+    @PutMapping("/bulk-update-status")
+    @Transactional
+    public ResponseEntity<?> bulkUpdateApplicationStatus(
+            @RequestBody Map<String, Object> request,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<Long> applicationIds = (List<Long>) request.get("applicationIds");
+            String newStatus = (String) request.get("status");
+
+            System.out.println("🔄 Bulk updating " + applicationIds.size() + " applications to status: " + newStatus);
+
+            // Get the employer
+            User employer = userRepository.findById(userPrincipal.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Check if user is employer
+            boolean isEmployer = employer.getRoles().stream()
+                    .anyMatch(role -> role.getName().toString().equals("ROLE_EMPLOYER"));
+
+            if (!isEmployer) {
+                return ResponseEntity.status(403).body("Only employers can update application status");
+            }
+
+            // Validate status
+            JobApplication.ApplicationStatus status;
+            try {
+                status = JobApplication.ApplicationStatus.valueOf(newStatus.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                return ResponseEntity.status(400).body("Invalid status: " + newStatus);
+            }
+
+            List<JobApplication> updatedApplications = new ArrayList<>();
+
+            for (Long applicationId : applicationIds) {
+                JobApplication application = applicationRepository.findById(applicationId)
+                        .orElseThrow(() -> new RuntimeException("Application not found: " + applicationId));
+
+                // Verify this application belongs to employer's job
+                if (!application.getJob().getPostedBy().getId().equals(employer.getId())) {
+                    continue; // Skip applications that don't belong to this employer
+                }
+
+                application.setStatus(status);
+                application.setUpdatedAt(LocalDateTime.now());
+                updatedApplications.add(applicationRepository.save(application));
+            }
+
+            List<ApplicationDTO> updatedDTOs = updatedApplications.stream()
+                    .map(ApplicationDTO::fromApplication)
+                    .collect(Collectors.toList());
+
+            System.out.println("✅ " + updatedApplications.size() + " applications updated successfully");
+            return ResponseEntity.ok(updatedDTOs);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error bulk updating application status: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to update application status: " + e.getMessage());
         }
     }
 
