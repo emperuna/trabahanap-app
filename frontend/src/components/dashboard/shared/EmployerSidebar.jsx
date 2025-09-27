@@ -48,7 +48,7 @@ const EmployerSidebar = () => {
     {
       label: 'Manage Jobs',
       icon: HiBriefcase,
-      path: '/employer/jobs',
+      path: '/employer/manage-jobs',
       badge: '8',
     },
     {

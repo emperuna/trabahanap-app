@@ -1,5 +1,6 @@
 package com.trabahanap.repository;
 
+import com.trabahanap.model.Job;
 import com.trabahanap.model.JobApplication;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -22,4 +23,6 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     Optional<JobApplication> findByJobIdAndApplicantId(@Param("jobId") Long jobId, @Param("applicantId") Long applicantId);
     
     boolean existsByJobIdAndApplicantId(Long jobId, Long applicantId);
+
+    long countByJob(Job job);
 }
