@@ -6,12 +6,15 @@ import {
   StatNumber, Divider, AlertDialog, AlertDialogBody, 
   AlertDialogFooter, AlertDialogHeader, AlertDialogContent, 
   AlertDialogOverlay, useDisclosure, Spinner, Input, 
-  InputGroup, InputLeftElement
+  InputGroup, InputLeftElement, Modal, ModalOverlay, 
+  ModalContent, ModalHeader, ModalFooter, ModalBody, 
+  ModalCloseButton, FormControl, FormLabel, Textarea,
+  Select, NumberInput, NumberInputField
 } from '@chakra-ui/react';
 import { 
   HiPlus, HiDotsVertical, HiEye, HiPencil, HiTrash, 
   HiLocationMarker, HiCurrencyDollar, HiClock, HiUsers,
-  HiSearch
+  HiSearch, HiCheck, HiX
 } from 'react-icons/hi';
 import { Link, useNavigate } from 'react-router-dom';
 import { jobManagementAPI } from '../../services/api';
@@ -22,7 +25,13 @@ const EmployerManageJobs = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [jobToDelete, setJobToDelete] = useState(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [editingJob, setEditingJob] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+  const [isUpdating, setIsUpdating] = useState(false);
+  
+  const { isOpen: deleteIsOpen, onOpen: deleteOnOpen, onClose: deleteOnClose } = useDisclosure();
+  const { isOpen: editIsOpen, onOpen: editOnOpen, onClose: editOnClose } = useDisclosure();
+  
   const toast = useToast();
   const navigate = useNavigate();
 
@@ -88,13 +97,90 @@ const EmployerManageJobs = () => {
       });
     } finally {
       setJobToDelete(null);
-      onClose();
+      deleteOnClose();
     }
   };
 
   const confirmDelete = (job) => {
     setJobToDelete(job);
-    onOpen();
+    deleteOnOpen();
+  };
+
+  // Edit Job Functions
+  const handleEditJob = (job) => {
+    setEditingJob(job);
+    setEditFormData({
+      title: job.title || '',
+      company: job.company || '',
+      location: job.location || '',
+      jobType: job.jobType || '',
+      description: job.description || '',
+      requirements: job.requirements || '',
+      salary: job.salary || ''
+    });
+    editOnOpen();
+  };
+
+  const handleEditFormChange = (field, value) => {
+    setEditFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleUpdateJob = async () => {
+    if (!editingJob) return;
+
+    try {
+      setIsUpdating(true);
+      
+      // Only validate title as required (minimum requirement)
+      if (!editFormData.title || editFormData.title.trim() === '') {
+        toast({
+          title: 'Validation Error',
+          description: 'Job title is required',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      const updatedJob = await jobManagementAPI.updateJob(editingJob.id, editFormData);
+      
+      // Update the job in the local state
+      setJobs(prev => prev.map(job => 
+        job.id === editingJob.id ? { ...job, ...updatedJob } : job
+      ));
+
+      toast({
+        title: 'Job Updated',
+        description: 'Job has been updated successfully',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+
+      editOnClose();
+      setEditingJob(null);
+      setEditFormData({});
+    } catch (error) {
+      toast({
+        title: 'Error updating job',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingJob(null);
+    setEditFormData({});
+    editOnClose();
   };
 
   const formatSalary = (salary) => {
@@ -236,6 +322,7 @@ const EmployerManageJobs = () => {
                     key={job.id}
                     job={job}
                     onDelete={confirmDelete}
+                    onEdit={handleEditJob}
                     formatSalary={formatSalary}
                     formatDate={formatDate}
                   />
@@ -246,8 +333,112 @@ const EmployerManageJobs = () => {
         </Container>
       </Box>
 
+      {/* Edit Job Modal */}
+      <Modal isOpen={editIsOpen} onClose={handleCancelEdit} size="xl">
+        <ModalOverlay bg="blackAlpha.600" backdropFilter="blur(10px)" />
+        <ModalContent mx={4}>
+          <ModalHeader>Edit Job</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <VStack spacing={4} align="stretch">
+              <FormControl isRequired>
+                <FormLabel>Job Title</FormLabel>
+                <Input
+                  value={editFormData.title}
+                  onChange={(e) => handleEditFormChange('title', e.target.value)}
+                  placeholder="e.g., Senior Software Developer"
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Company</FormLabel>
+                <Input
+                  value={editFormData.company}
+                  onChange={(e) => handleEditFormChange('company', e.target.value)}
+                  placeholder="Company name (optional)"
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Location</FormLabel>
+                <Input
+                  value={editFormData.location}
+                  onChange={(e) => handleEditFormChange('location', e.target.value)}
+                  placeholder="e.g., Manila, Philippines (optional)"
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Job Type</FormLabel>
+                <Select
+                  value={editFormData.jobType}
+                  onChange={(e) => handleEditFormChange('jobType', e.target.value)}
+                >
+                  <option value="">Select job type (optional)</option>
+                  <option value="Full-time">Full-time</option>
+                  <option value="Part-time">Part-time</option>
+                  <option value="Contract">Contract</option>
+                  <option value="Freelance">Freelance</option>
+                  <option value="Internship">Internship</option>
+                </Select>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Salary (Monthly)</FormLabel>
+                <NumberInput
+                  value={editFormData.salary}
+                  onChange={(value) => handleEditFormChange('salary', value)}
+                >
+                  <NumberInputField placeholder="Monthly salary in PHP (optional)" />
+                </NumberInput>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Job Description</FormLabel>
+                <Textarea
+                  value={editFormData.description}
+                  onChange={(e) => handleEditFormChange('description', e.target.value)}
+                  placeholder="Describe the job responsibilities and what you're looking for... (optional)"
+                  rows={6}
+                />
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Requirements</FormLabel>
+                <Textarea
+                  value={editFormData.requirements}
+                  onChange={(e) => handleEditFormChange('requirements', e.target.value)}
+                  placeholder="List the job requirements and qualifications... (optional)"
+                  rows={4}
+                />
+              </FormControl>
+            </VStack>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button 
+              variant="ghost" 
+              mr={3} 
+              onClick={handleCancelEdit}
+              isDisabled={isUpdating}
+            >
+              Cancel
+            </Button>
+            <Button 
+              colorScheme="blue" 
+              onClick={handleUpdateJob}
+              isLoading={isUpdating}
+              loadingText="Updating..."
+              leftIcon={<HiCheck />}
+            >
+              Update Job
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
       {/* Delete Confirmation Dialog */}
-      <AlertDialog isOpen={isOpen} onClose={onClose} isCentered>
+      <AlertDialog isOpen={deleteIsOpen} onClose={deleteOnClose} isCentered>
         <AlertDialogOverlay bg="blackAlpha.600" backdropFilter="blur(10px)" />
         <AlertDialogContent mx={4}>
           <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -263,7 +454,7 @@ const EmployerManageJobs = () => {
           </AlertDialogBody>
 
           <AlertDialogFooter>
-            <Button onClick={onClose}>Cancel</Button>
+            <Button onClick={deleteOnClose}>Cancel</Button>
             <Button colorScheme="red" onClick={handleDeleteJob} ml={3}>
               Delete Job
             </Button>
@@ -274,8 +465,8 @@ const EmployerManageJobs = () => {
   );
 };
 
-// Job Card Component
-const JobCard = ({ job, onDelete, formatSalary, formatDate }) => {
+// Updated Job Card Component with Edit and Delete buttons
+const JobCard = ({ job, onDelete, onEdit, formatSalary, formatDate }) => {
   const navigate = useNavigate();
 
   return (
@@ -319,6 +510,12 @@ const JobCard = ({ job, onDelete, formatSalary, formatDate }) => {
                   onClick={() => navigate(`/jobs/${job.id}`)}
                 >
                   View Job
+                </MenuItem>
+                <MenuItem 
+                  icon={<HiPencil />}
+                  onClick={() => onEdit(job)}
+                >
+                  Edit Job
                 </MenuItem>
                 <MenuItem 
                   icon={<HiUsers />}
@@ -365,12 +562,37 @@ const JobCard = ({ job, onDelete, formatSalary, formatDate }) => {
             </Badge>
 
             <HStack spacing={2}>
+              {/* Edit Button */}
+              <Button 
+                size="sm" 
+                variant="outline"
+                colorScheme="blue"
+                leftIcon={<HiPencil />}
+                onClick={() => onEdit(job)}
+              >
+                Edit
+              </Button>
+
+              {/* Delete Button */}
+              <Button 
+                size="sm" 
+                variant="outline"
+                colorScheme="red"
+                leftIcon={<HiTrash />}
+                onClick={() => onDelete(job)}
+                isDisabled={job.applicationCount > 0}
+              >
+                Delete
+              </Button>
+
+              {/* Applications Button */}
               <Button 
                 size="sm" 
                 colorScheme="blue"
+                leftIcon={<HiUsers />}
                 onClick={() => navigate(`/employer/applications?jobId=${job.id}`)}
               >
-                View Applications
+                Applications ({job.applicationCount || 0})
               </Button>
             </HStack>
           </HStack>
