@@ -1,41 +1,64 @@
 import React from 'react';
-import { Badge, HStack, Text } from '@chakra-ui/react';
+import { Badge, Text } from '@chakra-ui/react';
 
 const EmployerApplicationStatusBadge = ({ status }) => {
-  const getStatusColor = (status) => {
+  const getStatusConfig = (status) => {
     switch (status?.toUpperCase()) {
-      case 'PENDING': return 'yellow';
-      case 'REVIEWED': return 'purple';
-      case 'ACCEPTED': return 'green';
-      case 'REJECTED': return 'red';
-      default: return 'gray';
+      case 'PENDING': 
+        return {
+          colorScheme: 'orange',
+          variant: 'solid',
+          textColor: 'white',
+          label: 'Pending Review'
+        };
+      case 'REVIEWED': 
+        return {
+          colorScheme: 'blue',
+          variant: 'solid',
+          textColor: 'white',
+          label: 'Under Review'
+        };
+      case 'ACCEPTED': 
+        return {
+          colorScheme: 'green',
+          variant: 'solid',
+          textColor: 'white',
+          label: 'Accepted'
+        };
+      case 'REJECTED': 
+        return {
+          colorScheme: 'red',
+          variant: 'solid',
+          textColor: 'white',
+          label: 'Not Selected'
+        };
+      default: 
+        return {
+          colorScheme: 'gray',
+          variant: 'outline',
+          textColor: 'gray.600',
+          label: 'Unknown Status'
+        };
     }
   };
 
-  const getStatusIcon = (status) => {
-    switch (status?.toUpperCase()) {
-      case 'PENDING': return '⏳';
-      case 'REVIEWED': return '👀';
-      case 'ACCEPTED': return '✅';
-      case 'REJECTED': return '❌';
-      default: return '📄';
-    }
-  };
+  const config = getStatusConfig(status);
 
   return (
     <Badge 
-      colorScheme={getStatusColor(status)} 
-      variant="subtle" 
-      borderRadius="full"
+      colorScheme={config.colorScheme}
+      variant={config.variant}
+      borderRadius="md"
       px={3}
       py={1}
+      fontSize="xs"
+      fontWeight="semibold"
+      letterSpacing="wide"
+      textTransform="uppercase"
     >
-      <HStack spacing={1}>
-        <Text>{getStatusIcon(status)}</Text>
-        <Text fontWeight="medium">
-          {status || 'Pending'}
-        </Text>
-      </HStack>
+      <Text color={config.textColor} fontSize="xs">
+        {config.label}
+      </Text>
     </Badge>
   );
 };
