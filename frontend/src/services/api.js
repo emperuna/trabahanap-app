@@ -247,6 +247,37 @@ export const applicationsAPI = {
       throw new Error(error.response?.data?.message || 'Failed to fetch applications');
     }
   },
+
+  // Update application status (Employer only)
+  updateApplicationStatus: async (applicationId, status) => {
+    try {
+      console.log(`🔄 Updating application ${applicationId} to status: ${status}`);
+      const response = await api.put(`/applications/update-status/${applicationId}`, {
+        status: status
+      });
+      console.log('✅ Application status updated:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error updating application status:', error);
+      throw new Error(error.response?.data || 'Failed to update application status');
+    }
+  },
+
+  // Bulk update application status (Optional)
+  bulkUpdateApplicationStatus: async (applicationIds, status) => {
+    try {
+      console.log(`🔄 Bulk updating ${applicationIds.length} applications to status: ${status}`);
+      const response = await api.put('/applications/bulk-update-status', {
+        applicationIds,
+        status
+      });
+      console.log('✅ Applications bulk updated:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error bulk updating applications:', error);
+      throw new Error(error.response?.data || 'Failed to bulk update applications');
+    }
+  },
 };
 
 export default api;
