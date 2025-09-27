@@ -280,4 +280,59 @@ export const applicationsAPI = {
   },
 };
 
+// Job Management API calls
+export const jobManagementAPI = {
+  // Get employer's jobs
+  getEmployerJobs: async () => {
+    try {
+      console.log('📋 Fetching employer jobs...');
+      const response = await api.get('/employer/jobs');
+      console.log('✅ Employer jobs fetched:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching employer jobs:', error);
+      throw new Error(error.response?.data || 'Failed to fetch your jobs');
+    }
+  },
+
+  // Update job
+  updateJob: async (jobId, jobData) => {
+    try {
+      console.log(`📝 Updating job ${jobId}:`, jobData);
+      const response = await api.put(`/employer/jobs/${jobId}`, jobData);
+      console.log('✅ Job updated:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error updating job:', error);
+      throw new Error(error.response?.data || 'Failed to update job');
+    }
+  },
+
+  // Delete job
+  deleteJob: async (jobId) => {
+    try {
+      console.log(`🗑️ Deleting job ${jobId}`);
+      const response = await api.delete(`/employer/jobs/${jobId}`);
+      console.log('✅ Job deleted');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error deleting job:', error);
+      throw new Error(error.response?.data || 'Failed to delete job');
+    }
+  },
+
+  // Get job statistics
+  getJobStats: async () => {
+    try {
+      console.log('📊 Fetching job stats...');
+      const response = await api.get('/employer/jobs/stats');
+      console.log('✅ Job stats fetched:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching job stats:', error);
+      throw new Error(error.response?.data || 'Failed to fetch job statistics');
+    }
+  }
+};
+
 export default api;
