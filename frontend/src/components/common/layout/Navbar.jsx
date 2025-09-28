@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom'; // <-- import useLocation
 import {
   Box,
   Flex,
@@ -17,8 +17,9 @@ import { HiMenu, HiX } from 'react-icons/hi';
 import logo from '../../../assets/logo/TrabaHanap-Brandname.svg';
 
 const Navbar = () => {
-  // Detect if current page is home
-  const isHome = window.location.pathname === '/';
+  const location = useLocation(); // <-- get current location
+  // Detect if current page is home or about
+  const isHome = location.pathname === '/' || location.pathname === '/about';
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -132,7 +133,7 @@ const Navbar = () => {
             </Button>
             <Button
               as={Link}
-              to="/about"
+              to="/about" // <-- This links the About option to the About page
               variant="ghost"
               color={isHome ? "gray.600" : "white"}
               fontWeight="500"
