@@ -18,9 +18,7 @@ import {
   Switch,
   FormControl,
   FormLabel,
-  useColorMode,
-  Collapse,
-  useDisclosure
+  useColorMode
 } from '@chakra-ui/react';
 import {
   HiHome,
@@ -48,13 +46,12 @@ const DashboardSidebar = () => {
   const { user, logout } = useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
   const toast = useToast();
-  const { isOpen: isSettingsOpen, onToggle: onSettingsToggle } = useDisclosure();
-  
-  // ✅ Enhanced state management
+
+  // Enhanced state management
   const [profileCompletion, setProfileCompletion] = useState(75);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
 
-  // ✅ Online status detection
+  // Online status detection
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
@@ -174,7 +171,7 @@ const DashboardSidebar = () => {
     return location.pathname.startsWith(path);
   };
 
-  // ✅ Get badge color based on type
+  // Get badge color based on type
   const getBadgeColor = (badge, color) => {
     if (!badge) return 'gray';
     if (badge === 'Hot') return 'red';
@@ -184,8 +181,8 @@ const DashboardSidebar = () => {
   };
 
   return (
-    <VStack spacing={4} align="stretch">
-      {/* ✅ User Profile Card */}
+    <VStack spacing={4} align="stretch" h="full">
+      {/* User Profile Card */}
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
         <VStack spacing={3} align="stretch">
           <HStack spacing={3}>
@@ -232,7 +229,7 @@ const DashboardSidebar = () => {
         </VStack>
       </Card>
 
-      {/* ✅ Main Navigation */}
+      {/* Main Navigation */}
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
         <VStack spacing={1} align="stretch">
           <Text
@@ -297,7 +294,7 @@ const DashboardSidebar = () => {
         </VStack>
       </Card>
 
-      {/* ✅ Quick Stats */}
+      {/* Quick Stats */}
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
         <VStack spacing={3} align="stretch">
           <Text
@@ -330,11 +327,12 @@ const DashboardSidebar = () => {
         </VStack>
       </Card>
 
-      {/* ✅ Settings & Account */}
+      {/* Settings & Account - Updated to navigate instead of expand */}
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
         <VStack spacing={1} align="stretch">
           <Button
-            onClick={onSettingsToggle}
+            as={Link}
+            to="/settings"
             variant="ghost"
             justifyContent="flex-start"
             h={10}
@@ -343,66 +341,12 @@ const DashboardSidebar = () => {
             fontWeight="medium"
             _hover={{ bg: hoverBg }}
             transition="all 0.2s ease"
-            rightIcon={isSettingsOpen ? <HiChevronUp /> : <HiChevronDown />}
             leftIcon={<Icon as={HiCog} boxSize={4} />}
           >
             <Box flex="1" textAlign="left">
               <Text fontSize="sm">Settings & Preferences</Text>
             </Box>
           </Button>
-
-          <Collapse in={isSettingsOpen} animateOpacity>
-            <VStack spacing={2} align="stretch" mt={2} pl={4}>
-              {/* Dark Mode Toggle */}
-              <FormControl display="flex" alignItems="center" justifyContent="space-between">
-                <FormLabel htmlFor="dark-mode" mb="0" fontSize="xs" color={mutedColor}>
-                  <HStack spacing={2}>
-                    <Icon as={colorMode === 'light' ? HiMoon : HiSun} boxSize={3} />
-                    <Text>Dark Mode</Text>
-                  </HStack>
-                </FormLabel>
-                <Switch 
-                  id="dark-mode" 
-                  size="sm"
-                  isChecked={colorMode === 'dark'}
-                  onChange={toggleColorMode}
-                  colorScheme="blue"
-                />
-              </FormControl>
-
-              {/* Language */}
-              <Button
-                variant="ghost"
-                size="sm"
-                justifyContent="flex-start"
-                h={8}
-                borderRadius="md"
-                fontWeight="normal"
-                color={mutedColor}
-                _hover={{ bg: hoverBg, color: textColor }}
-                leftIcon={<Icon as={HiGlobe} boxSize={3} />}
-              >
-                <Text fontSize="xs">Language: English</Text>
-              </Button>
-
-              {/* Account Settings */}
-              <Button
-                as={Link}
-                to="/dashboard/settings"
-                variant="ghost"
-                size="sm"
-                justifyContent="flex-start"
-                h={8}
-                borderRadius="md"
-                fontWeight="normal"
-                color={mutedColor}
-                _hover={{ bg: hoverBg, color: textColor }}
-                leftIcon={<Icon as={HiCog} boxSize={3} />}
-              >
-                <Text fontSize="xs">Account Settings</Text>
-              </Button>
-            </VStack>
-          </Collapse>
 
           <Divider my={2} />
 

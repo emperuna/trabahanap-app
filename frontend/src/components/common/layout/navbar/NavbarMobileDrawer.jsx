@@ -138,7 +138,7 @@ const NavbarMobileDrawer = ({ isOpen, onClose, user, navbarState }) => {
               <VStack spacing={1} align="stretch">
                 <Button
                   as={RouterLink}
-                  to="/dashboard/settings"
+                  to="/settings" // ✅ Changed from "/dashboard/settings"
                   variant="ghost"
                   size="md"
                   h={10}
