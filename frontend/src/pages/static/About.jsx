@@ -14,9 +14,9 @@ const About = () => (
     <Box minH="100vh" py={10} bg="white" display="flex" flexDirection="column" alignItems="center">
       <Header />
       <CompaniesSection />
+      <Team />
       <VisionSection />
       <MissionSection />
-      <Team />
     </Box>
     <Footer />
   </>
