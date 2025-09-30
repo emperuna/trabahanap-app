@@ -147,14 +147,6 @@ const JobSeekerPage = () => {
           </VStack>
         );
       
-      case '/dashboard/settings':
-        return (
-          <VStack spacing={6} align="stretch">
-            <Text fontSize="2xl" fontWeight="bold">Settings</Text>
-            <Text>Account settings and preferences will be managed here.</Text>
-          </VStack>
-        );
-      
       default:
         // Check if it's a job detail route
         if (location.pathname.startsWith('/jobs/')) {
@@ -169,8 +161,8 @@ const JobSeekerPage = () => {
   if (loading) {
     return (
       <Box bg={bgColor} minH="100vh">
-        <JobSeekerNavbar /> {/* ✅ CHANGED: Use job seeker specific navbar */}
-        <Container maxW="8xl" p={6} pt="5rem"> {/* ✅ CHANGED: Adjusted padding for fixed navbar */}
+        <JobSeekerNavbar />
+        <Container maxW="8xl" p={6} pt="5rem">
           <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
             <GridItem display={{ base: 'none', lg: 'block' }}>
               <Skeleton height="600px" borderRadius="xl" />
@@ -200,7 +192,7 @@ const JobSeekerPage = () => {
   if (error && !userData && !user) {
     return (
       <Box bg={bgColor} minH="100vh">
-        <JobSeekerNavbar /> {/* ✅ CHANGED: Use job seeker specific navbar */}
+        <JobSeekerNavbar />
         <Box display="flex" alignItems="center" justifyContent="center" pt="4rem" minH="calc(100vh - 4rem)">
           <Container maxW="md" textAlign="center">
           <Alert status="error" borderRadius="xl" p={6}>
@@ -221,10 +213,10 @@ const JobSeekerPage = () => {
 
   return (
     <Box bg={bgColor} minH="100vh">
-      <JobSeekerNavbar /> {/* ✅ CHANGED: Use job seeker specific navbar */}
-      <Container maxW="8xl" p={6} pt="5rem"> {/* ✅ CHANGED: Adjusted padding for fixed navbar */}
+      <JobSeekerNavbar />
+      <Container maxW="8xl" p={6} pt="5rem">
         <Grid templateColumns={{ base: '1fr', lg: '280px 1fr' }} gap={6}>
-          {/* Fixed Sidebar */}
+          {/* Sidebar */}
           <GridItem display={{ base: 'none', lg: 'block' }}>
             <Box position="sticky" top={6} pt={6}>
               <DashboardSidebar />

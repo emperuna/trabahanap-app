@@ -26,9 +26,9 @@ import PostJob from './pages/employer/EmployerPostJob';
 import JobDetail from './pages/jobseeker/JobSeekerJobDetail';
 import EmployerApplications from './pages/employer/EmployerApplications';
 import EmployerManageJobs from './pages/employer/EmployerManageJobs';
+import SettingsPage from './pages/settings/SettingsPage';
 
 function App() {
-  // Temporary dev button state
   const [showDevButton, setShowDevButton] = React.useState(true);
 
   return (
@@ -80,12 +80,6 @@ function App() {
                   <JobSeekerPage />
                 </JobSeekerOnlyRoute>
               } />
-
-              {/* <Route path="/dashboard/profile" element={
-                <JobSeekerOnlyRoute>
-                  <JobSeekerProfile />
-                </JobSeekerOnlyRoute>
-              } /> */}
               
               <Route path="/dashboard/profile/edit" element={
                 <JobSeekerOnlyRoute>
@@ -123,12 +117,43 @@ function App() {
                 </JobSeekerOnlyRoute>
               } />
               
-              <Route path="/dashboard/settings" element={
+              {/* ⚙️ NEW SETTINGS ROUTES - Standalone Pages */}
+              <Route path="/settings" element={
                 <JobSeekerOnlyRoute>
-                  <JobSeekerPage />
+                  <SettingsPage />
                 </JobSeekerOnlyRoute>
               } />
               
+              <Route path="/settings/account" element={
+                <JobSeekerOnlyRoute>
+                  <SettingsPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/settings/notifications" element={
+                <JobSeekerOnlyRoute>
+                  <SettingsPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/settings/privacy" element={
+                <JobSeekerOnlyRoute>
+                  <SettingsPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/settings/preferences" element={
+                <JobSeekerOnlyRoute>
+                  <SettingsPage />
+                </JobSeekerOnlyRoute>
+              } />
+              
+              <Route path="/settings/security" element={
+                <JobSeekerOnlyRoute>
+                  <SettingsPage />
+                </JobSeekerOnlyRoute>
+              } />
+
               {/* 🏢 Employer ONLY Routes */}
               <Route path="/employer-dashboard" element={
                 <EmployerOnlyRoute>
