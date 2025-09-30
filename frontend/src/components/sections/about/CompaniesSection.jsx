@@ -36,23 +36,24 @@ function CompaniesSection() {
         gap={10}
       >
         {/* Left: Heading and description */}
-        <Box flex="1" color="white" maxW="2xl"> {/* Increased max width */}
+        <Box flex="1" color="white" maxW="2xl">
           <Heading
             as="h2"
             fontSize={{ base: "3xl", md: "5xl" }}
             fontWeight="extrabold"
             mb={4}
             lineHeight="1.1"
-            maxW="2xl" // Increased max width
+            maxW="2xl"
           >
             Great Companies <br /> trust in us
           </Heading>
           <Text
             fontSize={{ base: "md", md: "lg" }}
             color="whiteAlpha.900"
-            maxW="2xl" // Increased max width
+            maxW="2xl"
           >
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            We partner with trusted companies across different industries to bring you a wide range of job openings. 
+            From startups to established enterprises, Trabahanap is where top talent meets top employers.
           </Text>
         </Box>
         {/* Right: Companies grid */}
@@ -81,8 +82,8 @@ function CompaniesSection() {
                 <Image
                   src={company.logo}
                   alt={company.name}
-                  h={company.name === "TESLA" ? 16 : 8} // Tesla logo much bigger
-                  maxW={company.name === "TESLA" ? "140px" : "100px"} // Increase max width for Tesla
+                  h={company.name === "TESLA" ? 16 : 8}
+                  maxW={company.name === "TESLA" ? "140px" : "100px"}
                   objectFit="contain"
                 />
               </Flex>
