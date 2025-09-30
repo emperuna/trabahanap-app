@@ -1,8 +1,11 @@
-import { Box, Text, VStack, HStack, Icon, Flex, Image } from "@chakra-ui/react";
+import { Box, Text, VStack, HStack, Flex, Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import AlbertoImg from "../../../assets/images/Alberto.png";
+import TwitterLogo from "../../../assets/icons/Twitter.svg";
+import FacebookLogo from "../../../assets/icons/Facebook.svg";
+import GithubLogo from "../../../assets/icons/Github.svg";
+import LinkedinLogo from "../../../assets/icons/Linkedin.svg";
 import TrabaHanapLogo from "../../../assets/logo/TrabaHanap-Logo.svg";
-import TrabaHanapLogoWhite from "../../../assets/logo/TrabaHanap-Logo-White.svg";
 
 const teamMembers = [
 	{
@@ -31,25 +34,13 @@ const teamMembers = [
 	},
 ];
 
-function SocialIcons() {
+function SocialIcons({ isBrightBlue }) {
 	return (
 		<HStack spacing={3}>
-			<Icon viewBox="0 0 20 20" boxSize={5} color="white">
-				<circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
-				<text x="6" y="15" fontSize="10" fill="currentColor">f</text>
-			</Icon>
-			<Icon viewBox="0 0 20 20" boxSize={5} color="white">
-				<circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
-				<text x="6" y="15" fontSize="10" fill="currentColor">O</text>
-			</Icon>
-			<Icon viewBox="0 0 20 20" boxSize={5} color="white">
-				<circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
-				<text x="6" y="15" fontSize="10" fill="currentColor">X</text>
-			</Icon>
-			<Icon viewBox="0 0 20 20" boxSize={5} color="white">
-				<circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
-				<text x="6" y="15" fontSize="10" fill="currentColor">in</text>
-			</Icon>
+			<Image src={FacebookLogo} alt="Facebook" boxSize={5} filter={isBrightBlue ? "brightness(0) invert(1)" : ""} />
+			<Image src={TwitterLogo} alt="Twitter" boxSize={5} filter={isBrightBlue ? "brightness(0) invert(1)" : ""} />
+			<Image src={GithubLogo} alt="Github" boxSize={5} filter={isBrightBlue ? "brightness(0) invert(1)" : ""} />
+			<Image src={LinkedinLogo} alt="Linkedin" boxSize={5} filter={isBrightBlue ? "brightness(0) invert(1)" : ""} />
 		</HStack>
 	);
 }
@@ -57,6 +48,16 @@ function SocialIcons() {
 function Team() {
 	return (
 		<Box py={16} px={8} bg="white">
+			<Box mb={8}>
+				<Text
+					fontSize={{ base: "3xl", md: "5xl" }}
+					fontWeight="extrabold"
+					color="blue.600"
+					textAlign="center"
+				>
+					Meet the team
+				</Text>
+			</Box>
 			<HStack spacing={8} justify="center" align="stretch">
 				{teamMembers.map((member, idx) => {
 					const isBrightBlue = member.bg.includes("#174AFF");
@@ -88,12 +89,15 @@ function Team() {
 							}}
 						>
 							<Flex px={6} pt={5} justify="space-between" align="center">
+								{/* TrabaHanap logo on the left */}
 								<Image
-									src={isBrightBlue ? TrabaHanapLogoWhite : TrabaHanapLogo}
+									src={TrabaHanapLogo}
 									alt="TrabaHanap Logo"
 									boxSize={7}
+									filter={isBrightBlue ? "brightness(0) invert(1)" : ""}
 								/>
-								<SocialIcons />
+								{/* Social icons on the right */}
+								<SocialIcons isBrightBlue={isBrightBlue} />
 							</Flex>
 							<VStack align="start" spacing={1} px={6} pt={4} pb={2}>
 								<Text fontSize="lg" fontWeight="bold" color={fontColor}>

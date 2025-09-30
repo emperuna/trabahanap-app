@@ -19,7 +19,7 @@ function CompaniesSection() {
   return (
     <Box
       w="full"
-      bg="#174AFF"
+      bgGradient="linear(120deg, brand.500 0%, brand.500 50%, blue.600 50%, blue.600 66.67%, blue.700 66.67%, blue.700 83.33%, blue.800 83.33%, blue.800 100%)" p={8} color="white"
       py={{ base: 10, md: 16 }}
       px={{ base: 4, md: 12 }}
       display="flex"
