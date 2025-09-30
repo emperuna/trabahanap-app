@@ -27,6 +27,7 @@ import JobDetail from './pages/jobseeker/JobSeekerJobDetail';
 import EmployerApplications from './pages/employer/EmployerApplications';
 import EmployerManageJobs from './pages/employer/EmployerManageJobs';
 import SettingsPage from './pages/settings/SettingsPage';
+import About from "./pages/static/About";
 
 function App() {
   const [showDevButton, setShowDevButton] = React.useState(true);
@@ -233,7 +234,7 @@ function App() {
               <Route path="/pricing" element={<ComingSoon />} />
               <Route path="/solutions" element={<ComingSoon />} />
               <Route path="/hire" element={<ComingSoon />} />
-              <Route path="/about" element={<ComingSoon />} />
+              <Route path="/about" element={<About />} /> {/* Route to About page */}
               <Route path="/mission" element={<ComingSoon />} />
               <Route path="/careers" element={<ComingSoon />} />
               <Route path="/press" element={<ComingSoon />} />
