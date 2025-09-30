@@ -53,6 +53,18 @@ public class User {
                inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "bio", length = 1000)
+    private String bio;
+
+    @Column(name = "profile_picture")
+    private String profilePicture;
+
     public User() {}
 
     public User(String username, String email, String password) {
@@ -128,6 +140,18 @@ public class User {
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+
+    public String getBio() { return bio; }
+    public void setBio(String bio) { this.bio = bio; }
+
+    public String getProfilePicture() { return profilePicture; }
+    public void setProfilePicture(String profilePicture) { this.profilePicture = profilePicture; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;

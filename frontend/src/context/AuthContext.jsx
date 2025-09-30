@@ -20,6 +20,7 @@ const AUTH_ACTIONS = {
   REGISTER_FAILURE: 'REGISTER_FAILURE',
   LOGOUT: 'LOGOUT',
   LOAD_USER: 'LOAD_USER',
+  UPDATE_USER: 'UPDATE_USER', // ✅ Add this action
   CLEAR_ERROR: 'CLEAR_ERROR',
   SET_LOADING_FALSE: 'SET_LOADING_FALSE',
 };
@@ -86,6 +87,13 @@ const authReducer = (state, action) => {
         user: action.payload,
         isAuthenticated: !!action.payload,
         isLoading: false,
+      };
+
+    // ✅ Add UPDATE_USER case
+    case AUTH_ACTIONS.UPDATE_USER:
+      return {
+        ...state,
+        user: { ...state.user, ...action.payload },
       };
 
     case AUTH_ACTIONS.SET_LOADING_FALSE:
@@ -298,36 +306,77 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  // ✅ ADD updateUser function
+  const updateUser = (updatedUserData) => {
+    try {
+      console.log('📝 AuthContext: Updating user with data:', updatedUserData);
+      
+      // Update both the reducer state and the useState
+      dispatch({
+        type: AUTH_ACTIONS.UPDATE_USER,
+        payload: updatedUserData
+      });
+      
+      // Also update the useState user (for consistency with your dual state approach)
+      setUser(prevUser => {
+        const newUser = { ...prevUser, ...updatedUserData };
+        console.log('✅ AuthContext: User updated successfully:', newUser);
+        return newUser;
+      });
+      
+      return { ...user, ...updatedUserData };
+    } catch (error) {
+      console.error('❌ AuthContext: Error updating user:', error);
+      throw error;
+    }
+  };
+
+  // ✅ ADD refreshUser function (optional)
+  const refreshUser = async () => {
+    try {
+      console.log('🔄 AuthContext: Refreshing user data...');
+      const userData = await authAPI.verifyToken();
+      
+      dispatch({
+        type: AUTH_ACTIONS.LOAD_USER,
+        payload: userData
+      });
+      
+      setUser(userData);
+      console.log('✅ AuthContext: User data refreshed:', userData);
+      
+      return userData;
+    } catch (error) {
+      console.error('❌ AuthContext: Error refreshing user:', error);
+      throw error;
+    }
+  };
+
   const clearError = () => {
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
   };
 
-  const value = {
-    user: state.user,
+  // ✅ Update the context value to include updateUser
+  const contextValue = {
+    // Use the reducer state for some values and useState for others (maintaining your existing pattern)
+    user: user || state.user, // Prefer useState user, fallback to reducer user
     token: state.token,
-    isAuthenticated: state.isAuthenticated,
-    isLoading: state.isLoading,
+    isAuthenticated: isAuthenticated || state.isAuthenticated,
+    isLoading: isLoading && state.isLoading, // Both should be false to stop loading
     error: state.error,
     login,
-    register,
     logout,
+    register,
+    updateUser, // ✅ Add this
+    refreshUser, // ✅ Add this (optional)
     clearError,
   };
 
-  const contextValue = {
-    user,
-    isAuthenticated,
-    isLoading,
-    login,
-    logout,
-    register
-  };
-
   console.log('🔍 AuthContext State:', {
-    isAuthenticated,
-    isLoading,
-    hasUser: !!user,
-    userRoles: user?.roles || []
+    isAuthenticated: contextValue.isAuthenticated,
+    isLoading: contextValue.isLoading,
+    hasUser: !!contextValue.user,
+    userRoles: contextValue.user?.roles || []
   });
 
   return (

@@ -55,7 +55,7 @@ const UserMenu = ({ user, profileCompletion, onLogout }) => {
         <MenuDivider />
         <MenuItem
           as={RouterLink}
-          to="/dashboard/settings"
+          to="/settings"
           icon={<HiCog />}
         >
           Settings
