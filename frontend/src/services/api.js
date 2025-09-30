@@ -167,21 +167,61 @@ export const companiesAPI = {
 
 // Users API calls
 export const usersAPI = {
+  // Get user profile
   getProfile: async () => {
     try {
+      console.log('👤 API: Getting user profile...');
       const response = await api.get('/users/profile');
+      console.log('✅ API: Profile retrieved:', response.data);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch profile');
+      console.error('❌ API: Error getting profile:', error);
+      throw new Error(`Failed to get profile: ${error.response?.data?.message || error.message}`);
     }
   },
 
+  // ✅ Update user profile - THIS WAS MISSING
   updateProfile: async (profileData) => {
     try {
-      const response = await api.put('/users/profile', profileData);
+      console.log('📝 API: Updating user profile with data:', profileData);
+      
+      // Make sure we're sending the right data structure
+      const requestData = {
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
+        email: profileData.email,
+        phoneNumber: profileData.phoneNumber, // Note: backend expects 'phoneNumber'
+        location: profileData.location,
+        bio: profileData.bio
+      };
+      
+      console.log('📦 API: Request data formatted as:', requestData);
+      
+      const response = await api.put('/users/profile', requestData);
+      console.log('✅ API: Profile update response:', response.data);
+      
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to update profile');
+      console.error('❌ API: Error updating profile:', error);
+      console.error('❌ API: Error details:', {
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        message: error.message
+      });
+      
+      // Provide more specific error messages
+      if (error.response?.status === 401) {
+        throw new Error('Authentication failed. Please login again.');
+      } else if (error.response?.status === 404) {
+        throw new Error('Profile update endpoint not found. Backend may not be ready.');
+      } else if (error.response?.status === 500) {
+        throw new Error(`Server error: ${error.response?.data?.message || 'Internal server error'}`);
+      } else if (error.code === 'ECONNREFUSED' || error.message.includes('Network Error')) {
+        throw new Error('Cannot connect to server. Please check if backend is running.');
+      }
+      
+      throw new Error(`Failed to update profile: ${error.response?.data?.message || error.message}`);
     }
   },
 
