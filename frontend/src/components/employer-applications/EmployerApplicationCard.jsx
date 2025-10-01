@@ -1,10 +1,12 @@
 import React from 'react';
 import {
-  Card, CardBody, VStack, HStack, Text, Avatar, Divider,
-  useColorModeValue, IconButton, Menu, MenuButton, MenuList, MenuItem
+  Card, CardBody, VStack, HStack, Text, Avatar, Divider, Button,
+  useColorModeValue, IconButton, Menu, MenuButton, MenuList, MenuItem,
+  useToast, Badge
 } from '@chakra-ui/react';
 import { 
-  HiEye, HiDotsVertical, HiMail, HiDownload
+  HiEye, HiDotsVertical, HiMail, HiDownload, HiOutlineDocumentText,
+  HiOutlineEye, HiCalendar
 } from 'react-icons/hi';
 import EmployerApplicationStatusBadge from './EmployerApplicationStatusBadge';
 import EmployerApplicationActions from './EmployerApplicationActions';
@@ -12,12 +14,52 @@ import EmployerApplicationActions from './EmployerApplicationActions';
 const EmployerApplicationCard = ({ 
   application, 
   formatDate, 
-  onStatusUpdate 
+  onStatusUpdate,
+  onViewPDF
 }) => {
   const cardBg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
   const textColor = useColorModeValue('gray.800', 'white');
   const mutedColor = useColorModeValue('gray.600', 'gray.400');
+  const toast = useToast();
+
+  const handleViewResume = () => {
+    if (application.resumePath && onViewPDF) {
+      onViewPDF(
+        application.id, 
+        'resume', 
+        `${application.applicantUsername}'s Resume`
+      );
+    }
+  };
+
+  const handleViewCoverLetter = () => {
+    if (application.coverLetterPath && onViewPDF) {
+      onViewPDF(
+        application.id, 
+        'cover-letter', 
+        `${application.applicantUsername}'s Cover Letter`
+      );
+    }
+  };
+
+  const handleViewTextCoverLetter = () => {
+    if (application.coverLetter) {
+      toast({
+        title: `Cover Letter - ${application.applicantUsername}`,
+        description: application.coverLetter,
+        status: 'info',
+        duration: 10000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  };
+
+  const getDaysAgo = (dateString) => {
+    const days = Math.ceil((new Date() - new Date(dateString)) / (1000 * 60 * 60 * 24));
+    return days;
+  };
 
   return (
     <Card
@@ -25,8 +67,9 @@ const EmployerApplicationCard = ({
       border="1px"
       borderColor={borderColor}
       borderRadius="xl"
-      _hover={{ shadow: 'md', transform: 'translateY(-2px)' }}
+      _hover={{ shadow: 'lg', transform: 'translateY(-4px)' }}
       transition="all 0.3s ease"
+      h="fit-content"
     >
       <CardBody p={6}>
         <VStack spacing={4} align="stretch">
@@ -36,16 +79,19 @@ const EmployerApplicationCard = ({
               <Avatar 
                 name={application.applicantUsername || 'Applicant'} 
                 size="md"
-                bg="blue.500"
+                bg="#153CF5"
                 color="white"
               />
-              <VStack align="start" spacing={0}>
-                <Text fontSize="md" fontWeight="semibold" color={textColor}>
+              <VStack align="start" spacing={1}>
+                <Text fontSize="md" fontWeight="bold" color={textColor}>
                   {application.applicantUsername || 'Anonymous Applicant'}
                 </Text>
-                <Text fontSize="sm" color={mutedColor}>
-                  {application.applicantEmail || 'No email provided'}
-                </Text>
+                <HStack spacing={1}>
+                  <HiMail size={12} color={mutedColor} />
+                  <Text fontSize="xs" color={mutedColor}>
+                    {application.applicantEmail || 'No email provided'}
+                  </Text>
+                </HStack>
               </VStack>
             </HStack>
             
@@ -56,52 +102,153 @@ const EmployerApplicationCard = ({
                 variant="ghost"
                 size="sm"
                 color={mutedColor}
+                _hover={{ bg: useColorModeValue('gray.100', 'gray.700') }}
               />
               <MenuList>
                 <MenuItem icon={<HiEye />}>
-                  View Full Application
+                  View Full Profile
                 </MenuItem>
                 <MenuItem icon={<HiMail />}>
-                  Send Message
+                  Contact Applicant
                 </MenuItem>
-                <MenuItem icon={<HiDownload />}>
-                  Download Resume
-                </MenuItem>
+                {application.resumePath && (
+                  <MenuItem 
+                    icon={<HiOutlineDocumentText />}
+                    onClick={handleViewResume}
+                  >
+                    View Resume (PDF)
+                  </MenuItem>
+                )}
+                {application.coverLetterPath && (
+                  <MenuItem 
+                    icon={<HiOutlineDocumentText />}
+                    onClick={handleViewCoverLetter}
+                  >
+                    View Cover Letter (PDF)
+                  </MenuItem>
+                )}
               </MenuList>
             </Menu>
           </HStack>
 
-          {/* Job & Status */}
+          {/* Job Info */}
           <VStack align="start" spacing={2}>
-            <Text fontSize="sm" fontWeight="medium" color={textColor}>
-              Applied for: {application.jobTitle}
+            <Text fontSize="sm" fontWeight="semibold" color={textColor}>
+              Applied for: <Text as="span" color="#153CF5">{application.jobTitle}</Text>
             </Text>
-            <EmployerApplicationStatusBadge status={application.status} />
+            <HStack justify="space-between" w="full">
+              <EmployerApplicationStatusBadge status={application.status} />
+              <HStack spacing={1}>
+                <HiCalendar size={12} />
+                <Text fontSize="xs" color={mutedColor}>
+                  {getDaysAgo(application.appliedAt)} days ago
+                </Text>
+              </HStack>
+            </HStack>
           </VStack>
 
-          {/* Cover Letter Preview */}
-          {application.coverLetter && (
-            <VStack align="start" spacing={1}>
-              <Text fontSize="xs" color={mutedColor}>Cover Letter:</Text>
-              <Text fontSize="sm" color={textColor} noOfLines={3}>
-                "{application.coverLetter}"
-              </Text>
+          {/* Documents Section */}
+          <VStack align="start" spacing={3}>
+            <Text fontSize="sm" fontWeight="semibold" color={textColor}>
+              📄 Documents
+            </Text>
+            
+            <VStack spacing={2} align="stretch" w="full">
+              {/* Resume */}
+              {application.resumePath ? (
+                <HStack justify="space-between" p={3} bg={useColorModeValue('blue.50', 'blue.900')} borderRadius="md">
+                  <HStack spacing={2}>
+                    <HiOutlineDocumentText color="#153CF5" />
+                    <Text fontSize="sm" fontWeight="medium" color={textColor}>Resume</Text>
+                    <Badge colorScheme="blue" size="sm">PDF</Badge>
+                  </HStack>
+                  <Button
+                    size="xs"
+                    colorScheme="blue"
+                    variant="solid"
+                    leftIcon={<HiEye />}
+                    onClick={handleViewResume}
+                    borderRadius="full"
+                  >
+                    View
+                  </Button>
+                </HStack>
+              ) : (
+                <HStack justify="space-between" p={3} bg={useColorModeValue('gray.50', 'gray.700')} borderRadius="md">
+                  <HStack spacing={2}>
+                    <HiOutlineDocumentText color={mutedColor} />
+                    <Text fontSize="sm" color={mutedColor}>No resume uploaded</Text>
+                  </HStack>
+                </HStack>
+              )}
+
+              {/* Cover Letter */}
+              {application.coverLetterPath ? (
+                <HStack justify="space-between" p={3} bg={useColorModeValue('purple.50', 'purple.900')} borderRadius="md">
+                  <HStack spacing={2}>
+                    <HiOutlineDocumentText color="#9333EA" />
+                    <Text fontSize="sm" fontWeight="medium" color={textColor}>Cover Letter</Text>
+                    <Badge colorScheme="purple" size="sm">PDF</Badge>
+                  </HStack>
+                  <Button
+                    size="xs"
+                    colorScheme="purple"
+                    variant="solid"
+                    leftIcon={<HiEye />}
+                    onClick={handleViewCoverLetter}
+                    borderRadius="full"
+                  >
+                    View
+                  </Button>
+                </HStack>
+              ) : application.coverLetter ? (
+                <VStack align="stretch" p={3} bg={useColorModeValue('green.50', 'green.900')} borderRadius="md">
+                  <HStack justify="space-between">
+                    <HStack spacing={2}>
+                      <HiOutlineEye color="#059669" />
+                      <Text fontSize="sm" fontWeight="medium" color={textColor}>Cover Letter</Text>
+                      <Badge colorScheme="green" size="sm">Text</Badge>
+                    </HStack>
+                    <Button
+                      size="xs"
+                      colorScheme="green"
+                      variant="solid"
+                      leftIcon={<HiOutlineEye />}
+                      onClick={handleViewTextCoverLetter}
+                      borderRadius="full"
+                    >
+                      View
+                    </Button>
+                  </HStack>
+                  <Text fontSize="xs" color={textColor} noOfLines={2} mt={1}>
+                    "{application.coverLetter}"
+                  </Text>
+                </VStack>
+              ) : (
+                <HStack justify="space-between" p={3} bg={useColorModeValue('gray.50', 'gray.700')} borderRadius="md">
+                  <HStack spacing={2}>
+                    <HiOutlineDocumentText color={mutedColor} />
+                    <Text fontSize="sm" color={mutedColor}>No cover letter provided</Text>
+                  </HStack>
+                </HStack>
+              )}
             </VStack>
-          )}
+          </VStack>
 
           <Divider />
 
-          {/* Footer */}
-          <HStack justify="space-between" align="center">
-            <Text fontSize="xs" color={mutedColor}>
-              Applied {formatDate(application.appliedAt)}
+          {/* Application Date */}
+          <HStack justify="center">
+            <Text fontSize="xs" color={mutedColor} textAlign="center">
+              Application submitted on {formatDate(application.appliedAt)}
             </Text>
-            
-            <EmployerApplicationActions 
-              application={application}
-              onStatusUpdate={onStatusUpdate}
-            />
           </HStack>
+
+          {/* Actions */}
+          <EmployerApplicationActions 
+            application={application}
+            onApplicationUpdate={onStatusUpdate}
+          />
         </VStack>
       </CardBody>
     </Card>
