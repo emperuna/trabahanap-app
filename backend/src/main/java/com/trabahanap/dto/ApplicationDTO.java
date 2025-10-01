@@ -12,6 +12,8 @@ public class ApplicationDTO {
     private String applicantEmail;
     private String status;
     private String coverLetter;
+    private String coverLetterPath;
+    private String resumePath;
     private LocalDateTime appliedAt;
     private LocalDateTime updatedAt;
 
@@ -21,7 +23,9 @@ public class ApplicationDTO {
         ApplicationDTO dto = new ApplicationDTO();
         dto.setId(application.getId());
         dto.setStatus(application.getStatus().toString());
-        dto.setCoverLetter(application.getCoverLetter());
+        dto.setCoverLetter(application.getCoverLetterText()); // Updated method name
+        dto.setCoverLetterPath(application.getCoverLetterPath());
+        dto.setResumePath(application.getResumePath());
         dto.setAppliedAt(application.getAppliedAt());
         dto.setUpdatedAt(application.getUpdatedAt());
 
@@ -63,6 +67,12 @@ public class ApplicationDTO {
 
     public String getCoverLetter() { return coverLetter; }
     public void setCoverLetter(String coverLetter) { this.coverLetter = coverLetter; }
+
+    public String getCoverLetterPath() { return coverLetterPath; }
+    public void setCoverLetterPath(String coverLetterPath) { this.coverLetterPath = coverLetterPath; }
+
+    public String getResumePath() { return resumePath; }
+    public void setResumePath(String resumePath) { this.resumePath = resumePath; }
 
     public LocalDateTime getAppliedAt() { return appliedAt; }
     public void setAppliedAt(LocalDateTime appliedAt) { this.appliedAt = appliedAt; }
