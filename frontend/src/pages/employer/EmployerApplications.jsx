@@ -41,13 +41,54 @@ const EmployerApplications = () => {
     }
   };
 
-  const handleViewPDF = (applicationId, fileType, title) => {
-    const token = localStorage.getItem('token');
-    const pdfUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/applications/view/${applicationId}/${fileType}?Authorization=Bearer ${token}`;
-    
-    setSelectedPDF(pdfUrl);
-    setPdfTitle(title);
-    pdfOnOpen();
+  const handleViewPDF = async (applicationId, fileType, title) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast({
+          title: 'Authentication Error',
+          description: 'Please log in to view documents',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
+
+      // Create a blob URL with proper authentication
+      const apiUrl = window.location.origin.includes('localhost') 
+        ? 'http://localhost:8080' 
+        : window.location.origin;
+      
+      const response = await fetch(`${apiUrl}/api/applications/view/${applicationId}/${fileType}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/pdf'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const pdfUrl = URL.createObjectURL(blob);
+      
+      setSelectedPDF(pdfUrl);
+      setPdfTitle(title);
+      pdfOnOpen();
+
+    } catch (error) {
+      console.error('Error loading PDF:', error);
+      toast({
+        title: 'Error loading PDF',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   const formatDate = (dateString) => {
@@ -61,7 +102,13 @@ const EmployerApplications = () => {
           <VStack spacing={6} align="stretch">
             <Heading size="lg">Job Applications</Heading>
 
-            {applications.length === 0 ? (
+            {loading ? (
+              <Card>
+                <CardBody p={12} textAlign="center">
+                  <Text fontSize="xl" color="gray.500">Loading applications...</Text>
+                </CardBody>
+              </Card>
+            ) : applications.length === 0 ? (
               <Card>
                 <CardBody p={12} textAlign="center">
                   <Text fontSize="xl" color="gray.500">No applications yet</Text>
@@ -164,8 +211,13 @@ const EmployerApplications = () => {
                                     colorScheme="gray"
                                     leftIcon={<HiEye />}
                                     onClick={() => {
-                                      // You can create a text modal for this
-                                      alert(application.coverLetter);
+                                      toast({
+                                        title: 'Cover Letter',
+                                        description: application.coverLetter,
+                                        status: 'info',
+                                        duration: 10000,
+                                        isClosable: true,
+                                      });
                                     }}
                                   >
                                     Text

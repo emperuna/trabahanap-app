@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   ModalOverlay,
@@ -22,6 +22,22 @@ const PDFViewerModal = ({ isOpen, onClose, pdfUrl, title }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  useEffect(() => {
+    if (isOpen && pdfUrl) {
+      setLoading(true);
+      setError(false);
+    }
+  }, [isOpen, pdfUrl]);
+
+  // Clean up blob URL when modal closes
+  useEffect(() => {
+    return () => {
+      if (pdfUrl && pdfUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(pdfUrl);
+      }
+    };
+  }, [pdfUrl]);
+
   const handleLoad = () => {
     setLoading(false);
     setError(false);
@@ -35,8 +51,14 @@ const PDFViewerModal = ({ isOpen, onClose, pdfUrl, title }) => {
   const handleDownload = () => {
     const link = document.createElement('a');
     link.href = pdfUrl;
-    link.download = `${title.toLowerCase().replace(' ', '-')}.pdf`;
+    link.download = `${title.toLowerCase().replace(/\s+/g, '-')}.pdf`;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleNewTab = () => {
+    window.open(pdfUrl, '_blank');
   };
 
   const bgColor = useColorModeValue('white', 'gray.800');
@@ -58,7 +80,7 @@ const PDFViewerModal = ({ isOpen, onClose, pdfUrl, title }) => {
               />
               <IconButton
                 icon={<HiExternalLink />}
-                onClick={() => window.open(pdfUrl, '_blank')}
+                onClick={handleNewTab}
                 size="sm"
                 variant="outline"
                 aria-label="Open in new tab"
@@ -86,15 +108,17 @@ const PDFViewerModal = ({ isOpen, onClose, pdfUrl, title }) => {
             </VStack>
           ) : (
             <Box h="full" w="full">
-              <iframe
-                src={pdfUrl}
-                width="100%"
-                height="100%"
-                style={{ border: 'none' }}
-                onLoad={handleLoad}
-                onError={handleError}
-                title={title}
-              />
+              {pdfUrl && (
+                <iframe
+                  src={pdfUrl}
+                  width="100%"
+                  height="100%"
+                  style={{ border: 'none' }}
+                  onLoad={handleLoad}
+                  onError={handleError}
+                  title={title}
+                />
+              )}
             </Box>
           )}
         </ModalBody>
