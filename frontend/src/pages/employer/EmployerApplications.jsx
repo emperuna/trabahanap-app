@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Container, VStack, Spinner, Text, useToast, useColorModeValue
+  Box, Container, VStack, useToast, useDisclosure
 } from '@chakra-ui/react';
 import { applicationsAPI } from '../../services/api';
+import PDFViewerModal from '../../components/common/PDFViewerModal';
+
+// Import existing employer-applications components
 import {
   EmployerApplicationsHeader,
   EmployerApplicationsStats,
@@ -13,30 +16,24 @@ import {
 
 const EmployerApplications = () => {
   const [applications, setApplications] = useState([]);
-  const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedPDF, setSelectedPDF] = useState(null);
+  const [pdfTitle, setPdfTitle] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [jobFilter, setJobFilter] = useState('');
+  
+  const { isOpen: pdfIsOpen, onOpen: pdfOnOpen, onClose: pdfOnClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const textColor = useColorModeValue('gray.800', 'white');
-  const mutedColor = useColorModeValue('gray.600', 'gray.400');
-
   useEffect(() => {
-    fetchEmployerApplications();
+    fetchApplications();
   }, []);
 
-  useEffect(() => {
-    filterApplications();
-  }, [applications, statusFilter, jobFilter]);
-
-  const fetchEmployerApplications = async () => {
+  const fetchApplications = async () => {
     try {
       setLoading(true);
-      const response = await applicationsAPI.getEmployerApplications();
-      setApplications(response);
+      const data = await applicationsAPI.getEmployerApplications();
+      setApplications(data);
     } catch (error) {
       toast({
         title: 'Error fetching applications',
@@ -50,122 +47,189 @@ const EmployerApplications = () => {
     }
   };
 
-  const filterApplications = () => {
-    let filtered = [...applications];
-
-    if (statusFilter) {
-      filtered = filtered.filter(app => 
-        app.status?.toUpperCase() === statusFilter.toUpperCase()
+  const handleStatusUpdate = async (applicationId, newStatus) => {
+    try {
+      // Optimistic update
+      setApplications(prevApplications =>
+        prevApplications.map(app =>
+          app.id === applicationId
+            ? { ...app, status: newStatus, updatedAt: new Date().toISOString() }
+            : app
+        )
       );
-    }
 
-    if (jobFilter) {
-      filtered = filtered.filter(app => 
-        app.jobTitle?.toLowerCase().includes(jobFilter.toLowerCase())
-      );
-    }
+      // API call
+      await applicationsAPI.updateApplicationStatus(applicationId, newStatus);
 
-    setFilteredApplications(filtered);
+      // Success toast
+      const applicant = applications.find(app => app.id === applicationId);
+      toast({
+        title: `Application ${newStatus.toLowerCase()}`,
+        description: `${applicant?.applicantUsername}'s application has been ${newStatus.toLowerCase()}.`,
+        status: newStatus === 'ACCEPTED' ? 'success' : newStatus === 'REJECTED' ? 'warning' : 'info',
+        duration: 4000,
+        isClosable: true,
+      });
+
+      // Refresh data after a short delay
+      setTimeout(() => {
+        fetchApplications();
+      }, 1000);
+
+    } catch (error) {
+      // Revert optimistic update on error
+      fetchApplications();
+      
+      toast({
+        title: 'Error updating status',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
-  const getUniqueJobs = () => {
-    const jobs = applications.map(app => app.jobTitle).filter(Boolean);
-    return [...new Set(jobs)];
-  };
+  const handleViewPDF = async (applicationId, fileType, title) => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        toast({
+          title: 'Authentication Error',
+          description: 'Please log in to view documents',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
+        return;
+      }
 
-  const handleStatusUpdate = (applicationId, newStatus) => {
-    setApplications(prev => 
-      prev.map(app => 
-        app.id === applicationId 
-          ? { ...app, status: newStatus, updatedAt: new Date().toISOString() }
-          : app
-      )
-    );
+      const apiUrl = window.location.origin.includes('localhost') 
+        ? 'http://localhost:8080' 
+        : window.location.origin;
+      
+      const response = await fetch(`${apiUrl}/api/applications/view/${applicationId}/${fileType}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/pdf'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const blob = await response.blob();
+      const pdfUrl = URL.createObjectURL(blob);
+      
+      setSelectedPDF(pdfUrl);
+      setPdfTitle(title);
+      pdfOnOpen();
+
+    } catch (error) {
+      console.error('Error loading PDF:', error);
+      toast({
+        title: 'Error loading PDF',
+        description: error.message,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'Unknown date';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
+    return new Date(dateString).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
   };
 
-  if (loading) {
-    return (
-      <Box bg={bgColor} minH="100vh" display="flex" justifyContent="center" alignItems="center">
-        <VStack spacing={4}>
-          <Spinner size="xl" color="blue.500" />
-          <Text color={mutedColor}>Loading applications...</Text>
-        </VStack>
-      </Box>
-    );
-  }
+  // Filter applications based on status and job filters
+  const getFilteredApplications = () => {
+    let filtered = applications;
+
+    if (statusFilter) {
+      filtered = filtered.filter(app => app.status === statusFilter);
+    }
+
+    if (jobFilter) {
+      filtered = filtered.filter(app => app.jobTitle === jobFilter);
+    }
+
+    return filtered;
+  };
+
+  const filteredApplications = getFilteredApplications();
+
+  // Get unique job titles for filter
+  const uniqueJobs = [...new Set(applications.map(app => app.jobTitle))];
+
+  // Check if we have applications and if filters are applied
+  const hasApplications = applications.length > 0;
+  const isFiltered = statusFilter || jobFilter;
 
   return (
-    <Box bg={bgColor} minH="100vh" py={8}>
-      <Container maxW="7xl">
-        <VStack spacing={6} align="stretch">
-          {/* Header */}
-          <EmployerApplicationsHeader 
-            applicationsCount={applications.length}
-            textColor={textColor}
-            mutedColor={mutedColor}
-          />
-
-          {/* Stats */}
-          {applications.length > 0 && (
-            <EmployerApplicationsStats applications={applications} />
-          )}
-
-          {/* Applications Content */}
-          {applications.length === 0 ? (
-            <EmptyEmployerApplicationsState 
-              cardBg={cardBg}
-              textColor={textColor}
-              mutedColor={mutedColor}
-              hasApplications={false}
-              isFiltered={false}
+    <>
+      <Box minH="100vh" py={8}>
+        <Container maxW="8xl">
+          <VStack spacing={8} align="stretch">
+            {/* Header */}
+            <EmployerApplicationsHeader 
+              applicationsCount={applications.length}
             />
-          ) : (
-            <>
-              {/* Filters */}
-              <EmployerApplicationsFilters
-                statusFilter={statusFilter}
-                setStatusFilter={setStatusFilter}
-                jobFilter={jobFilter}
-                setJobFilter={setJobFilter}
-                applications={applications}
-                filteredApplications={filteredApplications}
-                uniqueJobs={getUniqueJobs()}
-                onRefresh={fetchEmployerApplications}
-              />
 
-              {/* Applications List */}
-              {filteredApplications.length === 0 ? (
-                <EmptyEmployerApplicationsState 
-                  cardBg={cardBg}
-                  textColor={textColor}
-                  mutedColor={mutedColor}
-                  hasApplications={true}
-                  isFiltered={true}
-                />
-              ) : (
-                <EmployerApplicationsList
-                  applications={filteredApplications}
-                  formatDate={formatDate}
-                  onStatusUpdate={handleStatusUpdate}
-                />
-              )}
-            </>
-          )}
-        </VStack>
-      </Container>
-    </Box>
+            {/* Stats */}
+            <EmployerApplicationsStats applications={applications} />
+
+            {/* Filters */}
+            <EmployerApplicationsFilters
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
+              jobFilter={jobFilter}
+              setJobFilter={setJobFilter}
+              applications={applications}
+              filteredApplications={filteredApplications}
+              uniqueJobs={uniqueJobs}
+              onRefresh={fetchApplications}
+            />
+
+            {/* Applications List or Empty State */}
+            {loading ? (
+              <EmployerApplicationsList 
+                applications={[]}
+                formatDate={formatDate}
+                onStatusUpdate={handleStatusUpdate}
+                loading={true}
+              />
+            ) : filteredApplications.length === 0 ? (
+              <EmptyEmployerApplicationsState
+                hasApplications={hasApplications}
+                isFiltered={isFiltered}
+              />
+            ) : (
+              <EmployerApplicationsList 
+                applications={filteredApplications}
+                formatDate={formatDate}
+                onStatusUpdate={handleStatusUpdate}
+                onViewPDF={handleViewPDF}
+                loading={false}
+              />
+            )}
+          </VStack>
+        </Container>
+      </Box>
+
+      {/* PDF Viewer Modal */}
+      <PDFViewerModal
+        isOpen={pdfIsOpen}
+        onClose={pdfOnClose}
+        pdfUrl={selectedPDF}
+        title={pdfTitle}
+      />
+    </>
   );
 };
 

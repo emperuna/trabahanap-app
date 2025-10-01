@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box, 
   Container, 
@@ -31,7 +31,8 @@ import {
   Textarea,
   FormControl,
   FormLabel,
-  FormHelperText
+  FormHelperText,
+  Input
 } from '@chakra-ui/react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
@@ -58,6 +59,13 @@ const JobDetail = () => {
   const [hasApplied, setHasApplied] = useState(false);
   const [applying, setApplying] = useState(false);
   const [coverLetter, setCoverLetter] = useState('');
+  
+  // Add file upload state
+  const [resumeFile, setResumeFile] = useState(null);
+  const [coverLetterFile, setCoverLetterFile] = useState(null);
+  const resumeFileRef = useRef();
+  const coverLetterFileRef = useRef();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
@@ -98,10 +106,42 @@ const JobDetail = () => {
     }
   };
 
+  const handleFileChange = (file, type) => {
+    if (file && file.type === 'application/pdf') {
+      if (type === 'resume') {
+        setResumeFile(file);
+      } else if (type === 'coverLetter') {
+        setCoverLetterFile(file);
+      }
+    } else {
+      toast({
+        title: 'Invalid File',
+        description: 'Please select a PDF file only.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
   const handleApply = async () => {
     try {
       setApplying(true);
-      await applicationsAPI.applyForJob(id, coverLetter);
+
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('jobId', id);
+      formData.append('coverLetterText', coverLetter);
+      
+      if (resumeFile) {
+        formData.append('resumePdf', resumeFile);
+      }
+      
+      if (coverLetterFile) {
+        formData.append('coverLetterPdf', coverLetterFile);
+      }
+
+      await applicationsAPI.applyForJobWithFiles(formData);
       
       toast({
         title: 'Application Submitted!',
@@ -112,7 +152,6 @@ const JobDetail = () => {
       });
       
       setHasApplied(true);
-      setCoverLetter('');
       onClose();
       
     } catch (error) {
@@ -215,128 +254,79 @@ const JobDetail = () => {
       </Box>
 
       {/* Cover Letter Modal */}
-      <Modal isOpen={isOpen} onClose={handleModalClose} size="xl" isCentered>
+      <Modal isOpen={isOpen} onClose={onClose} size="xl" isCentered>
         <ModalOverlay bg="blackAlpha.600" backdropFilter="blur(10px)" />
         <ModalContent mx={4}>
-          <ModalHeader>
-            <VStack align="start" spacing={2}>
-              <HStack spacing={3}>
-                <Icon as={HiDocumentText} color="purple.500" boxSize={6} />
-                <Heading size="md">Apply for {job?.title}</Heading>
-              </HStack>
-              <Text fontSize="sm" color={mutedColor} fontWeight="normal">
-                at {job?.company}
-              </Text>
-            </VStack>
-          </ModalHeader>
+          <ModalHeader>Submit Application</ModalHeader>
           <ModalCloseButton />
           
-          <ModalBody pb={6}>
+          <ModalBody>
             <VStack spacing={6} align="stretch">
-              {/* Job Summary Card */}
-              <Card bg={useColorModeValue('gray.50', 'gray.700')} borderRadius="lg">
-                <CardBody p={4}>
-                  <VStack spacing={3} align="start">
-                    <HStack spacing={3}>
-                      <Avatar 
-                        name={job?.company} 
-                        size="sm" 
-                        bg="purple.500"
-                      />
-                      <VStack align="start" spacing={0}>
-                        <Text fontSize="sm" fontWeight="semibold">{job?.title}</Text>
-                        <Text fontSize="xs" color={mutedColor}>{job?.company}</Text>
-                      </VStack>
-                    </HStack>
-                    
-                    <HStack spacing={4} fontSize="xs" color={mutedColor}>
-                      <HStack spacing={1}>
-                        <Icon as={HiLocationMarker} />
-                        <Text>{job?.location}</Text>
-                      </HStack>
-                      <HStack spacing={1}>
-                        <Icon as={HiCurrencyDollar} />
-                        <Text>{formatSalary(job?.salary)}</Text>
-                      </HStack>
-                    </HStack>
-                  </VStack>
-                </CardBody>
-              </Card>
-
-              {/* Cover Letter Form */}
+              {/* Resume Upload */}
               <FormControl>
-                <FormLabel fontSize="sm" fontWeight="semibold">
-                  Cover Letter <Text as="span" color="red.500">*</Text>
-                </FormLabel>
-                <Textarea
-                  placeholder={`Dear Hiring Manager at ${job?.company},
-
-I am writing to express my interest in the ${job?.title} position. I believe my skills and experience make me a strong candidate for this role.
-
-[Tell them about your relevant experience, skills, and why you want to work for their company]
-
-I am excited about the opportunity to contribute to your team and would welcome the chance to discuss how my background aligns with your needs.
-
-Thank you for your consideration.
-
-Best regards,
-[Your name]`}
-                  value={coverLetter}
-                  onChange={(e) => setCoverLetter(e.target.value)}
-                  rows={10}
-                  resize="vertical"
-                  fontSize="sm"
-                  borderRadius="lg"
+                <FormLabel>Resume (PDF)</FormLabel>
+                <Input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => handleFileChange(e.target.files[0], 'resume')}
+                  ref={resumeFileRef}
+                  display="none"
                 />
-                <FormHelperText fontSize="xs">
-                  Write a compelling cover letter that highlights your qualifications and enthusiasm for this position.
-                  <Text as="span" color={mutedColor} ml={2}>
-                    ({coverLetter.length}/2000 characters)
-                  </Text>
-                </FormHelperText>
+                <Button
+                  onClick={() => resumeFileRef.current?.click()}
+                  variant="outline"
+                  w="full"
+                  h="50px"
+                >
+                  {resumeFile ? resumeFile.name : 'Upload Resume (PDF)'}
+                </Button>
               </FormControl>
 
-              {/* Application Tips */}
-              <Card bg={useColorModeValue('blue.50', 'blue.900')} borderRadius="lg" border="1px" borderColor="blue.200">
-                <CardBody p={4}>
-                  <VStack spacing={2} align="start">
-                    <Text fontSize="sm" fontWeight="semibold" color="blue.700">
-                      💡 Tips for a great cover letter:
-                    </Text>
-                    <VStack spacing={1} align="start" fontSize="xs" color="blue.600">
-                      <Text>• Personalize it for this specific role and company</Text>
-                      <Text>• Highlight your most relevant skills and experience</Text>
-                      <Text>• Show enthusiasm for the position and company</Text>
-                      <Text>• Keep it concise and professional</Text>
-                      <Text>• Proofread for any errors before submitting</Text>
-                    </VStack>
-                  </VStack>
-                </CardBody>
-              </Card>
+              {/* Cover Letter Upload (Optional) */}
+              <FormControl>
+                <FormLabel>Cover Letter (PDF) - Optional</FormLabel>
+                <Input
+                  type="file"
+                  accept=".pdf"
+                  onChange={(e) => handleFileChange(e.target.files[0], 'coverLetter')}
+                  ref={coverLetterFileRef}
+                  display="none"
+                />
+                <Button
+                  onClick={() => coverLetterFileRef.current?.click()}
+                  variant="outline"
+                  w="full"
+                  h="50px"
+                >
+                  {coverLetterFile ? coverLetterFile.name : 'Upload Cover Letter (PDF)'}
+                </Button>
+              </FormControl>
+
+              {/* Text Cover Letter */}
+              <FormControl>
+                <FormLabel>Cover Letter Text</FormLabel>
+                <Textarea
+                  placeholder="Write your cover letter here..."
+                  value={coverLetter}
+                  onChange={(e) => setCoverLetter(e.target.value)}
+                  rows={8}
+                />
+              </FormControl>
             </VStack>
           </ModalBody>
 
           <ModalFooter>
-            <HStack spacing={3} w="full">
-              <Button 
-                variant="ghost" 
-                onClick={handleModalClose}
-                flex={1}
-              >
-                Cancel
-              </Button>
-              <Button 
-                colorScheme="purple" 
-                onClick={handleApply}
-                isLoading={applying}
-                loadingText="Submitting..."
-                isDisabled={!coverLetter.trim() || coverLetter.length > 2000}
-                flex={2}
-                leftIcon={<Icon as={HiDocumentText} />}
-              >
-                Submit Application
-              </Button>
-            </HStack>
+            <Button variant="ghost" mr={3} onClick={onClose}>
+              Cancel
+            </Button>
+            <Button 
+              colorScheme="blue" 
+              onClick={handleApply}
+              isLoading={applying}
+              loadingText="Submitting..."
+            >
+              Submit Application
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
