@@ -22,9 +22,17 @@ public class JobApplication {
     @Enumerated(EnumType.STRING)
     private ApplicationStatus status = ApplicationStatus.PENDING;
 
-    @Column(name = "cover_letter", length = 2000)
-    private String coverLetter;
+    //New fields for cover letter and resume
+    @Column(name = "cover_letter_path")
+    private String coverLetterPath; // Path to PDF file
 
+    @Column(name = "resume_path")
+    private String resumePath; // Path to PDF file
+
+    @Column(name = "cover_letter_text", length = 2000)
+    private String coverLetterText; // Keep text for preview/search
+
+    //Current fields
     @Column(name = "applied_at")
     private LocalDateTime appliedAt = LocalDateTime.now();
 
@@ -37,7 +45,9 @@ public class JobApplication {
     public JobApplication(Job job, User applicant, String coverLetter) {
         this.job = job;
         this.applicant = applicant;
-        this.coverLetter = coverLetter;
+        this.coverLetterPath = coverLetterPath;
+        this.resumePath = resumePath;
+        this.coverLetterText = coverLetterText;
         this.appliedAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
@@ -55,14 +65,21 @@ public class JobApplication {
     public ApplicationStatus getStatus() { return status; }
     public void setStatus(ApplicationStatus status) { this.status = status; }
 
-    public String getCoverLetter() { return coverLetter; }
-    public void setCoverLetter(String coverLetter) { this.coverLetter = coverLetter; }
-
     public LocalDateTime getAppliedAt() { return appliedAt; }
     public void setAppliedAt(LocalDateTime appliedAt) { this.appliedAt = appliedAt; }
 
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+
+    // Add getters and setters for new fields
+    public String getCoverLetterPath() { return coverLetterPath; }
+    public void setCoverLetterPath(String coverLetterPath) { this.coverLetterPath = coverLetterPath; }
+
+    public String getResumePath() { return resumePath; }
+    public void setResumePath(String resumePath) { this.resumePath = resumePath; }
+
+    public String getCoverLetterText() { return coverLetterText; }
+    public void setCoverLetterText(String coverLetterText) { this.coverLetterText = coverLetterText; }
 
     public enum ApplicationStatus {
         PENDING,

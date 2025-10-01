@@ -1,42 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Container, VStack, Spinner, Text, useToast, useColorModeValue
+  Box, Container, VStack, HStack, Text, Button, Card, CardBody,
+  Heading, Badge, useToast, SimpleGrid, Avatar, Divider,
+  useColorModeValue, Table, Thead, Tbody, Tr, Th, Td,
+  TableContainer, IconButton, useDisclosure
 } from '@chakra-ui/react';
+import { 
+  HiEye, HiDocumentText, HiUser, HiMail, HiCalendar, HiDownload
+} from 'react-icons/hi';
 import { applicationsAPI } from '../../services/api';
-import {
-  EmployerApplicationsHeader,
-  EmployerApplicationsStats,
-  EmployerApplicationsFilters,
-  EmployerApplicationsList,
-  EmptyEmployerApplicationsState
-} from '../../components/employer-applications';
+import PDFViewerModal from '../../components/common/PDFViewerModal';
 
 const EmployerApplications = () => {
   const [applications, setApplications] = useState([]);
-  const [filteredApplications, setFilteredApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState('');
-  const [jobFilter, setJobFilter] = useState('');
+  const [selectedPDF, setSelectedPDF] = useState(null);
+  const [pdfTitle, setPdfTitle] = useState('');
+  
+  const { isOpen: pdfIsOpen, onOpen: pdfOnOpen, onClose: pdfOnClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const textColor = useColorModeValue('gray.800', 'white');
-  const mutedColor = useColorModeValue('gray.600', 'gray.400');
-
   useEffect(() => {
-    fetchEmployerApplications();
+    fetchApplications();
   }, []);
 
-  useEffect(() => {
-    filterApplications();
-  }, [applications, statusFilter, jobFilter]);
-
-  const fetchEmployerApplications = async () => {
+  const fetchApplications = async () => {
     try {
-      setLoading(true);
-      const response = await applicationsAPI.getEmployerApplications();
-      setApplications(response);
+      const data = await applicationsAPI.getEmployerApplications();
+      setApplications(data);
     } catch (error) {
       toast({
         title: 'Error fetching applications',
@@ -50,122 +41,168 @@ const EmployerApplications = () => {
     }
   };
 
-  const filterApplications = () => {
-    let filtered = [...applications];
-
-    if (statusFilter) {
-      filtered = filtered.filter(app => 
-        app.status?.toUpperCase() === statusFilter.toUpperCase()
-      );
-    }
-
-    if (jobFilter) {
-      filtered = filtered.filter(app => 
-        app.jobTitle?.toLowerCase().includes(jobFilter.toLowerCase())
-      );
-    }
-
-    setFilteredApplications(filtered);
-  };
-
-  const getUniqueJobs = () => {
-    const jobs = applications.map(app => app.jobTitle).filter(Boolean);
-    return [...new Set(jobs)];
-  };
-
-  const handleStatusUpdate = (applicationId, newStatus) => {
-    setApplications(prev => 
-      prev.map(app => 
-        app.id === applicationId 
-          ? { ...app, status: newStatus, updatedAt: new Date().toISOString() }
-          : app
-      )
-    );
+  const handleViewPDF = (applicationId, fileType, title) => {
+    const token = localStorage.getItem('token');
+    const pdfUrl = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/api/applications/view/${applicationId}/${fileType}?Authorization=Bearer ${token}`;
+    
+    setSelectedPDF(pdfUrl);
+    setPdfTitle(title);
+    pdfOnOpen();
   };
 
   const formatDate = (dateString) => {
-    if (!dateString) return 'Unknown date';
-    const date = new Date(dateString);
-    const now = new Date();
-    const diffTime = Math.abs(now - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) return 'Yesterday';
-    if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
+    return new Date(dateString).toLocaleDateString();
   };
 
-  if (loading) {
-    return (
-      <Box bg={bgColor} minH="100vh" display="flex" justifyContent="center" alignItems="center">
-        <VStack spacing={4}>
-          <Spinner size="xl" color="blue.500" />
-          <Text color={mutedColor}>Loading applications...</Text>
-        </VStack>
-      </Box>
-    );
-  }
-
   return (
-    <Box bg={bgColor} minH="100vh" py={8}>
-      <Container maxW="7xl">
-        <VStack spacing={6} align="stretch">
-          {/* Header */}
-          <EmployerApplicationsHeader 
-            applicationsCount={applications.length}
-            textColor={textColor}
-            mutedColor={mutedColor}
-          />
+    <>
+      <Box minH="100vh" py={8}>
+        <Container maxW="7xl">
+          <VStack spacing={6} align="stretch">
+            <Heading size="lg">Job Applications</Heading>
 
-          {/* Stats */}
-          {applications.length > 0 && (
-            <EmployerApplicationsStats applications={applications} />
-          )}
+            {applications.length === 0 ? (
+              <Card>
+                <CardBody p={12} textAlign="center">
+                  <Text fontSize="xl" color="gray.500">No applications yet</Text>
+                </CardBody>
+              </Card>
+            ) : (
+              <Card>
+                <CardBody p={0}>
+                  <TableContainer>
+                    <Table variant="simple">
+                      <Thead bg={useColorModeValue('gray.50', 'gray.700')}>
+                        <Tr>
+                          <Th>Applicant</Th>
+                          <Th>Job</Th>
+                          <Th>Applied Date</Th>
+                          <Th>Status</Th>
+                          <Th>Documents</Th>
+                          <Th>Actions</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {applications.map((application) => (
+                          <Tr key={application.id}>
+                            <Td>
+                              <HStack spacing={3}>
+                                <Avatar 
+                                  size="sm" 
+                                  name={application.applicantUsername}
+                                />
+                                <VStack align="start" spacing={0}>
+                                  <Text fontWeight="medium">
+                                    {application.applicantUsername}
+                                  </Text>
+                                  <Text fontSize="sm" color="gray.500">
+                                    {application.applicantEmail}
+                                  </Text>
+                                </VStack>
+                              </HStack>
+                            </Td>
+                            <Td>
+                              <VStack align="start" spacing={0}>
+                                <Text fontWeight="medium">{application.jobTitle}</Text>
+                                <Text fontSize="sm" color="gray.500">
+                                  {application.company}
+                                </Text>
+                              </VStack>
+                            </Td>
+                            <Td>{formatDate(application.appliedAt)}</Td>
+                            <Td>
+                              <Badge 
+                                colorScheme={
+                                  application.status === 'PENDING' ? 'orange' :
+                                  application.status === 'ACCEPTED' ? 'green' : 'red'
+                                }
+                              >
+                                {application.status}
+                              </Badge>
+                            </Td>
+                            <Td>
+                              <HStack spacing={2}>
+                                {/* Resume Button */}
+                                {application.resumePath && (
+                                  <Button
+                                    size="xs"
+                                    variant="outline"
+                                    colorScheme="blue"
+                                    leftIcon={<HiDocumentText />}
+                                    onClick={() => handleViewPDF(
+                                      application.id, 
+                                      'resume', 
+                                      `${application.applicantUsername}'s Resume`
+                                    )}
+                                  >
+                                    Resume
+                                  </Button>
+                                )}
+                                
+                                {/* Cover Letter Button */}
+                                {application.coverLetterPath && (
+                                  <Button
+                                    size="xs"
+                                    variant="outline"
+                                    colorScheme="purple"
+                                    leftIcon={<HiDocumentText />}
+                                    onClick={() => handleViewPDF(
+                                      application.id, 
+                                      'cover-letter', 
+                                      `${application.applicantUsername}'s Cover Letter`
+                                    )}
+                                  >
+                                    Cover Letter
+                                  </Button>
+                                )}
 
-          {/* Applications Content */}
-          {applications.length === 0 ? (
-            <EmptyEmployerApplicationsState 
-              cardBg={cardBg}
-              textColor={textColor}
-              mutedColor={mutedColor}
-              hasApplications={false}
-              isFiltered={false}
-            />
-          ) : (
-            <>
-              {/* Filters */}
-              <EmployerApplicationsFilters
-                statusFilter={statusFilter}
-                setStatusFilter={setStatusFilter}
-                jobFilter={jobFilter}
-                setJobFilter={setJobFilter}
-                applications={applications}
-                filteredApplications={filteredApplications}
-                uniqueJobs={getUniqueJobs()}
-                onRefresh={fetchEmployerApplications}
-              />
+                                {/* Show cover letter text if no PDF */}
+                                {!application.coverLetterPath && application.coverLetter && (
+                                  <Button
+                                    size="xs"
+                                    variant="outline"
+                                    colorScheme="gray"
+                                    leftIcon={<HiEye />}
+                                    onClick={() => {
+                                      // You can create a text modal for this
+                                      alert(application.coverLetter);
+                                    }}
+                                  >
+                                    Text
+                                  </Button>
+                                )}
+                              </HStack>
+                            </Td>
+                            <Td>
+                              <HStack spacing={2}>
+                                <Button size="sm" colorScheme="green" variant="outline">
+                                  Accept
+                                </Button>
+                                <Button size="sm" colorScheme="red" variant="outline">
+                                  Reject
+                                </Button>
+                              </HStack>
+                            </Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </CardBody>
+              </Card>
+            )}
+          </VStack>
+        </Container>
+      </Box>
 
-              {/* Applications List */}
-              {filteredApplications.length === 0 ? (
-                <EmptyEmployerApplicationsState 
-                  cardBg={cardBg}
-                  textColor={textColor}
-                  mutedColor={mutedColor}
-                  hasApplications={true}
-                  isFiltered={true}
-                />
-              ) : (
-                <EmployerApplicationsList
-                  applications={filteredApplications}
-                  formatDate={formatDate}
-                  onStatusUpdate={handleStatusUpdate}
-                />
-              )}
-            </>
-          )}
-        </VStack>
-      </Container>
-    </Box>
+      {/* PDF Viewer Modal */}
+      <PDFViewerModal
+        isOpen={pdfIsOpen}
+        onClose={pdfOnClose}
+        pdfUrl={selectedPDF}
+        title={pdfTitle}
+      />
+    </>
   );
 };
 
