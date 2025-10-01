@@ -7,12 +7,17 @@ import com.trabahanap.model.User;
 import com.trabahanap.repository.JobApplicationRepository;
 import com.trabahanap.repository.JobRepository;
 import com.trabahanap.repository.UserRepository;
+import com.trabahanap.service.FileStorageService;
 import com.trabahanap.service.UserPrincipal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -28,22 +33,28 @@ public class ApplicationController {
 
     @Autowired
     private JobApplicationRepository applicationRepository;
-
+    
     @Autowired
     private JobRepository jobRepository;
-
+    
     @Autowired
     private UserRepository userRepository;
+    
+    // Add file storage service
+    @Autowired
+    private FileStorageService fileStorageService;
 
     // POST: Apply for a job (Job Seeker only)
     @PostMapping("/apply")
     @Transactional
-    public ResponseEntity<?> applyForJob(@AuthenticationPrincipal UserPrincipal userPrincipal,
-                                        @RequestBody Map<String, Object> request) {
+    public ResponseEntity<?> applyForJob(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
+            @RequestParam("jobId") Long jobId,
+            @RequestParam("coverLetterText") String coverLetterText,
+            @RequestParam(value = "coverLetterPdf", required = false) MultipartFile coverLetterPdf,
+            @RequestParam(value = "resumePdf", required = false) MultipartFile resumePdf) {
+        
         try {
-            Long jobId = Long.valueOf(request.get("jobId").toString());
-            String coverLetter = (String) request.get("coverLetter");
-
             System.out.println("📝 User " + userPrincipal.getId() + " applying for job " + jobId);
 
             // Get the applicant
@@ -67,11 +78,27 @@ public class ApplicationController {
                 return ResponseEntity.status(400).body("You have already applied for this job");
             }
 
+            String coverLetterPath = null;
+            String resumePath = null;
+
+            // Handle file uploads
+            if (coverLetterPdf != null && !coverLetterPdf.isEmpty()) {
+                coverLetterPath = fileStorageService.storeFile(coverLetterPdf, "cover-letters");
+            }
+
+            if (resumePdf != null && !resumePdf.isEmpty()) {
+                resumePath = fileStorageService.storeFile(resumePdf, "resumes");
+            }
+
             // Create application
-            JobApplication application = new JobApplication(job, applicant, coverLetter);
+            JobApplication application = new JobApplication(job, applicant, coverLetterText);
+            application.setCoverLetterPath(coverLetterPath);
+            application.setResumePath(resumePath);
+            application.setCoverLetterText(coverLetterText);
+            
             JobApplication savedApplication = applicationRepository.save(application);
 
-            System.out.println("✅ Application submitted successfully");
+            System.out.println("✅ Application submitted successfully with PDFs");
             return ResponseEntity.ok(ApplicationDTO.fromApplication(savedApplication));
 
         } catch (Exception e) {
@@ -118,15 +145,16 @@ public class ApplicationController {
     }
 
     // GET: Get applications for employer's jobs (Employer only)
-    @GetMapping("/employer/applications")
-    @Transactional(readOnly = true)
+    @GetMapping("/employer")
     public ResponseEntity<List<ApplicationDTO>> getEmployerApplications(@AuthenticationPrincipal UserPrincipal userPrincipal) {
         try {
             System.out.println("📡 Fetching applications for employer: " + userPrincipal.getId());
 
+            // Get the employer
             User employer = userRepository.findById(userPrincipal.getId())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
+            // Check if user is employer
             boolean isEmployer = employer.getRoles().stream()
                     .anyMatch(role -> role.getName().toString().equals("ROLE_EMPLOYER"));
 
@@ -134,7 +162,21 @@ public class ApplicationController {
                 return ResponseEntity.status(403).body(null);
             }
 
-            List<JobApplication> applications = applicationRepository.findByEmployerIdWithDetails(employer.getId());
+            // Use existing method with fallback
+            List<Job> employerJobs;
+            try {
+                // Try the existing method first
+                employerJobs = jobRepository.findByPostedByOrderByCreatedAtDesc(employer);
+            } catch (Exception e) {
+                // Fallback to the custom query method that exists
+                System.out.println("⚠️ Using fallback query method");
+                employerJobs = jobRepository.findJobsByEmployerId(employer.getId());
+            }
+            
+            // Use the existing method to get applications by employer ID
+            List<JobApplication> applications = applicationRepository.findByEmployerIdWithDetails(userPrincipal.getId());
+
+            // Convert to DTOs
             List<ApplicationDTO> applicationDTOs = applications.stream()
                     .map(ApplicationDTO::fromApplication)
                     .collect(Collectors.toList());
@@ -267,4 +309,90 @@ public class ApplicationController {
         }
     }
 
+    // Add endpoint to download PDF files
+    @GetMapping("/download/{applicationId}/{fileType}")
+    public ResponseEntity<Resource> downloadFile(
+            @PathVariable Long applicationId,
+            @PathVariable String fileType,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        
+        try {
+            JobApplication application = applicationRepository.findById(applicationId)
+                    .orElseThrow(() -> new RuntimeException("Application not found"));
+
+            // Check permissions (only applicant or job poster can download)
+            if (!application.getApplicant().getId().equals(userPrincipal.getId()) &&
+                !application.getJob().getPostedBy().getId().equals(userPrincipal.getId())) {
+                return ResponseEntity.status(403).build();
+            }
+
+            String filePath;
+            String fileName;
+            
+            if ("cover-letter".equals(fileType)) {
+                filePath = application.getCoverLetterPath();
+                fileName = "cover-letter.pdf";
+            } else if ("resume".equals(fileType)) {
+                filePath = application.getResumePath();
+                fileName = "resume.pdf";
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+
+            Resource resource = fileStorageService.loadFileAsResource(filePath);
+            
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, 
+                            "attachment; filename=\"" + fileName + "\"")
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
+
+    // Add this method to your existing ApplicationController
+
+    @GetMapping("/view/{applicationId}/{fileType}")
+    public ResponseEntity<Resource> viewFile(
+            @PathVariable Long applicationId,
+            @PathVariable String fileType,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        
+        try {
+            JobApplication application = applicationRepository.findById(applicationId)
+                    .orElseThrow(() -> new RuntimeException("Application not found"));
+
+            // Check permissions (only applicant or job poster can view)
+            if (!application.getApplicant().getId().equals(userPrincipal.getId()) &&
+                !application.getJob().getPostedBy().getId().equals(userPrincipal.getId())) {
+                return ResponseEntity.status(403).build();
+            }
+
+            String filePath;
+            
+            if ("cover-letter".equals(fileType)) {
+                filePath = application.getCoverLetterPath();
+            } else if ("resume".equals(fileType)) {
+                filePath = application.getResumePath();
+            } else {
+                return ResponseEntity.badRequest().build();
+            }
+
+            if (filePath == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            Resource resource = fileStorageService.loadFileAsResource(filePath);
+            
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline") // inline instead of attachment
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(500).build();
+        }
+    }
 }

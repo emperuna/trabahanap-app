@@ -281,10 +281,13 @@ export const applicationsAPI = {
   // Get applications for employer
   getEmployerApplications: async () => {
     try {
-      const response = await api.get('/applications/employer/applications');
+      console.log('📋 Fetching employer applications...');
+      const response = await api.get('/applications/employer');
+      console.log('✅ Applications fetched:', response.data);
       return response.data;
     } catch (error) {
-      throw new Error(error.response?.data?.message || 'Failed to fetch applications');
+      console.error('❌ Error fetching applications:', error);
+      throw new Error(error.response?.data || 'Failed to fetch applications');
     }
   },
 
@@ -318,6 +321,29 @@ export const applicationsAPI = {
       throw new Error(error.response?.data || 'Failed to bulk update applications');
     }
   },
+
+  // Apply for job with file uploads
+  applyForJobWithFiles: async (formData) => {
+    try {
+      console.log('📝 Applying for job with files...');
+      const response = await api.post('/applications/apply', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      console.log('✅ Application submitted:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error applying for job:', error);
+      throw new Error(error.response?.data || 'Failed to apply for job');
+    }
+  },
+
+  // Get PDF URL for viewing (no download)
+  getPDFUrl: (applicationId, fileType) => {
+    const token = localStorage.getItem('token');
+    return `${API_BASE_URL}/applications/view/${applicationId}/${fileType}?Authorization=Bearer ${token}`;
+  }
 };
 
 // Job Management API calls
