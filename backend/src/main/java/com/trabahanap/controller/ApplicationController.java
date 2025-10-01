@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -359,39 +360,89 @@ public class ApplicationController {
             @PathVariable Long applicationId,
             @PathVariable String fileType,
             @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        
+    
         try {
+            System.out.println("=== PDF VIEW REQUEST ===");
+            System.out.println("📄 Application ID: " + applicationId);
+            System.out.println("📄 File Type: " + fileType);
+            System.out.println("📄 User ID: " + (userPrincipal != null ? userPrincipal.getId() : "NULL"));
+            
+            if (userPrincipal == null) {
+                System.out.println("❌ UserPrincipal is null - authentication failed");
+                return ResponseEntity.status(401).build();
+            }
+            
+            System.out.println("📄 Looking for application...");
             JobApplication application = applicationRepository.findById(applicationId)
                     .orElseThrow(() -> new RuntimeException("Application not found"));
 
-            // Check permissions (only applicant or job poster can view)
-            if (!application.getApplicant().getId().equals(userPrincipal.getId()) &&
-                !application.getJob().getPostedBy().getId().equals(userPrincipal.getId())) {
+            System.out.println("📄 Application found:");
+            System.out.println("   - Applicant ID: " + application.getApplicant().getId());
+            System.out.println("   - Job ID: " + application.getJob().getId());
+            System.out.println("   - Job Poster ID: " + application.getJob().getPostedBy().getId());
+
+            // Check permissions
+            boolean isApplicant = application.getApplicant().getId().equals(userPrincipal.getId());
+            boolean isJobPoster = application.getJob().getPostedBy().getId().equals(userPrincipal.getId());
+            
+            System.out.println("📄 Permission check:");
+            System.out.println("   - Is Applicant: " + isApplicant);
+            System.out.println("   - Is Job Poster: " + isJobPoster);
+            
+            if (!isApplicant && !isJobPoster) {
+                System.out.println("❌ Access denied - User is neither applicant nor job poster");
                 return ResponseEntity.status(403).build();
             }
 
-            String filePath;
+            String filePath = null;
             
             if ("cover-letter".equals(fileType)) {
                 filePath = application.getCoverLetterPath();
+                System.out.println("📄 Cover letter path: " + filePath);
             } else if ("resume".equals(fileType)) {
                 filePath = application.getResumePath();
+                System.out.println("📄 Resume path: " + filePath);
             } else {
+                System.out.println("❌ Invalid file type: " + fileType);
                 return ResponseEntity.badRequest().build();
             }
 
-            if (filePath == null) {
+            if (filePath == null || filePath.trim().isEmpty()) {
+                System.out.println("❌ File path is null or empty for " + fileType);
                 return ResponseEntity.notFound().build();
             }
 
+            System.out.println("📄 Attempting to load file: " + filePath);
+            
+            // Check if fileStorageService is null
+            if (fileStorageService == null) {
+                System.out.println("❌ FileStorageService is null!");
+                return ResponseEntity.status(500).body(null);
+            }
+            
             Resource resource = fileStorageService.loadFileAsResource(filePath);
+            
+            if (resource == null || !resource.exists()) {
+                System.out.println("❌ Resource not found or doesn't exist: " + filePath);
+                return ResponseEntity.notFound().build();
+            }
+            
+            System.out.println("✅ File found and accessible, serving: " + filePath);
             
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_PDF)
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline") // inline instead of attachment
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "inline")
+                    .header("X-Frame-Options", "SAMEORIGIN")
+                    .header(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate")
+                    .header(HttpHeaders.PRAGMA, "no-cache")
+                    .header(HttpHeaders.EXPIRES, "0")
                     .body(resource);
 
         } catch (Exception e) {
+            System.err.println("❌ ERROR in viewFile:");
+            System.err.println("   Message: " + e.getMessage());
+            System.err.println("   Class: " + e.getClass().getSimpleName());
+            e.printStackTrace();
             return ResponseEntity.status(500).build();
         }
     }

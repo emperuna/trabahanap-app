@@ -342,7 +342,11 @@ export const applicationsAPI = {
   // Get PDF URL for viewing (no download)
   getPDFUrl: (applicationId, fileType) => {
     const token = localStorage.getItem('token');
-    return `${API_BASE_URL}/applications/view/${applicationId}/${fileType}?Authorization=Bearer ${token}`;
+    const apiUrl = window.location.origin.includes('localhost') 
+      ? 'http://localhost:8080' 
+      : window.location.origin;
+    
+    return `${apiUrl}/api/applications/view/${applicationId}/${fileType}`;
   }
 };
 
