@@ -9,9 +9,9 @@ import { useAuth } from '../../context/AuthContext';
 const SaveJobButton = ({ 
   jobId, 
   size = 'md', 
-  variant = 'icon', // 'icon' or 'button'
+  variant = 'icon',
   colorScheme = 'red',
-  onSaveChange // Callback when save status changes
+  onSaveChange
 }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -49,8 +49,16 @@ const SaveJobButton = ({
       setLoading(true);
 
       if (isSaved) {
+        // Remove from saved
         await savedJobsAPI.removeSavedJob(jobId);
         setIsSaved(false);
+        
+        // ✅ Dispatch custom event for real-time updates
+        console.log('🔔 Dispatching savedJobRemoved event for job:', jobId);
+        window.dispatchEvent(new CustomEvent('savedJobRemoved', { 
+          detail: { jobId, action: 'removed' }
+        }));
+        
         toast({
           title: 'Job removed',
           description: 'Job removed from your saved list',
@@ -59,8 +67,16 @@ const SaveJobButton = ({
           isClosable: true,
         });
       } else {
+        // Add to saved
         await savedJobsAPI.saveJob(jobId);
         setIsSaved(true);
+        
+        // ✅ Dispatch custom event for real-time updates
+        console.log('🔔 Dispatching savedJobAdded event for job:', jobId);
+        window.dispatchEvent(new CustomEvent('savedJobAdded', { 
+          detail: { jobId, action: 'added' }
+        }));
+        
         toast({
           title: 'Job saved!',
           description: 'Job added to your saved list',
@@ -76,6 +92,7 @@ const SaveJobButton = ({
       }
 
     } catch (error) {
+      console.error('❌ Error saving/removing job:', error);
       toast({
         title: 'Error',
         description: error.message,
