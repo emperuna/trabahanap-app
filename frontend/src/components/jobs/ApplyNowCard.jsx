@@ -1,8 +1,9 @@
 import React from 'react';
 import { Card, CardBody, VStack, Heading, Text, Button, Badge, HStack } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import SaveJobButton from './SaveJobButton'; // ✅ Import SaveJobButton
 
-const ApplyNowCard = ({ company, onApply, hasApplied, loading = false }) => (
+const ApplyNowCard = ({ company, onApply, hasApplied, loading = false, jobId }) => ( // ✅ Add jobId prop
   <Card bg="white" borderRadius="2xl" shadow="md">
     <CardBody p={8}>
       <VStack spacing={4} textAlign="center">
@@ -61,6 +62,16 @@ const ApplyNowCard = ({ company, onApply, hasApplied, loading = false }) => (
                   Find More Jobs
                 </Button>
               </HStack>
+
+              {/* ✅ Save Button for applied jobs */}
+              {jobId && (
+                <SaveJobButton
+                  jobId={jobId}
+                  size="md"
+                  variant="button"
+                  colorScheme="purple"
+                />
+              )}
             </>
           ) : (
             <>
@@ -74,6 +85,16 @@ const ApplyNowCard = ({ company, onApply, hasApplied, loading = false }) => (
               >
                 Apply Now
               </Button>
+
+              {/* ✅ Save Button for jobs not yet applied to */}
+              {jobId && (
+                <SaveJobButton
+                  jobId={jobId}
+                  size="lg"
+                  variant="button"
+                  colorScheme="purple"
+                />
+              )}
               
               <Button 
                 as={Link} 
