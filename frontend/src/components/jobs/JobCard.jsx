@@ -4,6 +4,7 @@ import {
   useColorModeValue, Card, CardBody, Divider
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import SaveJobButton from '../jobs/SaveJobButton';
 
 const JobCard = ({ job }) => {
   const cardBg = useColorModeValue('white', 'gray.800');
@@ -100,17 +101,24 @@ const JobCard = ({ job }) => {
               </Text>
             </VStack>
             
-            <Button
-              as={Link}
-              to={`/jobs/${job.id}`}
-              size="sm"
-              colorScheme="blue"
-              variant="solid"
-              borderRadius="full"
-              _hover={{ transform: 'scale(1.05)' }}
-            >
-              View Details
-            </Button>
+            <HStack spacing={2}>
+              <SaveJobButton 
+                jobId={job.id} 
+                size="sm" 
+                variant="icon"
+              />
+              <Button
+                as={Link}
+                to={`/jobs/${job.id}`}
+                size="sm"
+                colorScheme="blue"
+                variant="solid"
+                borderRadius="full"
+                _hover={{ transform: 'scale(1.05)' }}
+              >
+                View Details
+              </Button>
+            </HStack>
           </HStack>
         </VStack>
       </CardBody>

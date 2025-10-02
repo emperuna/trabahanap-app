@@ -402,6 +402,70 @@ export const jobManagementAPI = {
       console.error('❌ Error fetching job stats:', error);
       throw new Error(error.response?.data || 'Failed to fetch job statistics');
     }
+  },
+
+};
+
+export const savedJobsAPI = {
+  // Save a job   
+  saveJob: async (jobId) => {
+    try {
+      console.log('💾 Saving job:', jobId);
+      const response = await api.post(`/saved-jobs/save/${jobId}`);
+      console.log('✅ Job saved successfully');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error saving job:', error);
+      throw new Error(error.response?.data || 'Failed to save job');
+    }
+  },
+
+  // Remove saved job
+  removeSavedJob: async (jobId) => {
+    try {
+      console.log('🗑️ Removing saved job:', jobId);
+      const response = await api.delete(`/saved-jobs/remove/${jobId}`);
+      console.log('✅ Saved job removed successfully');
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error removing saved job:', error);
+      throw new Error(error.response?.data || 'Failed to remove saved job');
+    }
+  },
+
+  // Get user's saved jobs
+  getMySavedJobs: async () => {
+    try {
+      console.log('📋 Fetching saved jobs...');
+      const response = await api.get('/saved-jobs/my-saved-jobs');
+      console.log('✅ Saved jobs fetched:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching saved jobs:', error);
+      throw new Error(error.response?.data || 'Failed to fetch saved jobs');
+    }
+  },
+
+  // Check if job is saved
+  isJobSaved: async (jobId) => {
+    try {
+      const response = await api.get(`/saved-jobs/is-saved/${jobId}`);
+      return response.data.isSaved;
+    } catch (error) {
+      console.error('❌ Error checking saved status:', error);
+      return false;
+    }
+  },
+
+  // Get saved jobs count
+  getSavedJobsCount: async () => {
+    try {
+      const response = await api.get('/saved-jobs/count');
+      return response.data.count;
+    } catch (error) {
+      console.error('❌ Error getting saved jobs count:', error);
+      return 0;
+    }
   }
 };
 
