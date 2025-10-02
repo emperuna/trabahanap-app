@@ -50,6 +50,7 @@ import { jobsAPI, applicationsAPI } from '../../services/api';
 import ApplyNowCard from '../../components/jobs/ApplyNowCard';
 import AboutCompanyCard from '../../components/jobs/AboutCompanyCard';
 import JobDetailCard from '../../components/jobs/JobDetailCard';
+import SaveJobButton from '../../components/jobs/SaveJobButton';
 
 const JobDetail = () => {
   const { id } = useParams();
@@ -245,6 +246,8 @@ const JobDetail = () => {
                   company={job.company} 
                   onApply={hasApplied ? null : onOpen}
                   hasApplied={hasApplied}
+                  jobId={job.id}
+                  
                 />
                 <AboutCompanyCard company={job.company} companyDescription={job.companyDescription} />
               </VStack>

@@ -15,9 +15,6 @@ import {
   Avatar,
   Flex,
   Tooltip,
-  Switch,
-  FormControl,
-  FormLabel,
   useColorMode
 } from '@chakra-ui/react';
 import {
@@ -31,25 +28,23 @@ import {
   HiSearch,
   HiChartBar,
   HiLightningBolt,
-  HiTrendingUp,
-  HiChevronDown,
-  HiChevronUp,
-  HiGlobe,
-  HiMoon,
-  HiSun
+  HiTrendingUp
 } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
+import { savedJobsAPI } from '../../../services/api';
 
 const DashboardSidebar = () => {
   const location = useLocation();
-  const { user, logout } = useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const { colorMode, toggleColorMode } = useColorMode();
   const toast = useToast();
 
-  // Enhanced state management
+  // State management
   const [profileCompletion, setProfileCompletion] = useState(75);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [savedJobsCount, setSavedJobsCount] = useState(0);
+  const [loadingSavedJobs, setLoadingSavedJobs] = useState(false);
 
   // Online status detection
   useEffect(() => {
@@ -65,6 +60,78 @@ const DashboardSidebar = () => {
     };
   }, []);
 
+  // ✅ Fetch initial saved jobs count
+  const fetchSavedJobsCount = async () => {
+    if (!isAuthenticated) {
+      setSavedJobsCount(0);
+      return;
+    }
+
+    try {
+      setLoadingSavedJobs(true);
+      console.log('📊 Fetching saved jobs count for sidebar...');
+      const count = await savedJobsAPI.getSavedJobsCount();
+      console.log('✅ Sidebar: Saved jobs count fetched:', count);
+      setSavedJobsCount(count);
+    } catch (error) {
+      console.error('❌ Sidebar: Error fetching saved jobs count:', error);
+      setSavedJobsCount(0);
+    } finally {
+      setLoadingSavedJobs(false);
+    }
+  };
+
+  // ✅ Initial fetch on authentication change
+  useEffect(() => {
+    fetchSavedJobsCount();
+  }, [isAuthenticated]);
+
+  // ✅ Listen for real-time saved job events
+  useEffect(() => {
+    const handleSavedJobAdded = (event) => {
+      console.log('🔔 Sidebar: Received savedJobAdded event:', event.detail);
+      setSavedJobsCount(prevCount => {
+        const newCount = prevCount + 1;
+        console.log(`📊 Sidebar: Saved jobs count updated: ${prevCount} → ${newCount}`);
+        return newCount;
+      });
+    };
+
+    const handleSavedJobRemoved = (event) => {
+      console.log('🔔 Sidebar: Received savedJobRemoved event:', event.detail);
+      setSavedJobsCount(prevCount => {
+        const newCount = Math.max(0, prevCount - 1);
+        console.log(`📊 Sidebar: Saved jobs count updated: ${prevCount} → ${newCount}`);
+        return newCount;
+      });
+    };
+
+    // ✅ Add event listeners
+    window.addEventListener('savedJobAdded', handleSavedJobAdded);
+    window.addEventListener('savedJobRemoved', handleSavedJobRemoved);
+    
+    return () => {
+      window.removeEventListener('savedJobAdded', handleSavedJobAdded);
+      window.removeEventListener('savedJobRemoved', handleSavedJobRemoved);
+    };
+  }, []);
+
+  // ✅ Refresh count when sidebar becomes visible (optional)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden && isAuthenticated) {
+        console.log('👁️ Sidebar: Document became visible, refreshing count...');
+        fetchSavedJobsCount();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [isAuthenticated]);
+
   const handleLogout = async () => {
     try {
       toast({
@@ -76,6 +143,9 @@ const DashboardSidebar = () => {
 
       console.log('🚪 Job Seeker Sidebar: Logout button clicked');
       await logout();
+      
+      // Reset saved jobs count on logout
+      setSavedJobsCount(0);
       
       toast({
         title: 'Signed out successfully',
@@ -104,7 +174,7 @@ const DashboardSidebar = () => {
   const mutedColor = useColorModeValue('gray.500', 'gray.400'); 
   const hoverBg = useColorModeValue('gray.100', 'gray.700');
 
-  // ✅ Menu items with badges and descriptions
+  // ✅ Menu items with dynamic saved jobs count
   const menuItems = [
     {
       label: 'Dashboard',
@@ -142,9 +212,10 @@ const DashboardSidebar = () => {
       label: 'Saved Jobs',
       icon: HiHeart,
       path: '/dashboard/saved',
-      badge: '12',
+      badge: savedJobsCount > 0 ? savedJobsCount.toString() : null, // ✅ Dynamic badge
       description: 'Your bookmarked jobs',
-      color: 'purple'
+      color: 'purple',
+      isLoading: loadingSavedJobs
     },
     {
       label: 'Resume',
@@ -171,13 +242,19 @@ const DashboardSidebar = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Get badge color based on type
   const getBadgeColor = (badge, color) => {
     if (!badge) return 'gray';
     if (badge === 'Hot') return 'red';
     if (badge === 'New') return 'green';
     if (badge.includes('%')) return 'orange';
     return color || 'blue';
+  };
+
+  const getBadgeText = (item) => {
+    if (item.isLoading && item.label === 'Saved Jobs') {
+      return '...';
+    }
+    return item.badge;
   };
 
   return (
@@ -210,7 +287,6 @@ const DashboardSidebar = () => {
             </VStack>
           </HStack>
           
-          {/* Profile Completion */}
           <Box>
             <Flex justify="space-between" mb={1}>
               <Text fontSize="xs" color={mutedColor}>Profile Complete</Text>
@@ -276,7 +352,8 @@ const DashboardSidebar = () => {
                 <Box flex="1" textAlign="left">
                   <Text fontSize="sm">{item.label}</Text>
                 </Box>
-                {item.badge && (
+                {/* ✅ Dynamic badge display */}
+                {(item.badge || item.isLoading) && (
                   <Badge
                     colorScheme={getBadgeColor(item.badge, item.color)}
                     variant="solid"
@@ -284,8 +361,11 @@ const DashboardSidebar = () => {
                     fontSize="xs"
                     px={2}
                     py={0.5}
+                    opacity={item.isLoading ? 0.7 : 1}
+                    // ✅ Add special styling for saved jobs count
+                    bg={item.label === 'Saved Jobs' && savedJobsCount > 0 ? 'purple.500' : undefined}
                   >
-                    {item.badge}
+                    {getBadgeText(item)}
                   </Badge>
                 )}
               </Button>
@@ -294,7 +374,7 @@ const DashboardSidebar = () => {
         </VStack>
       </Card>
 
-      {/* Quick Stats */}
+      {/* Quick Stats with Real-time Saved Jobs Count */}
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
         <VStack spacing={3} align="stretch">
           <Text
@@ -319,15 +399,23 @@ const DashboardSidebar = () => {
               <Text fontSize="lg" fontWeight="bold" color="green.500">5</Text>
               <Text fontSize="xs" color={mutedColor}>Profile Views</Text>
             </VStack>
+            {/* ✅ Real-time saved jobs count */}
             <VStack spacing={0} align="start">
-              <Text fontSize="lg" fontWeight="bold" color="purple.500">8</Text>
-              <Text fontSize="xs" color={mutedColor}>New Matches</Text>
+              <Text 
+                fontSize="lg" 
+                fontWeight="bold" 
+                color="purple.500"
+                transition="all 0.3s ease"
+              >
+                {loadingSavedJobs ? '...' : savedJobsCount}
+              </Text>
+              <Text fontSize="xs" color={mutedColor}>Saved Jobs</Text>
             </VStack>
           </HStack>
         </VStack>
       </Card>
 
-      {/* Settings & Account - Updated to navigate instead of expand */}
+      {/* Settings & Logout */}
       <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
         <VStack spacing={1} align="stretch">
           <Button
@@ -350,7 +438,6 @@ const DashboardSidebar = () => {
 
           <Divider my={2} />
 
-          {/* Logout Button */}
           <Button
             onClick={handleLogout}
             variant="ghost"

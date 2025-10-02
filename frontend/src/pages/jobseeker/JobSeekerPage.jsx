@@ -24,6 +24,7 @@ import JobSeekerFindJobs from './JobSeekerFindJobs';
 import JobSeekerProfile from './JobSeekerProfile';
 import JobSeekerJobDetail from './JobSeekerJobDetail';
 import JobSeekerApplications from './JobSeekerApplications';
+import JobSeekerSavedJobs from './JobSeekerSavedJobs';
 
 const JobSeekerPage = () => {
   // Custom scrollbar styles
@@ -124,12 +125,7 @@ const JobSeekerPage = () => {
         return <JobSeekerApplications />;
       
       case '/dashboard/saved':
-        return (
-          <VStack spacing={6} align="stretch">
-            <Text fontSize="2xl" fontWeight="bold">Saved Jobs</Text>
-            <Text>Your saved jobs will be displayed here.</Text>
-          </VStack>
-        );
+        return <JobSeekerSavedJobs/>;
       
       case '/dashboard/resume':
         return (
