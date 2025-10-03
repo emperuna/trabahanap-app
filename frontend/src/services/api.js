@@ -404,6 +404,18 @@ export const jobManagementAPI = {
     }
   },
 
+      getRecentEmployerJobs: async () => {
+    try {
+      console.log('📋 Fetching recent employer jobs...');
+      const response = await api.get('/employer/jobs/recent');
+      console.log('✅ Recent employer jobs fetched:', response.data);
+      return response.data;
+    } catch (error) {
+      console.error('❌ Error fetching recent employer jobs:', error);
+      throw new Error(error.response?.data || 'Failed to fetch recent jobs');
+    }
+  }
+
 };
 
 export const savedJobsAPI = {
@@ -467,6 +479,7 @@ export const savedJobsAPI = {
       return 0;
     }
   }
+
 };
 
 export default api;
