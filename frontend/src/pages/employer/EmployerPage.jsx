@@ -2,8 +2,10 @@ import React from 'react';
 import { Box, Container, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
 import EmployerSidebar from '../../components/dashboard/shared/EmployerSidebar';
 import EmployerDashboard from './EmployerDashboard';
+
 import EmployerManageJobs from './EmployerManageJobs';
 import EmployerApplications from './EmployerApplications';
+import EmployerPostJob from './EmployerPostJob';
 
 
 import {
@@ -32,6 +34,7 @@ const EmployerPage = () => {
 
   let content = null;
   if (selected === 'dashboard') content = <EmployerDashboard />;
+  else if (selected === 'postJob') content = <EmployerPostJob />;
   else if (selected === 'manageJobs') content = <EmployerManageJobs />;
   else if (selected === 'applications') content = <EmployerApplications />;
 
