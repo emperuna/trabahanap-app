@@ -25,64 +25,11 @@ import {
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 
-const EmployerSidebar = () => {
-  const location = useLocation();
+const EmployerSidebar = ({ selected, onSelect, options }) => {
   const { logout } = useAuth();
   const toast = useToast();
   const cardBg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
-
-  const navigationItems = [
-    {
-      label: 'Dashboard',
-      icon: HiHome,
-      path: '/employer-dashboard',
-      badge: null,
-    },
-    {
-      label: 'Post Job',
-      icon: HiPlus,
-      path: '/employer/post-job',
-      badge: null,
-    },
-    {
-      label: 'Manage Jobs',
-      icon: HiBriefcase,
-      path: '/employer/manage-jobs',
-      badge: '8',
-    },
-    {
-      label: 'Applications',
-      icon: HiClipboardList,
-      path: '/employer/applications',
-      badge: '23',
-    },
-    {
-      label: 'Candidates',
-      icon: HiUserGroup,
-      path: '/employer/candidates',
-      badge: null,
-    },
-    {
-      label: 'Analytics',
-      icon: HiChartBar,
-      path: '/employer/analytics',
-      badge: null,
-    },
-    {
-      label: 'Settings',
-      icon: HiCog,
-      path: '/employer/settings',
-      badge: null,
-    },
-  ];
-
-  const isActive = (path) => {
-    if (path === '/employer-dashboard') {
-      return location.pathname === '/employer-dashboard';
-    }
-    return location.pathname.startsWith(path);
-  };
 
   const handleLogout = async () => {
     try {
@@ -123,35 +70,34 @@ const EmployerSidebar = () => {
             Employer Hub
           </Text>
           <VStack spacing={2} align="stretch">
-            {navigationItems.map((item) => (
+            {options && options.map((item) => (
               <Button
-                key={item.path}
-                as={Link}
-                to={item.path}
-                variant={isActive(item.path) ? 'solid' : 'ghost'}
-                colorScheme={isActive(item.path) ? 'blue' : 'gray'}
+                key={item.key}
+                variant={selected === item.key ? 'solid' : 'ghost'}
+                colorScheme={selected === item.key ? 'blue' : 'gray'}
                 justifyContent="flex-start"
                 h={12}
                 px={4}
                 borderRadius="xl"
                 fontWeight="medium"
-                bg={isActive(item.path) ? 'blue.500' : 'transparent'}
-                color={isActive(item.path) ? 'white' : 'gray.700'}
+                bg={selected === item.key ? 'blue.500' : 'transparent'}
+                color={selected === item.key ? 'white' : 'gray.700'}
                 _hover={{
-                  bg: isActive(item.path) ? 'blue.600' : 'gray.100',
+                  bg: selected === item.key ? 'blue.600' : 'gray.100',
                   transform: 'translateX(4px)',
                 }}
                 transition="all 0.2s ease"
+                onClick={() => onSelect && onSelect(item.key)}
               >
                 <HStack spacing={3} w="full">
-                  <Icon as={item.icon} boxSize={5} />
+                  {item.icon && <Icon as={item.icon} boxSize={5} />}
                   <Text flex="1" textAlign="left">
                     {item.label}
                   </Text>
                   {item.badge && (
                     <Badge
-                      colorScheme={isActive(item.path) ? 'white' : 'blue'}
-                      variant={isActive(item.path) ? 'outline' : 'solid'}
+                      colorScheme={selected === item.key ? 'white' : 'blue'}
+                      variant={selected === item.key ? 'outline' : 'solid'}
                       borderRadius="full"
                       px={2}
                       fontSize="xs"
