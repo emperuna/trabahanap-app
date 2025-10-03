@@ -1,0 +1,75 @@
+import React from 'react';
+import { Box, Container, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
+import EmployerSidebar from '../../components/dashboard/shared/EmployerSidebar';
+import EmployerDashboard from './EmployerDashboard';
+import EmployerManageJobs from './EmployerManageJobs';
+import EmployerApplications from './EmployerApplications';
+
+
+import {
+  HiHome,
+  HiPlus,
+  HiBriefcase,
+  HiClipboardList,
+  HiUserGroup,
+  HiChartBar,
+  HiCog,
+} from 'react-icons/hi';
+
+const SIDEBAR_OPTIONS = [
+  { key: 'dashboard', label: 'Dashboard', icon: HiHome },
+  { key: 'postJob', label: 'Post Job', icon: HiPlus },
+  { key: 'manageJobs', label: 'Manage Jobs', icon: HiBriefcase },
+  { key: 'applications', label: 'Applications', icon: HiClipboardList },
+  { key: 'candidates', label: 'Candidates', icon: HiUserGroup },
+  { key: 'analytics', label: 'Analytics', icon: HiChartBar },
+  { key: 'settings', label: 'Settings', icon: HiCog },
+];
+
+const EmployerPage = () => {
+  const bgColor = useColorModeValue('gray.50', 'gray.900');
+  const [selected, setSelected] = React.useState('dashboard');
+
+  let content = null;
+  if (selected === 'dashboard') content = <EmployerDashboard />;
+  else if (selected === 'manageJobs') content = <EmployerManageJobs />;
+  else if (selected === 'applications') content = <EmployerApplications />;
+
+  return (
+    <Box bg={bgColor} minH="100vh" w="100vw" overflow="hidden">
+      <Box maxW="8xl" mx="auto" p={6} display="flex" flexDir="row" h="100vh">
+        {/* Sidebar */}
+        <Box
+          display={{ base: 'none', lg: 'block' }}
+          w="280px"
+          flexShrink={0}
+          h="100vh"
+          position="sticky"
+          top={0}
+          left={0}
+          zIndex={1}
+          bg={bgColor}
+          borderRightWidth="1px"
+        >
+          <EmployerSidebar
+            selected={selected}
+            onSelect={setSelected}
+            options={SIDEBAR_OPTIONS}
+          />
+        </Box>
+
+        {/* Main Content */}
+        <Box
+          flex={1}
+          h="100vh"
+          overflowY="auto"
+          pl={{ base: 0, lg: 6 }}
+        >
+          {content}
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+export default EmployerPage;

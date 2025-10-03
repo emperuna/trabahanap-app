@@ -19,7 +19,7 @@ import Home from "./pages/common/Home";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import JobSeekerPage from "./pages/jobseeker/JobSeekerPage";
-import EmployerDashboard from "./pages/employer/EmployerDashboard";
+import EmployerPage from "./pages/employer/EmployerPage";
 import ComingSoon from "./pages/common/ComingSoon";
 import NotFound from "./pages/common/NotFound";
 import PostJob from './pages/employer/EmployerPostJob';
@@ -158,7 +158,7 @@ function App() {
               {/* 🏢 Employer ONLY Routes */}
               <Route path="/employer-dashboard" element={
                 <EmployerOnlyRoute>
-                  <EmployerDashboard />
+                  <EmployerPage />
                 </EmployerOnlyRoute>
               } />
               
