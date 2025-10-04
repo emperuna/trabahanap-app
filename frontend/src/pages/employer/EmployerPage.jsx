@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Box, Container, Grid, GridItem, useColorModeValue } from '@chakra-ui/react';
 import EmployerSidebar from '../../components/dashboard/shared/EmployerSidebar';
 import EmployerDashboard from './EmployerDashboard';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import EmployerManageJobs from './EmployerManageJobs';
 import EmployerApplications from './EmployerApplications';
@@ -28,9 +29,29 @@ const SIDEBAR_OPTIONS = [
   { key: 'settings', label: 'Settings', icon: HiCog },
 ];
 
+
+
 const EmployerPage = () => {
   const bgColor = useColorModeValue('gray.50', 'gray.900');
   const [selected, setSelected] = React.useState('dashboard');
+  const location = useLocation();
+  const navigate = useNavigate();
+
+    // ✅ Handle URL-based navigation
+    useEffect(() => {
+      const urlParams = new URLSearchParams(location.search);
+      const section = urlParams.get('section');
+      
+      if (section && SIDEBAR_OPTIONS.find(opt => opt.key === section)) {
+        setSelected(section);
+      }
+    }, [location.search]);
+
+  // ✅ Update URL when sidebar selection changes
+    const handleSelect = (key) => {
+      setSelected(key);
+      navigate(`/employer-dashboard?section=${key}`, { replace: true });
+    };
 
   let content = null;
   if (selected === 'dashboard') content = <EmployerDashboard />;
@@ -56,7 +77,7 @@ const EmployerPage = () => {
         >
           <EmployerSidebar
             selected={selected}
-            onSelect={setSelected}
+            onSelect={handleSelect}
             options={SIDEBAR_OPTIONS}
           />
         </Box>

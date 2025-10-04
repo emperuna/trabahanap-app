@@ -226,7 +226,7 @@ const RecentJobs = ({ refreshTrigger = 0 }) => {
             </Tooltip>
             <Button
               as={Link}
-              to="/employer/jobs"
+              to="/employer-dashboard?section=manageJobs"
               variant="ghost"
               colorScheme="blue"
               size="sm"
