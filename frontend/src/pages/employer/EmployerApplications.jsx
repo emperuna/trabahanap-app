@@ -5,14 +5,13 @@ import {
 import { applicationsAPI } from '../../services/api';
 import PDFViewerModal from '../../components/common/PDFViewerModal';
 
-// Import existing employer-applications components
 import {
   EmployerApplicationsHeader,
   EmployerApplicationsStats,
   EmployerApplicationsFilters,
   EmployerApplicationsList,
   EmptyEmployerApplicationsState
-} from '../../components/employer-applications';
+} from '../../components/applications/employer';
 
 const EmployerApplications = () => {
   const [applications, setApplications] = useState([]);
@@ -53,31 +52,22 @@ const EmployerApplications = () => {
       setApplications(prevApplications =>
         prevApplications.map(app =>
           app.id === applicationId
-            ? { ...app, status: newStatus, updatedAt: new Date().toISOString() }
+            ? { ...app, status: newStatus }
             : app
         )
       );
 
-      // API call
       await applicationsAPI.updateApplicationStatus(applicationId, newStatus);
 
-      // Success toast
-      const applicant = applications.find(app => app.id === applicationId);
       toast({
-        title: `Application ${newStatus.toLowerCase()}`,
-        description: `${applicant?.applicantUsername}'s application has been ${newStatus.toLowerCase()}.`,
-        status: newStatus === 'ACCEPTED' ? 'success' : newStatus === 'REJECTED' ? 'warning' : 'info',
-        duration: 4000,
+        title: 'Status Updated',
+        description: `Application status changed to ${newStatus}`,
+        status: 'success',
+        duration: 3000,
         isClosable: true,
       });
-
-      // Refresh data after a short delay
-      setTimeout(() => {
-        fetchApplications();
-      }, 1000);
-
     } catch (error) {
-      // Revert optimistic update on error
+      // Revert on error
       fetchApplications();
       
       toast({
@@ -126,7 +116,6 @@ const EmployerApplications = () => {
       setSelectedPDF(pdfUrl);
       setPdfTitle(title);
       pdfOnOpen();
-
     } catch (error) {
       console.error('Error loading PDF:', error);
       toast({
@@ -147,7 +136,6 @@ const EmployerApplications = () => {
     });
   };
 
-  // Filter applications based on status and job filters
   const getFilteredApplications = () => {
     let filtered = applications;
 
@@ -163,11 +151,7 @@ const EmployerApplications = () => {
   };
 
   const filteredApplications = getFilteredApplications();
-
-  // Get unique job titles for filter
   const uniqueJobs = [...new Set(applications.map(app => app.jobTitle))];
-
-  // Check if we have applications and if filters are applied
   const hasApplications = applications.length > 0;
   const isFiltered = statusFilter || jobFilter;
 
