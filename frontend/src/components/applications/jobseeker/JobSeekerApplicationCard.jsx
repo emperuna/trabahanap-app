@@ -24,7 +24,8 @@ import {
   HiDocumentText,
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
-import { ApplicationStatusBadge } from '../';
+
+import { StatusBadge } from '../shared';
 
 const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
   const navigate = useNavigate();
@@ -75,7 +76,8 @@ const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
               <Text fontSize="sm" color={mutedColor} noOfLines={1}>
                 {application.company}
               </Text>
-              <ApplicationStatusBadge status={application.status} size="sm" />
+              {/* ✅ USE SHARED StatusBadge */}
+              <StatusBadge status={application.status} size="sm" />
             </VStack>
 
             <Menu>

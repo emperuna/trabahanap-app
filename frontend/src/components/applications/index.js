@@ -1,6 +1,8 @@
-// Keep old exports for backward compatibility (temporarily)
-export { default as ApplicationCard } from './jobseeker/JobSeekerApplicationCard';
-export { default as ApplicationStatusBadge } from './ApplicationStatusBadge';
+// Shared components
+export * from './shared';
+
+// Employer components
+export * from './employer';
 
 // JobSeeker components
 export * from './jobseeker';

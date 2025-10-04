@@ -8,7 +8,8 @@ import {
   HiEye, HiDotsVertical, HiMail, HiDownload, HiOutlineDocumentText,
   HiOutlineEye, HiCalendar
 } from 'react-icons/hi';
-import EmployerApplicationStatusBadge from './EmployerApplicationStatusBadge';
+
+import { StatusBadge } from '../shared';
 import EmployerApplicationActions from './EmployerApplicationActions';
 
 const EmployerApplicationCard = ({ 
@@ -64,36 +65,41 @@ const EmployerApplicationCard = ({
   return (
     <Card
       bg={cardBg}
+      borderRadius="xl"
       border="1px"
       borderColor={borderColor}
-      borderRadius="xl"
-      _hover={{ shadow: 'lg', transform: 'translateY(-4px)' }}
-      transition="all 0.3s ease"
-      h="fit-content"
+      transition="all 0.2s"
+      _hover={{
+        shadow: 'lg',
+        transform: 'translateY(-2px)',
+        borderColor: '#153CF5'
+      }}
     >
       <CardBody p={6}>
         <VStack spacing={4} align="stretch">
-          {/* Header */}
-          <HStack justify="space-between" align="start">
-            <HStack spacing={3}>
-              <Avatar 
-                name={application.applicantUsername || 'Applicant'} 
-                size="md"
-                bg="#153CF5"
-                color="white"
-              />
-              <VStack align="start" spacing={1}>
-                <Text fontSize="md" fontWeight="bold" color={textColor}>
-                  {application.applicantUsername || 'Anonymous Applicant'}
+          {/* Applicant Header */}
+          <HStack spacing={4} align="start">
+            <Avatar 
+              name={application.applicantUsername || 'Applicant'} 
+              size="md"
+              bg="#153CF5"
+              color="white"
+            />
+            
+            <VStack align="start" spacing={2}>
+              <Text fontSize="md" fontWeight="bold" color={textColor}>
+                {application.applicantUsername || 'Anonymous Applicant'}
+              </Text>
+              <HStack spacing={1}>
+                <HiMail size={12} color={mutedColor} />
+                <Text fontSize="xs" color={mutedColor}>
+                  {application.applicantEmail || 'No email provided'}
                 </Text>
-                <HStack spacing={1}>
-                  <HiMail size={12} color={mutedColor} />
-                  <Text fontSize="xs" color={mutedColor}>
-                    {application.applicantEmail || 'No email provided'}
-                  </Text>
-                </HStack>
-              </VStack>
-            </HStack>
+              </HStack>
+
+              {/* ✅ USE NEW StatusBadge */}
+              <StatusBadge status={application.status} size="sm" />
+            </VStack>
             
             <Menu>
               <MenuButton
@@ -137,7 +143,7 @@ const EmployerApplicationCard = ({
               Applied for: <Text as="span" color="#153CF5">{application.jobTitle}</Text>
             </Text>
             <HStack justify="space-between" w="full">
-              <EmployerApplicationStatusBadge status={application.status} />
+              <StatusBadge status={application.status} />
               <HStack spacing={1}>
                 <HiCalendar size={12} />
                 <Text fontSize="xs" color={mutedColor}>
