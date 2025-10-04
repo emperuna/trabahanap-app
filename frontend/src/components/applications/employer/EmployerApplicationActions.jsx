@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { HStack, Button, useToast, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, useDisclosure, Text } from '@chakra-ui/react';
-import { applicationsAPI } from '../../services/api';
+import { applicationsAPI } from '../../../services/api';
 
 const EmployerApplicationActions = ({ 
   application, 
