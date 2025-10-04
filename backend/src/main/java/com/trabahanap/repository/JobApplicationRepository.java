@@ -25,4 +25,9 @@ public interface JobApplicationRepository extends JpaRepository<JobApplication, 
     boolean existsByJobIdAndApplicantId(Long jobId, Long applicantId);
 
     long countByJob(Job job);
+
+    long countByJobId(Long jobId);
+
+    @Query("SELECT COUNT(ja) FROM JobApplication ja WHERE ja.job.id = :jobId")
+    long countApplicationsByJobId(@Param("jobId") Long jobId);
 }

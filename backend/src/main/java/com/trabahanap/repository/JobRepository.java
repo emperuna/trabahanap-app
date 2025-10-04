@@ -15,6 +15,9 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     // Find jobs by employer ordered by creation date (newest first)
     List<Job> findByPostedByOrderByCreatedAtDesc(User postedBy);
     
+    // ✅ Add this method for recent jobs (top 5)
+    List<Job> findTop3ByPostedByOrderByCreatedAtDesc(User postedBy);
+    
     // Alternative if postedBy field name is different in your Job model
     // List<Job> findByUserOrderByCreatedAtDesc(User user);
     
@@ -22,9 +25,14 @@ public interface JobRepository extends JpaRepository<Job, Long> {
     @Query("SELECT j FROM Job j WHERE j.postedBy.id = :employerId ORDER BY j.createdAt DESC")
     List<Job> findJobsByEmployerId(@Param("employerId") Long employerId);
     
+    // ✅ Add query for recent jobs as alternative
+    @Query("SELECT j FROM Job j WHERE j.postedBy.id = :employerId ORDER BY j.createdAt DESC")
+    List<Job> findTop3JobsByEmployerId(@Param("employerId") Long employerId);
+    
     // Count jobs by employer
     long countByPostedBy(User postedBy);
     
     // Find active jobs by employer (if you add active field later)
     // List<Job> findByPostedByAndActiveOrderByCreatedAtDesc(User postedBy, Boolean active);
+
 }
