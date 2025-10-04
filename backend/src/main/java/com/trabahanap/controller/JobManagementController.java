@@ -278,6 +278,69 @@ public class JobManagementController {
         }
     }
 
+    // GET: Get recent jobs for employer
+    @GetMapping("/recent")
+    @Transactional(readOnly = true)
+    public ResponseEntity<?> getRecentEmployerJobs(@AuthenticationPrincipal UserPrincipal userPrincipal) {
+        try {
+            System.out.println("📋 Fetching recent jobs for employer: " + userPrincipal.getId());
+
+            User employer = userRepository.findById(userPrincipal.getId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            // Check if user is employer
+            boolean isEmployer = employer.getRoles().stream()
+                    .anyMatch(role -> role.getName().toString().equals("ROLE_EMPLOYER"));
+
+            if (!isEmployer) {
+                return ResponseEntity.status(403).body("Only employers can view their jobs");
+            }
+
+            // ✅ Get recent jobs (limit to 3 most recent)
+            List<Job> recentJobs;
+            try {
+                // ✅ Change method name to Top3
+                recentJobs = jobRepository.findTop3ByPostedByOrderByCreatedAtDesc(employer);
+            } catch (Exception e) {
+                System.out.println("⚠️ Using fallback query method for recent jobs");
+                List<Job> allJobs = jobRepository.findJobsByEmployerId(employer.getId());
+                recentJobs = allJobs.stream()
+                        .sorted((j1, j2) -> j2.getCreatedAt().compareTo(j1.getCreatedAt()))
+                        .limit(3) // ✅ Keep limit to 3
+                        .collect(Collectors.toList());
+            }
+
+            List<Map<String, Object>> jobResponses = recentJobs.stream()
+                    .map(job -> {
+                        Map<String, Object> jobMap = new HashMap<>();
+                        jobMap.put("id", job.getId());
+                        jobMap.put("title", job.getTitle());
+                        jobMap.put("company", job.getCompany());
+                        jobMap.put("location", job.getLocation());
+                        jobMap.put("jobType", job.getJobType());
+                        jobMap.put("description", job.getDescription());
+                        jobMap.put("requirements", job.getRequirements());
+                        jobMap.put("salary", job.getSalary());
+                        jobMap.put("createdAt", job.getCreatedAt());
+                        
+                        // Get application count for this job
+                        long applicationCount = applicationRepository.countByJobId(job.getId());
+                        jobMap.put("applicationCount", applicationCount);
+                        
+                        return jobMap;
+                    })
+                    .collect(Collectors.toList());
+
+            System.out.println("✅ Found " + jobResponses.size() + " recent jobs (max 3)");
+            return ResponseEntity.ok(jobResponses);
+
+        } catch (Exception e) {
+            System.err.println("❌ Error fetching recent jobs: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Failed to fetch recent jobs: " + e.getMessage());
+        }
+    }
+
     // Helper method to create job response map
     private Map<String, Object> createJobResponse(Job job) {
         Map<String, Object> jobMap = new HashMap<>();
