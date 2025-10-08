@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import {
   Box,
@@ -30,7 +30,8 @@ import {
   Skills,
   Portfolio,
   Contact,
-  ProfileQuickActions
+  ProfileQuickActions,
+  ResumeUpload,
 } from '../../components/profile';
 
 import { DashboardSidebar } from '../../components/dashboard';
@@ -38,6 +39,8 @@ import { Loading } from '../../components/common/feedback';
 
 const JobSeekerProfile = () => {
   const [activeTab, setActiveTab] = useState(0);
+  const [resumes, setResumes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const { user } = useAuth();
   
@@ -75,6 +78,26 @@ const JobSeekerProfile = () => {
     { label: 'Skills', component: <Skills /> },
     { label: 'Portfolio', component: <Portfolio /> }
   ];
+
+  useEffect(() => {
+    fetchResumes();
+  }, []);
+
+  const fetchResumes = async () => {
+    try {
+      // TODO: Add API call to fetch user's resumes
+      // const data = await userAPI.getResumes();
+      // setResumes(data);
+      
+      // Mock data for now
+      setResumes([]);
+      
+    } catch (error) {
+      console.error('Error fetching resumes:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box bg={bgColor} minH="100vh">
