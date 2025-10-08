@@ -32,7 +32,8 @@ import {
   FormControl,
   FormLabel,
   FormHelperText,
-  Input
+  Input,
+  Select
 } from '@chakra-ui/react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { 
@@ -64,6 +65,7 @@ const JobDetail = () => {
   // Add file upload state
   const [resumeFile, setResumeFile] = useState(null);
   const [coverLetterFile, setCoverLetterFile] = useState(null);
+  const [userResumes, setUserResumes] = useState([]); // For storing user's uploaded resumes
   const resumeFileRef = useRef();
   const coverLetterFileRef = useRef();
 
@@ -265,6 +267,28 @@ const JobDetail = () => {
           
           <ModalBody>
             <VStack spacing={6} align="stretch">
+              {/* Resume Selection - Add before file upload */}
+              <FormControl>
+                <FormLabel>Select Resume</FormLabel>
+                <Select 
+                  placeholder="Choose from uploaded resumes"
+                  onChange={(e) => {
+                    // Set selected resume
+                    const resumeId = e.target.value;
+                    // TODO: Fetch resume file by ID and set as resumeFile
+                  }}
+                >
+                  {userResumes.map((resume) => (
+                    <option key={resume.id} value={resume.id}>
+                      {resume.fileName}
+                    </option>
+                  ))}
+                </Select>
+                <Text fontSize="xs" color="gray.500" mt={1}>
+                  Or upload a new one below
+                </Text>
+              </FormControl>
+
               {/* Resume Upload */}
               <FormControl>
                 <FormLabel>Resume (PDF)</FormLabel>
