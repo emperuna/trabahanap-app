@@ -31,7 +31,7 @@ const ActionAlert = () => {
       </Box>
       <Button
         as={Link}
-        to="/employer/post-job"
+        to="/employer-dashboard?section=postJob"
         size="sm"
         colorScheme="blue"
         variant="solid"
