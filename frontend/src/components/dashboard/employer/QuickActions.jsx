@@ -28,7 +28,7 @@ const QuickActions = () => {
       label: 'Post New Job',
       description: 'Create job posting',
       icon: HiPlus,
-      path: '/employer/post-job',
+      path: '/employer-dashboard?section=postJob',
       colorScheme: 'blue',
       variant: 'solid'
     },
@@ -36,7 +36,7 @@ const QuickActions = () => {
       label: 'Review Applications',
       description: '12 pending',
       icon: HiClipboardList,
-      path: '/employer/applications',
+      path: '/employer-dashboard?section=applications',
       colorScheme: 'purple',
       variant: 'outline'
     },
@@ -44,7 +44,7 @@ const QuickActions = () => {
       label: 'Manage Candidates',
       description: 'View pipeline',
       icon: HiUserGroup,
-      path: '/employer/candidates',
+      path: '/employer-dashboard?section=candidates',
       colorScheme: 'green',
       variant: 'outline'
     },
@@ -52,7 +52,7 @@ const QuickActions = () => {
       label: 'View Analytics',
       description: 'Hiring insights',
       icon: HiChartBar,
-      path: '/employer/analytics',
+      path: '/employer-dashboard?section=analytics',
       colorScheme: 'orange',
       variant: 'outline'
     }
