@@ -5,6 +5,9 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import SaveJobButton from '../jobs/SaveJobButton';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 
 const JobCard = ({ job }) => {
   const cardBg = useColorModeValue('white', 'gray.800');
@@ -52,6 +55,7 @@ const JobCard = ({ job }) => {
       border="1px"
       borderColor={borderColor}
       borderRadius="2xl"
+      fontFamily="'Poppins', sans-serif" // ✅ Apply Poppins only to this card
       _hover={{ 
         boxShadow: 'xl', 
         transform: 'translateY(-4px)',
@@ -63,19 +67,14 @@ const JobCard = ({ job }) => {
     >
       <CardBody p={6}>
         <VStack align="start" spacing={12} h="full">
-          {/* Header with Avatar and Save Button */}
+          {/* Header with Circle and Save Button */}
           <Flex justify="space-between" align="start" w="full">
-            <Avatar
-              size="sm"
-              name={job.company}
-              src={job.companyLogo}
-              bg="gray.800"
-              color="white"
-              fontWeight="bold"
-              fontSize="lg"
-            >
-              {getCompanyInitial(job.company)}
-            </Avatar>
+            <Box
+              w="32px" // ✅ Same size as sm Avatar
+              h="32px"
+              bg="blue.500"
+              borderRadius="full" // ✅ Makes it a perfect circle
+            />
             
             <Box borderRadius="md" overflow="hidden">
               <SaveJobButton 
@@ -107,7 +106,7 @@ const JobCard = ({ job }) => {
         
           {/* Job Title */}
           <Text 
-            fontWeight="bold" 
+            fontWeight="semibold" 
             fontSize="3xl" 
             color={textColor}
             noOfLines={2}
@@ -126,8 +125,8 @@ const JobCard = ({ job }) => {
               px={3}
               py={1}
               fontSize="xs"
-              fontWeight="bold"
-              bg="gray.100"
+              fontWeight="normal"
+              bg="gray.200"
               color="black"
             >
               {job.jobType || 'Full-time'}
@@ -139,8 +138,8 @@ const JobCard = ({ job }) => {
               px={3}
               py={1}
               fontSize="xs"
-              fontWeight="bold"
-              bg="gray.100"
+              fontWeight="normal"
+              bg="gray.200"
               color="black"
             >
               Senior level
@@ -178,7 +177,7 @@ const JobCard = ({ job }) => {
               borderRadius="md"
               px={6}
               py={2}
-              fontWeight="semibold"
+              fontWeight="medium"
               _hover={{ 
                 bg: 'blue.700',
                 transform: 'scale(1.02)' 
