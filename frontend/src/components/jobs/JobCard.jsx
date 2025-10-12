@@ -62,11 +62,11 @@ const JobCard = ({ job }) => {
       overflow="hidden"
     >
       <CardBody p={6}>
-        <VStack align="start" spacing={6} h="full">
+        <VStack align="start" spacing={12} h="full">
           {/* Header with Avatar and Save Button */}
           <Flex justify="space-between" align="start" w="full">
             <Avatar
-              size="md"
+              size="sm"
               name={job.company}
               src={job.companyLogo}
               bg="gray.800"
@@ -94,13 +94,13 @@ const JobCard = ({ job }) => {
             alignItems="center"
             gap={2} >
             <Text 
-              fontSize="sm" 
+              fontSize="smaller" 
               fontWeight="semibold" 
               color={textColor}
             >
               {job.company || 'Company Name'}
             </Text>
-            <Text fontSize="sm" color={mutedColor}>
+            <Text fontSize="smaller" color={mutedColor}>
               {formatDate(job.createdAt)}
             </Text> 
           </Box>
@@ -108,7 +108,7 @@ const JobCard = ({ job }) => {
           {/* Job Title */}
           <Text 
             fontWeight="bold" 
-            fontSize="2xl" 
+            fontSize="3xl" 
             color={textColor}
             noOfLines={2}
             lineHeight="1.4"
@@ -116,8 +116,6 @@ const JobCard = ({ job }) => {
           >
             {job.title || 'Job Title'}
           </Text>
-
-          </VStack>
 
           {/* Job Type and Level Badges */}
           <HStack spacing={2} flexWrap="wrap">
@@ -149,7 +147,11 @@ const JobCard = ({ job }) => {
             </Badge>
           </HStack>
 
-         <Divider borderColor="gray.400" />
+          </VStack>
+
+          
+        <VStack spacing={4} w="full">
+          <Divider borderColor="gray.400" /> 
           {/* Footer with Salary and Apply Button */}
           <Flex justify="space-between" align="center" w="full" pt={1}>
             
@@ -161,7 +163,7 @@ const JobCard = ({ job }) => {
               >
                 {formatSalary(job.salary)}
               </Text>
-              <Text fontSize="sm" color={mutedColor}>
+              <Text fontSize="sm" color={mutedColor} fontWeight="500">
                 {job.location || 'Remote'}
               </Text>
             </VStack>
@@ -189,6 +191,9 @@ const JobCard = ({ job }) => {
             </Button>
           </Flex>
         </VStack>
+          
+       </VStack>
+          
       </CardBody>
     </Card>
   );
