@@ -114,8 +114,9 @@ const SaveJobButton = ({
         colorScheme={isSaved ? colorScheme : 'gray'}
         variant={isSaved ? 'solid' : 'outline'}
         size={size}
+        borderRadius="md" // ✅ Make it more rectangular
       >
-        {isSaved ? 'Saved' : 'Save Job'}
+        {isSaved ? 'Saved' : 'Save'}
       </Button>
     );
   }
@@ -129,6 +130,7 @@ const SaveJobButton = ({
         colorScheme={isSaved ? colorScheme : 'gray'}
         variant={isSaved ? 'solid' : 'outline'}
         size={size}
+        borderRadius="md" // ✅ Make it rectangular instead of round
         aria-label={isSaved ? 'Remove from saved' : 'Save job'}
       />
     </Tooltip>
