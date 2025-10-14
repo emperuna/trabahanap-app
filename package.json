@@ -30,5 +30,8 @@
     "full-stack"
   ],
   "author": "TrabaHanap Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@fontsource/poppins": "^5.2.7"
+  }
 }

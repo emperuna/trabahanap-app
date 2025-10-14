@@ -1,10 +1,13 @@
 import React from 'react';
 import {
   Box, VStack, Text, Button, Badge, HStack,
-  useColorModeValue, Card, CardBody, Divider
+  useColorModeValue, Card, CardBody, Avatar, Flex, Divider
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import SaveJobButton from '../jobs/SaveJobButton';
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 
 const JobCard = ({ job }) => {
   const cardBg = useColorModeValue('white', 'gray.800');
@@ -12,9 +15,17 @@ const JobCard = ({ job }) => {
   const textColor = useColorModeValue('gray.800', 'white');
   const mutedColor = useColorModeValue('gray.600', 'gray.400');
 
+  // ✅ Updated salary formatting with K for thousands
   const formatSalary = (salary) => {
-    if (!salary) return 'Salary not specified';
-    return `₱${salary.toLocaleString()}`;
+    if (!salary) return 'Not specified';
+    
+    // Format large numbers with K
+    if (salary >= 1000) {
+      const salaryInK = Math.floor(salary / 1000);
+      return `₱${salaryInK}K/mo`;
+    }
+    
+    return `₱${salary}/mo`;
   };
 
   const formatDate = (dateString) => {
@@ -24,9 +35,18 @@ const JobCard = ({ job }) => {
     const diffTime = Math.abs(now - date);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     
-    if (diffDays === 1) return 'Yesterday';
+    if (diffDays === 0) return 'Today';
+    if (diffDays === 1) return '1 day ago';
     if (diffDays < 7) return `${diffDays} days ago`;
-    return date.toLocaleDateString();
+    if (diffDays < 30) return `${Math.ceil(diffDays / 7)}w ago`; // ✅ Shorter format
+    if (diffDays < 365) return `${Math.ceil(diffDays / 30)}mo ago`; // ✅ Months
+    
+    return `${Math.ceil(diffDays / 365)}y ago`;
+  };
+
+  // Generate company initial for avatar
+  const getCompanyInitial = (companyName) => {
+    return companyName ? companyName.charAt(0).toUpperCase() : 'C';
   };
 
   return (
@@ -34,93 +54,145 @@ const JobCard = ({ job }) => {
       bg={cardBg}
       border="1px"
       borderColor={borderColor}
-      borderRadius="xl"
+      borderRadius="2xl"
+      fontFamily="'Poppins', sans-serif" // ✅ Apply Poppins only to this card
       _hover={{ 
-        boxShadow: 'lg', 
-        transform: 'translateY(-2px)',
-        borderColor: 'blue.200'
+        boxShadow: 'xl', 
+        transform: 'translateY(-4px)',
+        borderColor: 'blue.300'
       }}
       transition="all 0.3s ease"
       h="fit-content"
+      overflow="hidden"
     >
-      <CardBody p={5}>
-        <VStack align="start" spacing={4}>
-          {/* Job Title & Company */}
-          <VStack align="start" spacing={1} w="full">
-            <Text 
-              fontWeight="bold" 
-              fontSize="lg" 
-              color={textColor}
-              noOfLines={2}
-              lineHeight="1.3"
-            >
-              {job.title || 'Job Title'}
-            </Text>
-            <Text color={mutedColor} fontSize="md" fontWeight="medium">
-              {job.company || 'Company Name'}
-            </Text>
-            <Text fontSize="sm" color={mutedColor}>
-              📍 {job.location || 'Location not specified'}
-            </Text>
-          </VStack>
-
-          {/* Badges */}
-          <HStack spacing={2} flexWrap="wrap">
-            <Badge colorScheme="blue" variant="subtle" borderRadius="full">
-              {job.jobType || 'Full-time'}
-            </Badge>
-            {job.salary && (
-              <Badge colorScheme="green" variant="outline" borderRadius="full">
-                {formatSalary(job.salary)}
-              </Badge>
-            )}
-          </HStack>
-
-          {/* Description */}
-          {job.description && (
-            <Text 
-              fontSize="sm" 
-              color={mutedColor} 
-              noOfLines={3}
-              lineHeight="1.5"
-            >
-              {job.description}
-            </Text>
-          )}
-
-          <Divider />
-
-          {/* Footer */}
-          <HStack justify="space-between" w="full">
-            <VStack align="start" spacing={0}>
-              <Text fontSize="xs" color={mutedColor}>
-                Posted by {job.postedByUsername || 'Recruiter'}
-              </Text>
-              <Text fontSize="xs" color={mutedColor}>
-                {formatDate(job.createdAt)}
-              </Text>
-            </VStack>
+      <CardBody p={6}>
+        <VStack align="start" spacing={12} h="full">
+          {/* Header with Circle and Save Button */}
+          <Flex justify="space-between" align="start" w="full">
+            <Box
+              w="32px" // ✅ Same size as sm Avatar
+              h="32px"
+              bg="blue.500"
+              borderRadius="full" // ✅ Makes it a perfect circle
+            />
             
-            <HStack spacing={2}>
+            <Box borderRadius="md" overflow="hidden">
               <SaveJobButton 
                 jobId={job.id} 
                 size="sm" 
                 variant="icon"
+                colorScheme="gray"
               />
-              <Button
-                as={Link}
-                to={`/jobs/${job.id}`}
-                size="sm"
-                colorScheme="blue"
-                variant="solid"
-                borderRadius="full"
-                _hover={{ transform: 'scale(1.05)' }}
-              >
-                View Details
-              </Button>
-            </HStack>
+            </Box>
+          </Flex>
+
+          <VStack align="start" spacing={2} w="full" >
+            {/* Company Name and Date */}
+          <Box display="flex"
+            justifyContent="space-between"  
+            alignItems="center"
+            gap={2} >
+            <Text 
+              fontSize="smaller" 
+              fontWeight="semibold" 
+              color={textColor}
+            >
+              {job.company || 'Company Name'}
+            </Text>
+            <Text fontSize="smaller" color={mutedColor}>
+              {formatDate(job.createdAt)}
+            </Text> 
+          </Box>
+        
+          {/* Job Title */}
+          <Text 
+            fontWeight="semibold" 
+            fontSize="3xl" 
+            color={textColor}
+            noOfLines={2}
+            lineHeight="1.4"
+            w="full"
+          >
+            {job.title || 'Job Title'}
+          </Text>
+
+          {/* Job Type and Level Badges */}
+          <HStack spacing={2} flexWrap="wrap">
+            <Badge 
+              colorScheme="gray" 
+              variant="solid"
+              borderRadius="md"
+              px={3}
+              py={1}
+              fontSize="xs"
+              fontWeight="normal"
+              bg="gray.200"
+              color="black"
+            >
+              {job.jobType || 'Full-time'}
+            </Badge>
+            <Badge 
+              colorScheme="gray" 
+              variant="solid"
+              borderRadius="md"
+              px={3}
+              py={1}
+              fontSize="xs"
+              fontWeight="normal"
+              bg="gray.200"
+              color="black"
+            >
+              Senior level
+            </Badge>
           </HStack>
+
+          </VStack>
+
+          
+        <VStack spacing={4} w="full">
+          <Divider borderColor="gray.400" /> 
+          {/* Footer with Salary and Apply Button */}
+          <Flex justify="space-between" align="center" w="full" pt={1}>
+            
+            <VStack align="start" spacing={0}>
+              <Text 
+                fontSize="lg" 
+                fontWeight="bold" 
+                color={textColor}
+              >
+                {formatSalary(job.salary)}
+              </Text>
+              <Text fontSize="sm" color={mutedColor} fontWeight="500">
+                {job.location || 'Remote'}
+              </Text>
+            </VStack>
+            
+            <Button
+              as={Link}
+              to={`/jobs/${job.id}`}
+              size="md"
+              colorScheme="gray"
+              bg="blue.600"
+              color="white"
+              borderRadius="md"
+              px={6}
+              py={2}
+              fontWeight="medium"
+              _hover={{ 
+                bg: 'blue.700',
+                transform: 'scale(1.02)' 
+              }}
+              _active={{
+                bg: 'blue.800'
+              }}
+            >
+              Apply now
+            </Button>
+          </Flex>
         </VStack>
+          
+       </VStack>
+          
       </CardBody>
     </Card>
   );
