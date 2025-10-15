@@ -15,6 +15,10 @@ import {
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { jobsAPI } from '../../../services/api';
+// ✅ Add Poppins font imports
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 
 const JobRecommendationsCard = () => {
   const [jobs, setJobs] = useState([]);
@@ -51,6 +55,10 @@ const JobRecommendationsCard = () => {
 
   const formatSalary = (salary) => {
     if (!salary) return 'Salary not specified';
+    if (salary >= 1000) {
+      const salaryInK = Math.floor(salary / 1000);
+      return `₱${salaryInK}K`;
+    }
     return `₱${salary.toLocaleString()}`;
   };
 
@@ -68,7 +76,14 @@ const JobRecommendationsCard = () => {
 
   if (loading) {
     return (
-      <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} w="full">
+      <Card 
+        bg={cardBg} 
+        borderRadius="xl" 
+        border="1px" 
+        borderColor={borderColor} 
+        w="full"
+        fontFamily="'Poppins', sans-serif" // ✅ Apply Poppins font
+      >
         <CardBody p={6}>
           <VStack spacing={4}>
             <Spinner color="blue.500" />
@@ -80,7 +95,14 @@ const JobRecommendationsCard = () => {
   }
 
   return (
-    <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} w="full">
+    <Card 
+      bg={cardBg} 
+      borderRadius="xl" 
+      border="1px" 
+      borderColor={borderColor} 
+      w="full"
+      fontFamily="'Poppins', sans-serif" // ✅ Apply Poppins font to entire card
+    >
       <CardBody p={6}>
         <HStack justify="space-between" mb={4}>
           <Heading size="md" color={textColor}>Recommended Jobs</Heading>
@@ -117,6 +139,7 @@ const JobRecommendationsCard = () => {
                     size="xs"
                     colorScheme="blue"
                     variant="outline"
+                    borderRadius="md" // ✅ More rectangular buttons
                   >
                     View
                   </Button>
@@ -134,6 +157,7 @@ const JobRecommendationsCard = () => {
                 size="sm"
                 colorScheme="blue"
                 variant="outline"
+                borderRadius="md" // ✅ More rectangular
                 mt={3}
               >
                 Browse All Jobs
@@ -151,6 +175,7 @@ const JobRecommendationsCard = () => {
             size="sm"
             colorScheme="blue"
             variant="outline"
+            borderRadius="md" // ✅ More rectangular
           >
             View All Jobs
           </Button>
