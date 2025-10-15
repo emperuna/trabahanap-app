@@ -24,6 +24,10 @@ import {
   HiDocumentText,
 } from 'react-icons/hi';
 import { useNavigate } from 'react-router-dom';
+// ✅ Add Poppins font imports
+import '@fontsource/poppins/400.css';
+import '@fontsource/poppins/600.css';
+import '@fontsource/poppins/700.css';
 
 import { StatusBadge } from '../shared';
 
@@ -51,6 +55,7 @@ const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
       borderRadius="xl"
       border="1px"
       borderColor={borderColor}
+      fontFamily="'Poppins', sans-serif" // ✅ Apply Poppins font to entire card
       transition="all 0.2s"
       _hover={{
         shadow: 'lg',
@@ -74,7 +79,7 @@ const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
                 {application.jobTitle}
               </Text>
               <Text fontSize="sm" color={mutedColor} noOfLines={1}>
-                {application.company}
+                {application.company || "Company Name"}
               </Text>
               {/* ✅ USE SHARED StatusBadge */}
               <StatusBadge status={application.status} size="sm" />
@@ -86,6 +91,7 @@ const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
                 icon={<HiDotsVertical />}
                 variant="ghost"
                 size="sm"
+                borderRadius="md" // ✅ More rectangular
               />
               <MenuList>
                 <MenuItem
@@ -151,6 +157,7 @@ const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
                   size="sm"
                   colorScheme="blue"
                   variant="solid"
+                  borderRadius="md" // ✅ More rectangular buttons
                   flex={1}
                   onClick={() => navigate(`/jobs/${application.jobId}`)}
                   leftIcon={<HiExternalLink />}
@@ -161,6 +168,7 @@ const JobSeekerApplicationCard = ({ application, onWithdraw, onViewPDF }) => {
                   size="sm"
                   colorScheme="red"
                   variant="outline"
+                  borderRadius="md" // ✅ More rectangular buttons
                   flex={1}
                   onClick={() => onWithdraw(application.id)}
                   leftIcon={<HiTrash />}
