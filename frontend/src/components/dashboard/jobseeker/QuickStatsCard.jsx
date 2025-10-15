@@ -73,39 +73,6 @@ const QuickStatsCard = ({ applications = [], stats = {} }) => {
 
       <CardBody pt={3}>
         <VStack spacing={4} align="stretch">
-          {/* Profile Completion */}
-          <Box>
-            <HStack justify="space-between" mb={2}>
-              <HStack spacing={2}>
-                <Icon as={HiUserCircle} color="orange.500" boxSize="18px" />
-                <Text fontSize="sm" fontWeight="medium">
-                  Profile Completion
-                </Text>
-              </HStack>
-              <Text 
-                fontSize="lg" 
-                fontWeight="bold" 
-                color={stats.profileCompletion >= 80 ? 'green.500' : 'orange.500'}
-              >
-                {stats.profileCompletion || 0}%
-              </Text>
-            </HStack>
-            <Progress 
-              value={stats.profileCompletion || 0} 
-              colorScheme={stats.profileCompletion >= 80 ? 'green' : 'orange'}
-              size="sm"
-              borderRadius="full"
-            />
-            <Text fontSize="xs" color="gray.600" mt={1}>
-              {stats.profileCompletion >= 100 
-                ? '✨ Your profile is complete!' 
-                : `${100 - (stats.profileCompletion || 0)}% remaining`
-              }
-            </Text>
-          </Box>
-
-          <Divider />
-
           {/* Other Stats */}
           {statItems.map((stat, index) => (
             <HStack key={index} justify="space-between">
