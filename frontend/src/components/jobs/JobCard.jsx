@@ -70,10 +70,10 @@ const JobCard = ({ job }) => {
           {/* Header with Circle and Save Button */}
           <Flex justify="space-between" align="start" w="full">
             <Box
-              w="32px" // ✅ Same size as sm Avatar
+              w="32px"
               h="32px"
               bg="blue.500"
-              borderRadius="full" // ✅ Makes it a perfect circle
+              borderRadius="full"
             />
             
             <Box borderRadius="md" overflow="hidden">
@@ -166,28 +166,6 @@ const JobCard = ({ job }) => {
                 {job.location || 'Remote'}
               </Text>
             </VStack>
-            
-            <Button
-              as={Link}
-              to={`/jobs/${job.id}`}
-              size="md"
-              colorScheme="gray"
-              bg="blue.600"
-              color="white"
-              borderRadius="md"
-              px={6}
-              py={2}
-              fontWeight="medium"
-              _hover={{ 
-                bg: 'blue.700',
-                transform: 'scale(1.02)' 
-              }}
-              _active={{
-                bg: 'blue.800'
-              }}
-            >
-              Apply now
-            </Button>
           </Flex>
         </VStack>
           
