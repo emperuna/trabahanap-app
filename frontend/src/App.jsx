@@ -28,6 +28,7 @@ import EmployerApplications from './pages/employer/EmployerApplications';
 import EmployerManageJobs from './pages/employer/EmployerManageJobs';
 import SettingsPage from './pages/settings/SettingsPage';
 import About from "./pages/static/About";
+import Companies from "./pages/static/Companies";
 
 function App() {
   const [showDevButton, setShowDevButton] = React.useState(true);
@@ -225,7 +226,7 @@ function App() {
               
               {/* 🌐 Public Routes */}
               <Route path="/jobs" element={<ComingSoon />} />
-              <Route path="/companies" element={<ComingSoon />} />
+              <Route path="/companies" element={<Companies />} />
               <Route path="/post-job" element={<ComingSoon />} />
               <Route path="/career-advice" element={<ComingSoon />} />
               <Route path="/resume-builder" element={<ComingSoon />} />
