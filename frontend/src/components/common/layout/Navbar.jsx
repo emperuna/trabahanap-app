@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom'; // <-- import useLocation
+import { Link } from 'react-router-dom';
 import {
   Box,
   Flex,
@@ -17,17 +17,13 @@ import { HiMenu, HiX } from 'react-icons/hi';
 import logo from '../../../assets/logo/TrabaHanap-Brandname.svg';
 
 const Navbar = () => {
-  const location = useLocation(); // <-- get current location
-  // Detect if current page is home or about
-  const isHome = location.pathname === '/' || location.pathname === '/about';
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
-  const navBg = isHome 
-    ? useColorModeValue("rgba(255, 255, 255, 0.95)", "rgba(26, 32, 44, 0.95)")
-    : useColorModeValue("blue.500", "blue.600");
+  // Default to the 'home' navbar appearance across all pages
+  const navBg = useColorModeValue("rgba(255, 255, 255, 0.95)", "rgba(255, 255, 255, 0.95)");
 
   return (
     <Box
@@ -37,9 +33,9 @@ const Navbar = () => {
       right={0}
       zIndex={50}
       bg={navBg}
-      backdropFilter={isHome ? "blur(20px)" : undefined}
-      borderBottom={isHome ? "1px solid" : undefined}
-      borderColor={isHome ? "gray.100" : undefined}
+  backdropFilter="blur(20px)"
+  borderBottom="1px solid"
+  borderColor="gray.100"
       boxShadow="sm"
       w="100%"
     >
@@ -54,11 +50,7 @@ const Navbar = () => {
                 h={{ base: 6, sm: 7 }}
                 w="auto"
                 transition="all 0.3s ease"
-                filter={isHome ? undefined : 'brightness(0) invert(1)'}
-                _hover={{ 
-                  transform: 'scale(1.05)',
-                  filter: isHome ? undefined : 'brightness(0) invert(1)'
-                }}
+                _hover={{ transform: 'scale(1.05)' }}
               />
             </Link>
           </Flex>
@@ -71,20 +63,16 @@ const Navbar = () => {
               as={Link}
               to="/"
               variant="ghost"
-              color={isHome ? "gray.600" : "white"}
+              color="gray.600"
               fontWeight="500"
               fontSize="sm"
               px={5}
               py={2}
               h={10}
               borderRadius="xl"
-              _hover={{ 
-                color: isHome 
-                  ? useColorModeValue('gray.900', 'white')
-                  : useColorModeValue('white', 'gray.100'),
-                bg: isHome 
-                  ? useColorModeValue('gray.50', 'gray.700')
-                  : useColorModeValue('blue.600', 'blue.500'),
+              _hover={{
+                color: useColorModeValue('gray.900', 'white'),
+                bg: useColorModeValue('gray.50', 'gray.700'),
                 transform: 'translateY(-1px)'
               }}
               transition="all 0.2s ease"
@@ -95,18 +83,14 @@ const Navbar = () => {
               as={Link}
               to="/jobs"
               variant="ghost"
-              color={isHome ? "gray.600" : "white"}
+              color="gray.600"
               fontWeight="500"
               fontSize="sm"
               px={5}
               py={2}
               h={10}
               borderRadius="xl"
-              _hover={{ 
-                color: 'gray.900',
-                bg: 'gray.50',
-                transform: 'translateY(-1px)'
-              }}
+              _hover={{ color: 'gray.900', bg: 'gray.50', transform: 'translateY(-1px)' }}
               transition="all 0.2s ease"
             >
               Browse Jobs
@@ -115,18 +99,14 @@ const Navbar = () => {
               as={Link}
               to="/companies"
               variant="ghost"
-              color={isHome ? "gray.600" : "white"}
+              color="gray.600"
               fontWeight="500"
               fontSize="sm"
               px={5}
               py={2}
               h={10}
               borderRadius="xl"
-              _hover={{ 
-                color: 'gray.900',
-                bg: 'gray.50',
-                transform: 'translateY(-1px)'
-              }}
+              _hover={{ color: 'gray.900', bg: 'gray.50', transform: 'translateY(-1px)' }}
               transition="all 0.2s ease"
             >
               Companies
@@ -135,79 +115,57 @@ const Navbar = () => {
               as={Link}
               to="/about" // <-- This links the About option to the About page
               variant="ghost"
-              color={isHome ? "gray.600" : "white"}
+              color="gray.600"
               fontWeight="500"
               fontSize="sm"
               px={5}
               py={2}
               h={10}
               borderRadius="xl"
-              _hover={{ 
-                color: 'gray.900',
-                bg: 'gray.50',
-                transform: 'translateY(-1px)'
-              }}
+              _hover={{ color: 'gray.900', bg: 'gray.50', transform: 'translateY(-1px)' }}
               transition="all 0.2s ease"
             >
               About
             </Button>
 
             {/* Elegant Divider */}
-            <Box 
-              w="1px" 
-              h={6} 
-              bg={isHome ? "gray.200" : "whiteAlpha.700"} 
-              mx={4}
-              opacity={0.7}
-            />
+            <Box w="1px" h={6} bg="gray.200" mx={4} opacity={0.7} />
 
             {/* Auth Buttons */}
-            {isHome && (
-              <>
-                <Button
-                  as={Link}
-                  to="/login"
-                  variant="ghost"
-                  color={isHome ? "gray.600" : "white"}
-                  fontWeight="600"
-                  fontSize="sm"
-                  px={5}
-                  py={2}
-                  h={10}
-                  borderRadius="xl"
-                  _hover={{ 
-                    color: 'gray.900',
-                    bg: 'gray.50',
-                    transform: 'translateY(-1px)'
-                  }}
-                  transition="all 0.2s ease"
-                >
-                  Sign In
-                </Button>
-                <Button
-                  as={Link}
-                  to="/register"
-                  size="lg"
-                  h={12}
-                  px={8}
-                  ml={2}
-                  colorScheme="blue"
-                  fontWeight="600"
-                  fontSize="sm"
-                  letterSpacing="0.025em"
-                  borderRadius="2xl"
-                  _hover={{
-                    transform: 'translateY(-2px)',
-                  }}
-                  _active={{
-                    transform: 'translateY(-1px)',
-                  }}
-                  transition="all 0.3s ease"
-                >
-                  Get Started
-                </Button>
-              </>
-            )}
+            <Button
+              as={Link}
+              to="/login"
+              variant="ghost"
+              color="gray.600"
+              fontWeight="600"
+              fontSize="sm"
+              px={5}
+              py={2}
+              h={10}
+              borderRadius="xl"
+              _hover={{ color: 'gray.900', bg: 'gray.50', transform: 'translateY(-1px)' }}
+              transition="all 0.2s ease"
+            >
+              Sign In
+            </Button>
+            <Button
+              as={Link}
+              to="/register"
+              size="lg"
+              h={12}
+              px={8}
+              ml={2}
+              colorScheme="blue"
+              fontWeight="600"
+              fontSize="sm"
+              letterSpacing="0.025em"
+              borderRadius="2xl"
+              _hover={{ transform: 'translateY(-2px)' }}
+              _active={{ transform: 'translateY(-1px)' }}
+              transition="all 0.3s ease"
+            >
+              Get Started
+            </Button>
           </HStack>
 
           {/* Mobile Menu Button */}
