@@ -16,6 +16,8 @@ import {
   StatHelpText,
   StatArrow,
   useColorModeValue,
+  Button,
+  Spacer,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
@@ -30,7 +32,7 @@ const WelcomeHeader = ({ user, greeting, stats }) => {
         p={8}
         color="white"
       >
-        <HStack spacing={6}>
+        <HStack spacing={6} border={'1px solid red'}>
           <Avatar
             size="xl"
             name={`${user?.firstName || ''} ${user?.lastName || ''}`}
@@ -56,6 +58,25 @@ const WelcomeHeader = ({ user, greeting, stats }) => {
               </Badge>
             </HStack>
           </VStack>
+
+          <Spacer />
+          <Button 
+                bg="white" 
+                color="blue.500" 
+                variant="solid" 
+                borderRadius="md" 
+                _hover={{ 
+                  bg: "gray.50", // ✅ Light gray on hover
+                  transform: "translateY(-1px)" // ✅ Subtle lift effect
+                }}
+                _active={{
+                  bg: "gray.100" 
+                }}
+                fontWeight="semibold"
+                px={6}
+              > 
+                Edit Profile 
+              </Button>
         </HStack>
       </Box>
 
