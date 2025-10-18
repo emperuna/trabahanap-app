@@ -5,11 +5,11 @@ import {
 } from '@chakra-ui/react';
 import {
   HiUser, HiBell, HiShieldCheck, HiGlobe, HiLockClosed,
-  HiCog, HiChevronRight
+  HiCog, HiChevronRight, HiOfficeBuilding // ✅ Add company icon
 } from 'react-icons/hi';
 import { useAuth } from '../../context/AuthContext';
 
-const SettingsSidebar = ({ activeSection, onSectionChange }) => {
+const SettingsSidebar = ({ activeSection, onSectionChange, userRole }) => { // ✅ Add userRole prop
   const { user } = useAuth();
   const cardBg = useColorModeValue('white', 'gray.800');
   const borderColor = useColorModeValue('gray.200', 'gray.700');
@@ -18,43 +18,65 @@ const SettingsSidebar = ({ activeSection, onSectionChange }) => {
   const activeBg = useColorModeValue('blue.50', 'blue.900');
   const activeColor = useColorModeValue('blue.600', 'blue.300');
 
-  const settingsSections = [
-    {
-      id: 'account',
-      label: 'Account Settings',
-      icon: HiUser,
-      description: 'Personal information and profile',
-      badge: null
-    },
-    {
-      id: 'notifications',
-      label: 'Notifications',
-      icon: HiBell,
-      description: 'Email, push & SMS preferences',
-      badge: null
-    },
-    {
-      id: 'privacy',
-      label: 'Privacy',
-      icon: HiShieldCheck,
-      description: 'Profile visibility and data sharing',
-      badge: null
-    },
-    {
-      id: 'preferences',
-      label: 'Preferences',
-      icon: HiGlobe,
-      description: 'Language, timezone & appearance',
-      badge: null
-    },
-    {
-      id: 'security',
-      label: 'Security',
-      icon: HiLockClosed,
-      description: 'Password and account security',
-      badge: 'Important'
+  // ✅ Generate settings sections based on user role
+  const getSettingsSections = () => {
+    const baseSections = [
+      {
+        id: 'account',
+        label: 'Account Settings',
+        icon: HiUser,
+        description: 'Personal information and profile',
+        badge: null
+      }
+    ];
+
+    // ✅ Add Company Profile for employers
+    if (userRole === 'employer') {
+      baseSections.push({
+        id: 'company',
+        label: 'Company Profile',
+        icon: HiOfficeBuilding,
+        description: 'Company information and branding',
+        badge: null
+      });
     }
-  ];
+
+    // ✅ Add remaining sections
+    baseSections.push(
+      {
+        id: 'notifications',
+        label: 'Notifications',
+        icon: HiBell,
+        description: 'Email, push & SMS preferences',
+        badge: null
+      },
+      {
+        id: 'privacy',
+        label: 'Privacy',
+        icon: HiShieldCheck,
+        description: 'Profile visibility and data sharing',
+        badge: null
+      },
+      {
+        id: 'preferences',
+        label: 'Preferences',
+        icon: HiGlobe,
+        description: 'Language, timezone & appearance',
+        badge: null
+      },
+      {
+        id: 'security',
+        label: 'Security',
+        icon: HiLockClosed,
+        description: 'Password and account security',
+        badge: 'Important'
+      }
+    );
+
+    return baseSections;
+  };
+
+  const settingsSections = getSettingsSections();
 
   return (
     <VStack spacing={6} align="stretch">
@@ -67,7 +89,10 @@ const SettingsSidebar = ({ activeSection, onSectionChange }) => {
               <Heading size="md" color={textColor}>Settings</Heading>
             </HStack>
             <Text fontSize="sm" color={mutedColor}>
-              Manage your account preferences and privacy settings
+              {userRole === 'employer' 
+                ? 'Manage your account and company preferences' 
+                : 'Manage your account preferences and privacy settings'
+              }
             </Text>
           </VStack>
         </CardBody>
@@ -87,6 +112,14 @@ const SettingsSidebar = ({ activeSection, onSectionChange }) => {
               <Text fontSize="sm" color={mutedColor}>
                 {user?.email}
               </Text>
+              {/* ✅ Show role badge */}
+              <Badge 
+                colorScheme={userRole === 'employer' ? 'purple' : 'blue'} 
+                mt={1}
+                textTransform="capitalize"
+              >
+                {userRole || 'User'}
+              </Badge>
             </Box>
           </VStack>
         </CardBody>
@@ -153,7 +186,7 @@ const SettingsSidebar = ({ activeSection, onSectionChange }) => {
         </CardBody>
       </Card>
 
-      {/* Quick Actions */}
+      {/* Quick Actions - Role specific */}
       <Card bg={cardBg} border="1px" borderColor={borderColor}>
         <CardBody>
           <VStack spacing={3} align="stretch">
@@ -161,12 +194,25 @@ const SettingsSidebar = ({ activeSection, onSectionChange }) => {
               Quick Actions
             </Text>
             <VStack spacing={2} align="stretch">
-              <Button variant="outline" size="sm" colorScheme="blue">
-                Export Data
-              </Button>
-              <Button variant="outline" size="sm" colorScheme="gray">
-                Contact Support
-              </Button>
+              {userRole === 'employer' ? (
+                <>
+                  <Button variant="outline" size="sm" colorScheme="blue" borderRadius="md">
+                    Export Company Data
+                  </Button>
+                  <Button variant="outline" size="sm" colorScheme="purple" borderRadius="md">
+                    Upgrade Plan
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button variant="outline" size="sm" colorScheme="blue" borderRadius="md">
+                    Export Data
+                  </Button>
+                  <Button variant="outline" size="sm" colorScheme="gray" borderRadius="md">
+                    Contact Support
+                  </Button>
+                </>
+              )}
             </VStack>
           </VStack>
         </CardBody>
