@@ -9,7 +9,8 @@ import EmployerManageJobs from './EmployerManageJobs';
 import EmployerApplications from './EmployerApplications';
 import EmployerPostJob from './EmployerPostJob';
 import SettingsContent from '../../components/settings/SettingsContent';
-import SettingsSidebar from '../../components/settings/SettingsSidebar'; // ✅ Import SettingsSidebar
+import SettingsSidebar from '../../components/settings/SettingsSidebar';
+import EmployerNavbar from '../../components/common/layout/EmployerNavbar';
 
 import {
   HiHome,
@@ -76,19 +77,16 @@ const EmployerPage = () => {
   else if (selected === 'manageJobs') content = <EmployerManageJobs />;
   else if (selected === 'applications') content = <EmployerApplications />;
   else if (selected === 'settings') {
-    // ✅ Use Settings layout with both sidebar and content
+    // ✅ Settings layout - no sidebar, use settings components
     content = (
       <Grid templateColumns={{ base: '1fr', lg: '320px 1fr' }} gap={6} h="full">
-        {/* Settings Sidebar */}
         <GridItem>
           <SettingsSidebar 
             activeSection={settingsSection}
             onSectionChange={handleSettingsSelect}
-            userRole={user?.role} // ✅ Pass user role for role-specific sections
+            userRole={user?.role}
           />
         </GridItem>
-        
-        {/* Settings Content */}
         <GridItem>
           <SettingsContent 
             activeSection={settingsSection}
@@ -101,39 +99,49 @@ const EmployerPage = () => {
 
   return (
     <Box bg={bgColor} minH="100vh" w="100vw" overflow="hidden">
-      <Box maxW="8xl" mx="auto" p={6} display="flex" flexDir="row" h="100vh">
-        {/* Main Sidebar - Only show when not in settings */}
-        {selected !== 'settings' && (
-          <Box
-            display={{ base: 'none', lg: 'block' }}
-            w="280px"
-            flexShrink={0}
-            h="100vh"
-            position="sticky"
-            top={0}
-            left={0}
-            zIndex={1}
-            bg={bgColor}
-            borderRightWidth="1px"
-          >
-            <EmployerSidebar
-              selected={selected}
-              onSelect={handleSelect}
-              options={SIDEBAR_OPTIONS}
-            />
-          </Box>
-        )}
+      {/* ✅ Fixed Navbar */}
+      <EmployerNavbar />
+      
+      {/* ✅ Main Layout Container */}
+      <Box 
+        pt="64px" // Account for fixed navbar height
+        h="100vh"
+        overflow="hidden"
+      >
+        <Container maxW="8xl" h="full" p={0}>
+          <Box display="flex" h="full">
+            {/* ✅ Sidebar - Only show when not in settings */}
+            {selected !== 'settings' && (
+              <Box
+                w="280px"
+                flexShrink={0}
+                bg={bgColor}
+                borderRightWidth="1px"
+                borderColor={useColorModeValue('gray.200', 'gray.700')}
+                display={{ base: 'none', lg: 'block' }}
+                h="full"
+                overflow="hidden"
+              >
+                <EmployerSidebar
+                  selected={selected}
+                  onSelect={handleSelect}
+                  options={SIDEBAR_OPTIONS}
+                />
+              </Box>
+            )}
 
-        {/* Main Content */}
-        <Box
-          flex={1}
-          h="100vh"
-          overflowY="auto"
-          pl={{ base: 0, lg: selected !== 'settings' ? 6 : 0 }} // ✅ Conditional padding
-          p={selected === 'settings' ? 6 : 0} // ✅ Full padding for settings
-        >
-          {content}
-        </Box>
+            {/* ✅ Main Content Area */}
+            <Box
+              flex={1}
+              h="full"
+              overflow="auto"
+              bg={bgColor}
+              p={6}
+            >
+              {content}
+            </Box>
+          </Box>
+        </Container>
       </Box>
     </Box>
   );

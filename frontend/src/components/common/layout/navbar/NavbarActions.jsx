@@ -11,7 +11,8 @@ const NavbarActions = ({
   profileCompletion, 
   onMarkAsRead, 
   onLogout, 
-  onOpenMobile 
+  onOpenMobile,
+  userRole = 'jobseeker' // ✅ Accept userRole prop with default
 }) => {
   const { colorMode, toggleColorMode } = useColorMode();
 
@@ -35,6 +36,7 @@ const NavbarActions = ({
         notifications={notifications}
         unreadCount={unreadCount}
         onMarkAsRead={onMarkAsRead}
+        userRole={userRole} // ✅ Pass userRole for different notification types
       />
 
       {/* User Menu */}
@@ -42,6 +44,7 @@ const NavbarActions = ({
         user={user}
         profileCompletion={profileCompletion}
         onLogout={onLogout}
+        userRole={userRole} // ✅ Pass userRole for different menu items
       />
 
       {/* Mobile Menu Button */}
