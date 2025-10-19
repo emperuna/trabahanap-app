@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Container,
-  VStack,
-  useToast,
-  useDisclosure,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { VStack, useToast, useDisclosure } from '@chakra-ui/react';
 import { applicationsAPI } from '../../services/api';
 import PDFViewerModal from '../../components/common/PDFViewerModal';
+import JobSeekerLayout from '../../components/common/layout/JobSeekerLayout';
 
-// Import new jobseeker components
+// Import components
 import {
   JobSeekerApplicationsHeader,
   JobSeekerApplicationsStats,
@@ -28,8 +22,6 @@ const JobSeekerApplications = () => {
   const { isOpen: pdfIsOpen, onOpen: pdfOnOpen, onClose: pdfOnClose } = useDisclosure();
   const toast = useToast();
 
-  const bgColor = useColorModeValue('gray.50', 'gray.900');
-
   useEffect(() => {
     fetchApplications();
   }, []);
@@ -37,14 +29,15 @@ const JobSeekerApplications = () => {
   const fetchApplications = async () => {
     try {
       setLoading(true);
-      const data = await applicationsAPI.getMyApplications();
-      setApplications(data);
+      const response = await applicationsAPI.getMyApplications();
+      setApplications(response || []);
     } catch (error) {
+      console.error('Failed to fetch applications:', error);
       toast({
-        title: 'Error fetching applications',
-        description: error.message,
+        title: 'Error',
+        description: 'Failed to load applications',
         status: 'error',
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
     } finally {
@@ -53,123 +46,73 @@ const JobSeekerApplications = () => {
   };
 
   const handleWithdraw = async (applicationId) => {
-    if (!window.confirm('Are you sure you want to withdraw this application?')) {
-      return;
-    }
-
     try {
-      setApplications(prevApplications =>
-        prevApplications.filter(app => app.id !== applicationId)
-      );
-
       await applicationsAPI.withdrawApplication(applicationId);
-
       toast({
-        title: 'Application Withdrawn',
-        description: 'Your application has been successfully withdrawn.',
-        status: 'info',
-        duration: 4000,
+        title: 'Success',
+        description: 'Application withdrawn successfully',
+        status: 'success',
+        duration: 3000,
         isClosable: true,
       });
-    } catch (error) {
       fetchApplications();
-      
+    } catch (error) {
+      console.error('Failed to withdraw application:', error);
       toast({
-        title: 'Error withdrawing application',
-        description: error.message,
+        title: 'Error',
+        description: 'Failed to withdraw application',
         status: 'error',
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
     }
   };
 
-  const handleViewPDF = async (applicationId, fileType, title) => {
+  const handleViewPDF = async (applicationId, documentType, title) => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
-        toast({
-          title: 'Authentication Error',
-          description: 'Please log in to view documents',
-          status: 'error',
-          duration: 3000,
-          isClosable: true,
-        });
-        return;
-      }
-
-      const apiUrl = window.location.origin.includes('localhost') 
-        ? 'http://localhost:8080' 
-        : window.location.origin;
-      
-      const response = await fetch(`${apiUrl}/api/applications/view/${applicationId}/${fileType}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/pdf'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const blob = await response.blob();
-      const pdfUrl = URL.createObjectURL(blob);
-      
+      const pdfUrl = await applicationsAPI.getApplicationDocument(applicationId, documentType);
       setSelectedPDF(pdfUrl);
       setPdfTitle(title);
       pdfOnOpen();
     } catch (error) {
-      console.error('Error loading PDF:', error);
+      console.error('Failed to load PDF:', error);
       toast({
-        title: 'Error loading PDF',
-        description: error.message,
+        title: 'Error',
+        description: 'Failed to load document',
         status: 'error',
-        duration: 5000,
+        duration: 3000,
         isClosable: true,
       });
     }
   };
 
-  const getFilteredApplications = () => {
-    if (!statusFilter) return applications;
-    return applications.filter(app => app.status === statusFilter);
-  };
-
-  const filteredApplications = getFilteredApplications();
+  const filteredApplications = statusFilter
+    ? applications.filter(app => app.status === statusFilter)
+    : applications;
 
   return (
-    <>
-      <Box bg={bgColor} minH="100vh" py={8}>
-        <Container maxW="8xl">
-          <VStack spacing={8} align="stretch">
-            {/* Header */}
-            <JobSeekerApplicationsHeader 
-              applicationsCount={applications.length}
-            />
+    <JobSeekerLayout>
+      <VStack spacing={8} align="stretch">
+        <JobSeekerApplicationsHeader 
+          applicationsCount={applications.length}
+        />
 
-            {/* Stats */}
-            <JobSeekerApplicationsStats applications={applications} />
+        <JobSeekerApplicationsStats applications={applications} />
 
-            {/* Filters */}
-            <JobSeekerApplicationsFilters
-              statusFilter={statusFilter}
-              setStatusFilter={setStatusFilter}
-              onRefresh={fetchApplications}
-              loading={loading}
-            />
+        <JobSeekerApplicationsFilters
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          onRefresh={fetchApplications}
+          loading={loading}
+        />
 
-            {/* Applications List */}
-            <JobSeekerApplicationsList
-              applications={filteredApplications}
-              loading={loading}
-              onWithdraw={handleWithdraw}
-              onViewPDF={handleViewPDF}
-            />
-          </VStack>
-        </Container>
-      </Box>
+        <JobSeekerApplicationsList
+          applications={filteredApplications}
+          loading={loading}
+          onWithdraw={handleWithdraw}
+          onViewPDF={handleViewPDF}
+        />
+      </VStack>
 
       {/* PDF Viewer Modal */}
       <PDFViewerModal
@@ -178,7 +121,7 @@ const JobSeekerApplications = () => {
         pdfUrl={selectedPDF}
         title={pdfTitle}
       />
-    </>
+    </JobSeekerLayout>
   );
 };
 

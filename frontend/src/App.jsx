@@ -93,12 +93,6 @@ function App() {
                 </JobSeekerOnlyRoute>
               } />
               
-              <Route path="/dashboard/profile/edit" element={
-                <JobSeekerOnlyRoute>
-                  <JobSeekerEditProfile />
-                </JobSeekerOnlyRoute>
-              } />
-              
               <Route path="/dashboard/applications" element={
                 <JobSeekerOnlyRoute>
                   <JobSeekerApplications />
