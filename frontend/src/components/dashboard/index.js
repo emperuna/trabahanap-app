@@ -1,15 +1,15 @@
 // Shared Dashboard Components
-export { default as WelcomeSection } from './shared/WelcomeSection';
 export { default as DashboardSidebar } from './shared/DashboardSidebar';
 export { default as EmployerSidebar } from './shared/EmployerSidebar';
 export { default as StatsGrid } from './shared/StatsGrid';
 
 // Job Seeker Dashboard Components
-export { default as ProfileCompletionCard } from './jobseeker/ProfileCompletionCard';
 export { default as JobRecommendationsCard } from './jobseeker/JobRecommendationsCard';
-export { default as ProfileProgressCard } from './jobseeker/ProfileProgressCard';
-export { default as QuickActionsCard } from './jobseeker/QuickActionsCard';
 export { default as RecentActivityCard } from './jobseeker/RecentActivityCard';
+export { default as ApplicationPipelineCard } from './jobseeker/ApplicationPipelineCard';
+export { default as PriorityBanner } from './jobseeker/PriorityBanner';
+export { default as QuickStatsCard } from './jobseeker/QuickStatsCard';
+export { default as ComingSoonCard } from './jobseeker/ComingSoonCard';
 
 // Employer Dashboard Components
 export { default as WelcomeHeader } from './employer/WelcomeHeader';

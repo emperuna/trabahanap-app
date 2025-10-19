@@ -4,25 +4,13 @@ export const useJobSearch = (jobs) => {
   const [filteredJobs, setFilteredJobs] = useState([]);
   const [searchFilters, setSearchFilters] = useState({
     searchTerm: '',
-    locationFilter: '',
-    jobTypeFilter: '',
+    classification: [],      // NEW: Category filter
+    jobTypeFilter: [],       
+    workType: [],           
     salaryRange: [0, 200000],
-    experienceLevel: '',
-    companySize: '',
-    remoteWork: false,
-    datePosted: '',
-    selectedSkills: [],
-    industryFilter: '',
-    sortBy: 'relevance',
-    showFilters: false
+    sortBy: 'recent',
+    // ... other filters
   });
-
-  // Popular skills for filtering
-  const popularSkills = [
-    'JavaScript', 'React', 'Node.js', 'Python', 'Java', 'PHP', 'MySQL',
-    'MongoDB', 'AWS', 'Docker', 'Git', 'HTML/CSS', 'TypeScript', 'Vue.js',
-    'Angular', 'Laravel', 'Spring Boot', 'PostgreSQL', 'Redis', 'GraphQL'
-  ];
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -41,32 +29,22 @@ export const useJobSearch = (jobs) => {
   const clearFilters = () => {
     setSearchFilters({
       searchTerm: '',
-      locationFilter: '',
-      jobTypeFilter: '',
+      classification: [],      // NEW: Category filter
+      jobTypeFilter: [],       
+      workType: [],           
       salaryRange: [0, 200000],
-      experienceLevel: '',
-      companySize: '',
-      remoteWork: false,
-      datePosted: '',
-      selectedSkills: [],
-      industryFilter: '',
-      sortBy: 'relevance',
-      showFilters: false
+      sortBy: 'recent',
+      // ... other filters
     });
   };
 
   const getActiveFiltersCount = () => {
     let count = 0;
     if (searchFilters.searchTerm) count++;
-    if (searchFilters.locationFilter) count++;
-    if (searchFilters.jobTypeFilter) count++;
+    if (searchFilters.classification?.length > 0) count += searchFilters.classification.length;
+    if (searchFilters.jobTypeFilter?.length > 0) count += searchFilters.jobTypeFilter.length;
+    if (searchFilters.workType?.length > 0) count += searchFilters.workType.length;
     if (searchFilters.salaryRange[0] > 0 || searchFilters.salaryRange[1] < 200000) count++;
-    if (searchFilters.experienceLevel) count++;
-    if (searchFilters.companySize) count++;
-    if (searchFilters.remoteWork) count++;
-    if (searchFilters.datePosted) count++;
-    if (searchFilters.selectedSkills.length > 0) count++;
-    if (searchFilters.industryFilter) count++;
     return count;
   };
 
@@ -82,51 +60,40 @@ export const useJobSearch = (jobs) => {
 
   const filterJobs = () => {
     let filtered = jobs.filter(job => {
-      // Basic search
+      // Search term
       const matchesSearch = !searchFilters.searchTerm || 
         job.title?.toLowerCase().includes(searchFilters.searchTerm.toLowerCase()) ||
-        job.company?.toLowerCase().includes(searchFilters.searchTerm.toLowerCase()) ||
-        job.description?.toLowerCase().includes(searchFilters.searchTerm.toLowerCase());
-      
-      // Location filter
-      const matchesLocation = !searchFilters.locationFilter || 
-        job.location?.toLowerCase().includes(searchFilters.locationFilter.toLowerCase());
-      
-      // Job type filter
-      const matchesJobType = !searchFilters.jobTypeFilter || job.jobType === searchFilters.jobTypeFilter;
-      
-      // Salary range filter
-      const jobSalary = job.salary || 0;
-      const matchesSalary = jobSalary >= searchFilters.salaryRange[0] && jobSalary <= searchFilters.salaryRange[1];
-      
-      // Experience level filter
-      const matchesExperience = !searchFilters.experienceLevel || 
-        job.experienceLevel === searchFilters.experienceLevel ||
-        job.requirements?.toLowerCase().includes(searchFilters.experienceLevel.toLowerCase());
-      
-      // Remote work filter
-      const matchesRemote = !searchFilters.remoteWork || 
-        job.jobType?.toLowerCase().includes('remote') ||
-        job.location?.toLowerCase().includes('remote');
-      
-      // Date posted filter
-      const matchesDate = !searchFilters.datePosted || isWithinDateRange(job.createdAt, searchFilters.datePosted);
-      
-      // Skills filter
-      const matchesSkills = searchFilters.selectedSkills.length === 0 || 
-        searchFilters.selectedSkills.some(skill => 
-          job.requirements?.toLowerCase().includes(skill.toLowerCase()) ||
-          job.description?.toLowerCase().includes(skill.toLowerCase())
+        job.company?.name?.toLowerCase().includes(searchFilters.searchTerm.toLowerCase());
+
+      // Classification
+      const matchesClassification = !searchFilters.classification?.length || 
+        searchFilters.classification.some(cat => 
+          job.category?.toLowerCase() === cat.toLowerCase() ||
+          job.classification?.toLowerCase() === cat.toLowerCase()
         );
-      
-      // Industry filter
-      const matchesIndustry = !searchFilters.industryFilter ||
-        job.industry === searchFilters.industryFilter ||
-        job.company?.toLowerCase().includes(searchFilters.industryFilter.toLowerCase());
-      
-      return matchesSearch && matchesLocation && matchesJobType && 
-             matchesSalary && matchesExperience && matchesRemote && 
-             matchesDate && matchesSkills && matchesIndustry;
+
+      // Job type
+      const matchesJobType = !searchFilters.jobTypeFilter?.length || 
+        searchFilters.jobTypeFilter.some(type => 
+          job.type?.toLowerCase() === type.toLowerCase()
+        );
+
+      // Work type
+      const matchesWorkType = !searchFilters.workType?.length || 
+        searchFilters.workType.some(type => {
+          if (type === 'Remote') return job.remote || job.location?.toLowerCase().includes('remote');
+          if (type === 'On-site') return !job.remote && job.location && !job.location.toLowerCase().includes('remote');
+          if (type === 'Hybrid') return job.location?.toLowerCase().includes('hybrid');
+          return false;
+        });
+
+      // Salary range
+      const matchesSalary = 
+        (!job.salary?.min || job.salary.min >= searchFilters.salaryRange[0]) &&
+        (!job.salary?.max || job.salary.max <= searchFilters.salaryRange[1]);
+
+      return matchesSearch && matchesClassification && matchesJobType && 
+             matchesWorkType && matchesSalary;
     });
 
     // Apply sorting
@@ -173,7 +140,6 @@ export const useJobSearch = (jobs) => {
   return {
     filteredJobs,
     searchFilters,
-    popularSkills,
     updateFilter,
     clearFilters,
     getActiveFiltersCount,

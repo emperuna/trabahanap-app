@@ -1,90 +1,50 @@
 import React from 'react';
-import {
-  Card,
-  SimpleGrid,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  HStack,
-  Icon,
-  Text,
-  useColorModeValue,
-} from '@chakra-ui/react';
+import { SimpleGrid } from '@chakra-ui/react';
 import {
   HiBriefcase,
-  HiHeart,
+  HiBookmark,
   HiEye,
-  HiTrendingUp,
+  HiCheckCircle,
 } from 'react-icons/hi';
+import StatsCard from './StatsCard';
 
-const StatsGrid = ({ stats }) => {
-  const cardBg = useColorModeValue('white', 'gray.800');
-  const borderColor = useColorModeValue('gray.200', 'gray.700');
-  const textColor = useColorModeValue('gray.800', 'white');
-  const mutedColor = useColorModeValue('gray.600', 'gray.400');
-
-  const statsConfig = [
+const StatsGrid = ({ stats, columns = { base: 1, sm: 2, lg: 3, xl: 4 } }) => {
+  const statsData = [
     {
-      icon: HiBriefcase,
-      color: 'blue.600',
-      label: 'THIS MONTH',
+      label: 'Applications',
       value: stats.applications,
-      title: 'Applications',
-      helpText: '+23% from last month',
-      helpColor: 'blue.500',
+      icon: HiBriefcase,
+      color: 'blue',
+      helpText: stats.applications === 0 ? 'Start applying!' : 'Total submitted',
     },
     {
-      icon: HiHeart,
-      color: 'blue.600',
-      label: 'SAVED',
+      label: 'Saved Jobs',
       value: stats.savedJobs,
-      title: 'Saved Jobs',
-      helpText: '2 new matches today',
-      helpColor: 'blue.500',
+      icon: HiBookmark,
+      color: 'purple',
+      helpText: stats.savedJobs > 0 ? 'Review & apply' : 'Save jobs you like',
     },
     {
+      label: 'Profile Views',
+      value: stats.profileViews || 'Coming Soon',
       icon: HiEye,
-      color: 'blue.600',
-      label: 'VIEWS',
-      value: stats.profileViews,
-      title: 'Profile Views',
-      helpText: '+12 this week',
-      helpColor: 'blue.500',
+      color: 'green',
+      helpText: 'Employer interest',
+      isComingSoon: stats.profileViews === 0,
     },
     {
-      icon: HiTrendingUp,
-      color: 'blue.600',
-      label: 'PROFILE',
+      label: 'Profile Completion',
       value: `${stats.profileCompletion}%`,
-      title: 'Completion',
-      helpText: 'Complete to boost visibility',
-      helpColor: 'blue.500',
+      icon: HiCheckCircle,
+      color: stats.profileCompletion >= 80 ? 'green' : 'yellow',
+      helpText: stats.profileCompletion < 100 ? 'Complete your profile' : 'Well done!',
     },
   ];
 
   return (
-    <SimpleGrid columns={{ base: 2, md: 4 }} spacing={6}>
-      {statsConfig.map((stat, index) => (
-        <Card key={index} bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={6}>
-          <Stat>
-            <HStack justify="space-between" mb={3}>
-              <Icon as={stat.icon} boxSize={8} color={stat.color} />
-              <Text fontSize="xs" color={mutedColor} fontWeight="semibold">
-                {stat.label}
-              </Text>
-            </HStack>
-            <StatNumber fontSize="2xl" fontWeight="bold" color={textColor}>
-              {stat.value}
-            </StatNumber>
-            <StatLabel color={mutedColor} fontSize="sm">
-              {stat.title}
-            </StatLabel>
-            <StatHelpText color={stat.helpColor} fontSize="xs" mt={2}>
-              {stat.helpText}
-            </StatHelpText>
-          </Stat>
-        </Card>
+    <SimpleGrid columns={columns} spacing={6} w="full">
+      {statsData.map((stat, index) => (
+        <StatsCard key={index} {...stat} />
       ))}
     </SimpleGrid>
   );
