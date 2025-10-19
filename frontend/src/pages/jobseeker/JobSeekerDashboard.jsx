@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box,
   Grid,
   GridItem,
   VStack,
@@ -9,137 +8,162 @@ import {
   AlertIcon,
   Button,
   Text,
+  Box,
 } from '@chakra-ui/react';
 import { useAuth } from '../../context/AuthContext';
-import { authAPI } from '../../services/api';
+import { applicationsAPI } from '../../services/api';
 
+// Layout
+import JobSeekerLayout from '../../components/common/layout/JobSeekerLayout';
+
+// Dashboard Components
 import {
-  ProfileProgressCard,
-  ProfileCompletionCard,
-  StatsGrid,
-  WelcomeSection,
   JobRecommendationsCard,
-  QuickActionsCard,
-  RecentActivityCard
+  RecentActivityCard,
+  ApplicationPipelineCard,
+  PriorityBanner,
+  QuickStatsCard,
+  ComingSoonCard,
 } from '../../components/dashboard';
 
-import { Loading } from '../../components/common/feedback';
+import { HiChartBar, HiLightningBolt, HiTrendingUp } from 'react-icons/hi';
 
-const Dashboard = ({ user: propUser, stats: propStats }) => {
+const JobSeekerDashboard = () => {
   const { user } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [stats, setStats] = useState({
-    applications: 12,
-    savedJobs: 8,
-    profileViews: 24,
-    profileCompletion: 75
-  });
-
-
 
   useEffect(() => {
-    fetchUserData();
-    fetchUserStats();
+    fetchApplications();
   }, []);
 
-  const fetchUserData = async () => {
+  const fetchApplications = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      try {
-        const response = await authAPI.verifyToken();
-        setUserData(response);
-      } catch (apiError) {
-        console.log('Using context user data as fallback');
-        setUserData(user);
-      }
+      const response = await applicationsAPI.getMyApplications();
+      setApplications(response || []);
     } catch (err) {
-      console.error('Failed to fetch user data:', err);
-      setError('Failed to load user data');
-      setUserData(user);
+      console.error('Failed to fetch applications:', err);
+      setError('Failed to load applications');
+      setApplications([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchUserStats = async () => {
-    try {
-      // Mock data - replace with actual API calls
-      setStats({
-        applications: 12,
-        savedJobs: 8,
-        profileViews: 24,
-        profileCompletion: 75
-      });
-    } catch (err) {
-      console.error('Failed to fetch stats:', err);
-    }
+  // Calculate real stats from applications
+  const stats = {
+    applications: applications.length,
+    savedJobs: 0,
+    profileViews: 0,
+    profileCompletion: 75,
   };
 
   // Loading state
   if (loading) {
     return (
-      <VStack spacing={6}>
-        <Skeleton height="200px" width="100%" borderRadius="xl" />
-        <Grid templateColumns={{ base: '1fr', md: 'repeat(4, 1fr)' }} gap={6} w="full">
-          <Skeleton height="120px" borderRadius="xl" />
-          <Skeleton height="120px" borderRadius="xl" />
-          <Skeleton height="120px" borderRadius="xl" />
-          <Skeleton height="120px" borderRadius="xl" />
+      <JobSeekerLayout>
+        <Grid templateColumns={{ base: '1fr', xl: '1fr 380px' }} gap={6}>
+          <GridItem>
+            <VStack spacing={6} align="stretch">
+              <Skeleton height="180px" borderRadius="xl" />
+              <Skeleton height="400px" borderRadius="xl" />
+              <Skeleton height="300px" borderRadius="xl" />
+            </VStack>
+          </GridItem>
+          <GridItem display={{ base: 'none', xl: 'block' }}>
+            <VStack spacing={6}>
+              <Skeleton height="200px" borderRadius="xl" />
+              <Skeleton height="150px" borderRadius="xl" />
+            </VStack>
+          </GridItem>
         </Grid>
-        <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6} w="full">
-          <Skeleton height="400px" borderRadius="xl" />
-          <Skeleton height="400px" borderRadius="xl" />
-        </Grid>
-      </VStack>
+      </JobSeekerLayout>
     );
   }
 
   // Error state
-  if (error && !userData && !user) {
+  if (error) {
     return (
-      <Box textAlign="center" py={10}>
-        <Alert status="error" borderRadius="xl" p={6} maxW="md" mx="auto">
-          <AlertIcon />
-          <Box>
-            <Text fontWeight="semibold">Failed to load dashboard</Text>
-            <Text fontSize="sm" mt={1}>{error}</Text>
-          </Box>
-        </Alert>
-        <Button mt={6} onClick={fetchUserData} colorScheme="blue" size="lg" borderRadius="xl">
-          Try Again
-        </Button>
-      </Box>
+      <JobSeekerLayout>
+        <Box textAlign="center" py={10}>
+          <Alert status="error" borderRadius="xl" p={6} maxW="md" mx="auto">
+            <AlertIcon />
+            <Box>
+              <Text fontWeight="semibold">Failed to load dashboard</Text>
+              <Text fontSize="sm" mt={1}>{error}</Text>
+            </Box>
+          </Alert>
+          <Button 
+            mt={6} 
+            onClick={fetchApplications} 
+            colorScheme="blue" 
+            size="lg" 
+            borderRadius="xl"
+          >
+            Try Again
+          </Button>
+        </Box>
+      </JobSeekerLayout>
     );
   }
 
-  // Use props if available, otherwise fallback to fetched data
-  const currentUser = propUser || userData || user;
-  const currentStats = propStats || stats;
-
   return (
-    <VStack spacing={6} align="stretch">
-      <WelcomeSection user={currentUser} />
-      <StatsGrid stats={currentStats} />
-      <Grid templateColumns={{ base: '1fr', lg: '2fr 1fr' }} gap={6}>
+    <JobSeekerLayout>
+      <Grid 
+        templateColumns={{ base: '1fr', xl: '1fr 380px' }} 
+        gap={6}
+        alignItems="start"
+      >
+        {/* Left Column - Main Content */}
         <GridItem>
-          <VStack spacing={6}>
-            <QuickActionsCard />
-            <RecentActivityCard />
+          <VStack spacing={6} align="stretch">
+            <PriorityBanner 
+              applications={applications} 
+              savedJobs={[]} 
+              stats={stats}
+            />
+            <ApplicationPipelineCard applications={applications} />
+            <JobRecommendationsCard />
+            
+            {/* Recent Activity - Mobile/Tablet only */}
+            <Box display={{ base: 'block', xl: 'none' }}>
+              <RecentActivityCard applications={applications} />
+            </Box>
           </VStack>
         </GridItem>
-        <GridItem>
-          <VStack spacing={6}>
-            <ProfileProgressCard completion={currentStats.profileCompletion} />
-            <JobRecommendationsCard />
+
+        {/* Right Column - Scrolls with content */}
+        <GridItem display={{ base: 'none', xl: 'block' }}>
+          <VStack spacing={6} align="stretch">
+            <QuickStatsCard applications={applications} stats={stats} />
+            <RecentActivityCard applications={applications} />
+            
+            <ComingSoonCard
+              title="Job Market Insights"
+              description="Salary trends, demand level, and market intelligence"
+              icon={HiChartBar}
+            />
+            
+            <ComingSoonCard
+              title="AI Job Matching"
+              description="Smart job recommendations with match scores"
+              icon={HiLightningBolt}
+            />
+            
+            <ComingSoonCard
+              title="Performance Analytics"
+              description="Track your application success rate and insights"
+              icon={HiTrendingUp}
+            />
           </VStack>
         </GridItem>
       </Grid>
-    </VStack>
+    </JobSeekerLayout>
   );
 };
 
-export default Dashboard;
+export default JobSeekerDashboard;

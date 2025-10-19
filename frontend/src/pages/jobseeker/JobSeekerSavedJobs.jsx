@@ -13,6 +13,7 @@ import {
 import { Link as RouterLink } from 'react-router-dom';
 import { savedJobsAPI } from '../../services/api';
 import SaveJobButton from '../../components/jobs/SaveJobButton';
+import JobSeekerLayout from '../../components/common/layout/JobSeekerLayout';
 
 const JobSeekerSavedJobs = () => {
   const [savedJobs, setSavedJobs] = useState([]);
@@ -72,98 +73,102 @@ const JobSeekerSavedJobs = () => {
 
   if (loading) {
     return (
-      <Box bg={bgColor} minH="100vh" py={8}>
-        <Container maxW="6xl">
-          <VStack spacing={4} py={20}>
-            <Spinner size="xl" color="blue.500" />
-            <Text color={mutedColor}>Loading your saved jobs...</Text>
-          </VStack>
-        </Container>
-      </Box>
+      <JobSeekerLayout>
+        <Box bg={bgColor} minH="100vh" py={8}>
+          <Container maxW="6xl">
+            <VStack spacing={4} py={20}>
+              <Spinner size="xl" color="blue.500" />
+              <Text color={mutedColor}>Loading your saved jobs...</Text>
+            </VStack>
+          </Container>
+        </Box>
+      </JobSeekerLayout>
     );
   }
 
   return (
-    <Box bg={bgColor} minH="100vh" py={8}>
-      <Container maxW="6xl">
-        <VStack spacing={8} align="stretch">
-          {/* Header */}
-          <HStack justify="space-between" align="start">
-            <VStack align="start" spacing={2}>
-              <Heading size="xl" color={textColor}>
-                💾 Saved Jobs
-              </Heading>
-              <Text color={mutedColor} fontSize="lg">
-                {savedJobs.length} job{savedJobs.length !== 1 ? 's' : ''} saved for later
-              </Text>
-            </VStack>
-            
-            <Button
-              leftIcon={<HiRefresh />}
-              onClick={fetchSavedJobs}
-              variant="outline"
-              isLoading={loading}
-            >
-              Refresh
-            </Button>
-          </HStack>
+    <JobSeekerLayout>
+      <Box bg={bgColor} minH="100vh" py={8}>
+        <Container maxW="6xl">
+          <VStack spacing={8} align="stretch">
+            {/* Header */}
+            <HStack justify="space-between" align="start">
+              <VStack align="start" spacing={2}>
+                <Heading size="xl" color={textColor}>
+                  💾 Saved Jobs
+                </Heading>
+                <Text color={mutedColor} fontSize="lg">
+                  {savedJobs.length} job{savedJobs.length !== 1 ? 's' : ''} saved for later
+                </Text>
+              </VStack>
+              
+              <Button
+                leftIcon={<HiRefresh />}
+                onClick={fetchSavedJobs}
+                variant="outline"
+                isLoading={loading}
+              >
+                Refresh
+              </Button>
+            </HStack>
 
-          {/* Saved Jobs Grid */}
-          {savedJobs.length === 0 ? (
-            <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor}>
-              <CardBody p={12} textAlign="center">
-                <VStack spacing={4}>
-                  <Box
-                    w={16}
-                    h={16}
-                    borderRadius="full"
-                    bg={useColorModeValue('red.100', 'red.900')}
-                    display="flex"
-                    alignItems="center"
-                    justifyContent="center"
-                  >
-                    <Icon as={HiOutlineHeart} boxSize={8} color="red.500" />
-                  </Box>
-                  <VStack spacing={2}>
-                    <Text fontSize="xl" fontWeight="semibold" color={textColor}>
-                      No saved jobs yet
-                    </Text>
-                    <Text color={mutedColor} textAlign="center">
-                      Start saving jobs you're interested in to keep track of them easily.
-                    </Text>
+            {/* Saved Jobs Grid */}
+            {savedJobs.length === 0 ? (
+              <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor}>
+                <CardBody p={12} textAlign="center">
+                  <VStack spacing={4}>
+                    <Box
+                      w={16}
+                      h={16}
+                      borderRadius="full"
+                      bg={useColorModeValue('red.100', 'red.900')}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Icon as={HiOutlineHeart} boxSize={8} color="red.500" />
+                    </Box>
+                    <VStack spacing={2}>
+                      <Text fontSize="xl" fontWeight="semibold" color={textColor}>
+                        No saved jobs yet
+                      </Text>
+                      <Text color={mutedColor} textAlign="center">
+                        Start saving jobs you're interested in to keep track of them easily.
+                      </Text>
+                    </VStack>
+                    <Button 
+                      as={RouterLink} 
+                      to="/find-jobs" 
+                      colorScheme="blue" 
+                      size="lg"
+                    >
+                      Browse Jobs
+                    </Button>
                   </VStack>
-                  <Button 
-                    as={RouterLink} 
-                    to="/find-jobs" 
-                    colorScheme="blue" 
-                    size="lg"
-                  >
-                    Browse Jobs
-                  </Button>
-                </VStack>
-              </CardBody>
-            </Card>
-          ) : (
-            <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
-              {savedJobs.map((savedJob) => (
-                <SavedJobCard
-                  key={savedJob.id}
-                  savedJob={savedJob}
-                  onJobRemoved={handleJobRemoved}
-                  formatDate={formatDate}
-                  formatSalary={formatSalary}
-                  getDaysAgo={getDaysAgo}
-                  cardBg={cardBg}
-                  borderColor={borderColor}
-                  textColor={textColor}
-                  mutedColor={mutedColor}
-                />
-              ))}
-            </SimpleGrid>
-          )}
-        </VStack>
-      </Container>
-    </Box>
+                </CardBody>
+              </Card>
+            ) : (
+              <SimpleGrid columns={{ base: 1, lg: 2 }} spacing={6}>
+                {savedJobs.map((savedJob) => (
+                  <SavedJobCard
+                    key={savedJob.id}
+                    savedJob={savedJob}
+                    onJobRemoved={handleJobRemoved}
+                    formatDate={formatDate}
+                    formatSalary={formatSalary}
+                    getDaysAgo={getDaysAgo}
+                    cardBg={cardBg}
+                    borderColor={borderColor}
+                    textColor={textColor}
+                    mutedColor={mutedColor}
+                  />
+                ))}
+              </SimpleGrid>
+            )}
+          </VStack>
+        </Container>
+      </Box>
+    </JobSeekerLayout>
   );
 };
 

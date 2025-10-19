@@ -184,14 +184,14 @@ const DashboardSidebar = () => {
       description: 'Overview & quick actions',
       color: 'blue'
     },
-    {
-      label: 'My Profile',
-      icon: HiUser,
-      path: '/dashboard/profile',
-      badge: `${profileCompletion}%`,
-      description: 'Manage your profile',
-      color: 'orange'
-    },
+    // {
+    //   label: 'My Profile',
+    //   icon: HiUser,
+    //   path: '/dashboard/profile',
+    //   badge: `${profileCompletion}%`,
+    //   description: 'Manage your profile',
+    //   color: 'orange'
+    // },
     {
       label: 'Find Jobs',
       icon: HiSearch,
@@ -212,7 +212,7 @@ const DashboardSidebar = () => {
       label: 'Saved Jobs',
       icon: HiHeart,
       path: '/dashboard/saved',
-      badge: savedJobsCount > 0 ? savedJobsCount.toString() : null, // ✅ Dynamic badge
+      badge: savedJobsCount > 0 ? savedJobsCount.toString() : null,
       description: 'Your bookmarked jobs',
       color: 'purple',
       isLoading: loadingSavedJobs
@@ -371,91 +371,6 @@ const DashboardSidebar = () => {
               </Button>
             </Tooltip>
           ))}
-        </VStack>
-      </Card>
-
-      {/* Quick Stats with Real-time Saved Jobs Count */}
-      <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
-        <VStack spacing={3} align="stretch">
-          <Text
-            fontSize="xs"
-            fontWeight="bold"
-            color={mutedColor}
-            textTransform="uppercase"
-            letterSpacing="wider"
-          >
-            <HStack spacing={2}>
-              <HiTrendingUp />
-              <Text>This Week</Text>
-            </HStack>
-          </Text>
-          
-          <HStack justify="space-between">
-            <VStack spacing={0} align="start">
-              <Text fontSize="lg" fontWeight="bold" color={activeColor}>12</Text>
-              <Text fontSize="xs" color={mutedColor}>Jobs Applied</Text>
-            </VStack>
-            <VStack spacing={0} align="start">
-              <Text fontSize="lg" fontWeight="bold" color="green.500">5</Text>
-              <Text fontSize="xs" color={mutedColor}>Profile Views</Text>
-            </VStack>
-            {/* ✅ Real-time saved jobs count */}
-            <VStack spacing={0} align="start">
-              <Text 
-                fontSize="lg" 
-                fontWeight="bold" 
-                color="purple.500"
-                transition="all 0.3s ease"
-              >
-                {loadingSavedJobs ? '...' : savedJobsCount}
-              </Text>
-              <Text fontSize="xs" color={mutedColor}>Saved Jobs</Text>
-            </VStack>
-          </HStack>
-        </VStack>
-      </Card>
-
-      {/* Settings & Logout */}
-      <Card bg={cardBg} borderRadius="xl" border="1px" borderColor={borderColor} p={4}>
-        <VStack spacing={1} align="stretch">
-          <Button
-            as={Link}
-            to="/settings"
-            variant="ghost"
-            justifyContent="flex-start"
-            h={10}
-            borderRadius="lg"
-            color={textColor}
-            fontWeight="medium"
-            _hover={{ bg: hoverBg }}
-            transition="all 0.2s ease"
-            leftIcon={<Icon as={HiCog} boxSize={4} />}
-          >
-            <Box flex="1" textAlign="left">
-              <Text fontSize="sm">Settings & Preferences</Text>
-            </Box>
-          </Button>
-
-          <Divider my={2} />
-
-          <Button
-            onClick={handleLogout}
-            variant="ghost"
-            justifyContent="flex-start"
-            h={10}
-            borderRadius="lg"
-            fontWeight="medium"
-            color={useColorModeValue('red.600', 'red.400')} 
-            _hover={{ 
-              bg: useColorModeValue('red.50', 'red.900'),
-              transform: 'translateX(2px)',
-              boxShadow: 'sm'
-            }}
-            transition="all 0.2s ease"
-            leftIcon={<Icon as={HiLogout} boxSize={4} />}
-          >
-            <Text fontSize="sm">Sign Out</Text>
-          </Button>
         </VStack>
       </Card>
     </VStack>
