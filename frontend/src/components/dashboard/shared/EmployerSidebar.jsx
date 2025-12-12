@@ -118,17 +118,21 @@ const EmployerSidebar = ({ selected, onSelect, options }) => {
           </Text>
           <VStack spacing={2} align="stretch">
             <Button
-              as={Link}
-              to="/help"
-              variant="ghost"
+              variant={selected === 'helpCenter' ? 'solid' : 'ghost'}
+              colorScheme={selected === 'helpCenter' ? 'blue' : 'gray'}
               justifyContent="flex-start"
               h={10}
               px={4}
               borderRadius="xl"
               fontWeight="medium"
-              color="gray.700"
-              _hover={{ bg: 'gray.100', transform: 'translateX(4px)' }}
+              bg={selected === 'helpCenter' ? 'blue.500' : 'transparent'}
+              color={selected === 'helpCenter' ? 'white' : 'gray.700'}
+              _hover={{ 
+                bg: selected === 'helpCenter' ? 'blue.600' : 'gray.100', 
+                transform: 'translateX(4px)' 
+              }}
               transition="all 0.2s ease"
+              onClick={() => onSelect && onSelect('helpCenter')}
             >
               <HStack spacing={3}>
                 <Icon as={HiSupport} boxSize={4} />

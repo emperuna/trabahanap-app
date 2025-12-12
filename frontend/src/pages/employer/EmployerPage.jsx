@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import EmployerManageJobs from './EmployerManageJobs';
 import EmployerApplications from './EmployerApplications';
 import EmployerPostJob from './EmployerPostJob';
+import HelpCenter from '../../components/help-center/help-center';
 
 
 import {
@@ -48,16 +49,19 @@ const EmployerPage = () => {
     }, [location.search]);
 
   // ✅ Update URL when sidebar selection changes
-    const handleSelect = (key) => {
-      setSelected(key);
+  const handleSelect = (key) => {
+    setSelected(key);
+    if (key !== 'helpCenter') {
       navigate(`/employer-dashboard?section=${key}`, { replace: true });
-    };
+    }
+  };
 
   let content = null;
   if (selected === 'dashboard') content = <EmployerDashboard />;
   else if (selected === 'postJob') content = <EmployerPostJob />;
   else if (selected === 'manageJobs') content = <EmployerManageJobs />;
   else if (selected === 'applications') content = <EmployerApplications />;
+  else if (selected === 'helpCenter') content = <HelpCenter />;
 
   return (
     <Box bg={bgColor} minH="100vh" w="100vw" overflow="hidden">

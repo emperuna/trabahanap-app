@@ -28,7 +28,8 @@ import {
   HiSearch,
   HiChartBar,
   HiLightningBolt,
-  HiTrendingUp
+  HiTrendingUp,
+  HiSupport
 } from 'react-icons/hi';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';

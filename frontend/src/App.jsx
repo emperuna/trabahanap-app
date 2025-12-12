@@ -32,6 +32,7 @@ import JobSeekerProfile from './pages/jobseeker/JobSeekerProfile';
 import JobSeekerJobDetail from './pages/jobseeker/JobSeekerJobDetail';
 import JobSeekerApplications from './pages/jobseeker/JobSeekerApplications';
 import JobSeekerSavedJobs from './pages/jobseeker/JobSeekerSavedJobs';
+import JobSeekerHelpCenter from './pages/jobseeker/JobSeekerHelpCenter';
 
 // Settings Pages
 import SettingsPage from './pages/settings/SettingsPage';
@@ -114,6 +115,12 @@ function App() {
               <Route path="/dashboard/analytics" element={
                 <JobSeekerOnlyRoute>
                   <ComingSoon />
+                </JobSeekerOnlyRoute>
+              } />
+
+              <Route path="/dashboard/help" element={
+                <JobSeekerOnlyRoute>
+                  <JobSeekerHelpCenter />
                 </JobSeekerOnlyRoute>
               } />
 
