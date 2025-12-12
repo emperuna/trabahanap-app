@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.trabahanap.model.User;
 import com.trabahanap.repository.UserRepository;
+import com.trabahanap.security.UserPrincipal;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

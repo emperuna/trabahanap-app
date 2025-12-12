@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trabahanap.dto.UserResumeDTO;
+import com.trabahanap.dto.response.UserResumeDTO;
 import com.trabahanap.exception.ResourceNotFoundException;
 import com.trabahanap.model.User;
 import com.trabahanap.model.UserResume;
@@ -21,19 +21,19 @@ import com.trabahanap.repository.UserResumeRepository;
 
 @Service
 public class UserResumeService {
-    
+
     private final UserResumeRepository userResumeRepository;
     private final UserRepository userRepository;
     private final FileStorageService fileStorageService;
-    
+
     public UserResumeService(UserResumeRepository userResumeRepository,
-                            UserRepository userRepository,
-                            FileStorageService fileStorageService) {
+            UserRepository userRepository,
+            FileStorageService fileStorageService) {
         this.userResumeRepository = userResumeRepository;
         this.userRepository = userRepository;
         this.fileStorageService = fileStorageService;
     }
-    
+
     /**
      * Upload a new resume for user
      */
@@ -42,31 +42,31 @@ public class UserResumeService {
         // Validate user exists
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        
+
         // Validate file
         validateResumeFile(file);
-        
+
         // Store file in uploads/resumes/user_{userId}/
         String subDirectory = "resumes/user_" + userId;
         String filePath = fileStorageService.storeFile(file, subDirectory);
-        
+
         // Create UserResume entity
         UserResume resume = new UserResume();
         resume.setUser(user);
         resume.setFileName(file.getOriginalFilename());
         resume.setFilePath(filePath);
         resume.setFileSize(file.getSize());
-        
+
         // If this is user's first resume, set as default
         boolean hasResumes = userResumeRepository.existsByUserId(userId);
         resume.setIsDefault(!hasResumes);
-        
+
         // Save to database
         UserResume savedResume = userResumeRepository.save(resume);
-        
+
         return UserResumeDTO.fromEntity(savedResume);
     }
-    
+
     /**
      * Get all resumes for a user
      */
@@ -76,7 +76,7 @@ public class UserResumeService {
                 .map(UserResumeDTO::fromEntity)
                 .collect(Collectors.toList());
     }
-    
+
     /**
      * Get a specific resume (with security check)
      */
@@ -84,7 +84,7 @@ public class UserResumeService {
         return userResumeRepository.findByIdAndUserId(resumeId, userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Resume not found"));
     }
-    
+
     /**
      * Get default resume for user
      */
@@ -93,7 +93,7 @@ public class UserResumeService {
                 .orElseThrow(() -> new ResourceNotFoundException("No default resume found"));
         return UserResumeDTO.fromEntity(resume);
     }
-    
+
     /**
      * Set a resume as default
      */
@@ -101,17 +101,17 @@ public class UserResumeService {
     public UserResumeDTO setDefaultResume(Long resumeId, Long userId) {
         // Verify ownership
         UserResume resume = getResume(resumeId, userId);
-        
+
         // Remove default flag from all user's resumes
         userResumeRepository.removeDefaultFlagFromAllResumes(userId);
-        
+
         // Set this resume as default
         resume.setIsDefault(true);
         UserResume updated = userResumeRepository.save(resume);
-        
+
         return UserResumeDTO.fromEntity(updated);
     }
-    
+
     /**
      * Delete a resume
      */
@@ -119,7 +119,7 @@ public class UserResumeService {
     public void deleteResume(Long resumeId, Long userId) {
         // Verify ownership
         UserResume resume = getResume(resumeId, userId);
-        
+
         // Delete physical file
         try {
             Path filePath = Paths.get(resume.getFilePath());
@@ -128,15 +128,14 @@ public class UserResumeService {
             // Log but don't fail - DB record will still be deleted
             System.err.println("Failed to delete file: " + e.getMessage());
         }
-        
+
         // Delete from database
         userResumeRepository.delete(resume);
-        
+
         // If deleted resume was default, set another resume as default
         if (resume.getIsDefault()) {
-            List<UserResume> remainingResumes = 
-                userResumeRepository.findByUserIdOrderByUploadedAtDesc(userId);
-            
+            List<UserResume> remainingResumes = userResumeRepository.findByUserIdOrderByUploadedAtDesc(userId);
+
             if (!remainingResumes.isEmpty()) {
                 UserResume newDefault = remainingResumes.get(0);
                 newDefault.setIsDefault(true);
@@ -144,7 +143,7 @@ public class UserResumeService {
             }
         }
     }
-    
+
     /**
      * View resume file
      */
@@ -152,21 +151,21 @@ public class UserResumeService {
         UserResume resume = getResume(resumeId, userId);
         return fileStorageService.loadFileAsResource(resume.getFilePath());
     }
-    
+
     /**
      * Download resume file
      */
     public Resource downloadResume(Long resumeId, Long userId) {
         return viewResume(resumeId, userId);
     }
-    
+
     /**
      * Get resume count for user
      */
     public long getResumeCount(Long userId) {
         return userResumeRepository.countByUserId(userId);
     }
-    
+
     /**
      * Validate resume file
      */
@@ -174,19 +173,19 @@ public class UserResumeService {
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File is empty");
         }
-        
+
         // Check file size (max 10MB)
         long maxSize = 10 * 1024 * 1024; // 10MB
         if (file.getSize() > maxSize) {
             throw new IllegalArgumentException("File size exceeds maximum limit (10MB)");
         }
-        
+
         // Check file type
         String contentType = file.getContentType();
         if (contentType == null || !contentType.equals("application/pdf")) {
             throw new IllegalArgumentException("Only PDF files are allowed");
         }
-        
+
         // Check file extension
         String fileName = file.getOriginalFilename();
         if (fileName == null || !fileName.toLowerCase().endsWith(".pdf")) {
