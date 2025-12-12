@@ -29,3 +29,12 @@ dist/
 node_modules/
 *.log
 .DS_Store
+
+# Dependencies
+node_modules/
+**/node_modules/
+
+# OS files
+.DS_Store
+**/.DS_Store
+*.DS_Store
