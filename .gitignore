@@ -1,40 +1,75 @@
-# Environment files
+# ========================
+# Environment
+# ========================
 .env
 .env.*
 !.env.example
+!.env.development
+!.env.production
 
-# IDE files
-.vscode/
-.idea/
-*.iml
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-
-# Build outputs
-/backend/target/
-/frontend/dist/
-/frontend/build/
-
+# ========================
 # Dependencies
-/frontend/node_modules/node_modules/
-.DS_Store
-build/
-*.log
-dist/
-node_modules/
-*.log
-.DS_Store
-
-# Dependencies
+# ========================
 node_modules/
 **/node_modules/
 
-# OS files
+# ========================
+# Build Outputs
+# ========================
+# Frontend
+/frontend/dist/
+/frontend/build/
+
+# Backend (Maven)
+/backend/target/
+*.jar
+*.war
+*.ear
+
+# ========================
+# IDE & Editors
+# ========================
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+.project
+.classpath
+.settings/
+
+# ========================
+# OS Generated Files
+# ========================
 .DS_Store
 **/.DS_Store
-*.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ========================
+# Logs
+# ========================
+*.log
+logs/
+**/logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ========================
+# Testing
+# ========================
+/coverage/
+*.lcov
+.nyc_output/
+
+# ========================
+# Misc
+# ========================
+*.swp
+*.swo
+*~
+.cache/
+.temp/
+.tmp/
