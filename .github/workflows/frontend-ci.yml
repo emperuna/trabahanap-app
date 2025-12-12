@@ -60,6 +60,8 @@ jobs:
 
   # ========================================
   # Deploy to Cloudflare Pages
+  # Cloudflare Pages automatically deploys via GitHub integration
+  # This job is kept for workflow visibility
   # ========================================
   deploy:
     name: Deploy to Cloudflare Pages
@@ -69,18 +71,7 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: frontend-dist
-          path: frontend/dist
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy frontend/dist --project-name=trabahanap --branch=main
+      - name: Deployment notification
+        run: |
+          echo "✅ Build successful! Cloudflare Pages will auto-deploy from GitHub integration."
+          echo "Check Cloudflare dashboard for deployment status."
