@@ -273,7 +273,7 @@ const Register = () => {
               <Text textAlign="center" fontSize="sm" color={textColor}>
                 <Link
                   as={RouterLink}
-                  to="/"
+                  to="https://trabahanap.dev"
                   color="blue.500"
                   fontWeight="medium"
                   _hover={{ 
