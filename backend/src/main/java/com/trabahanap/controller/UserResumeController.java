@@ -18,20 +18,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.trabahanap.dto.UserResumeDTO;
+import com.trabahanap.dto.response.UserResumeDTO;
 import com.trabahanap.model.User;
 import com.trabahanap.service.UserResumeService;
 
 @RestController
 @RequestMapping("/api/users/resume")
 public class UserResumeController {
-    
+
     private final UserResumeService userResumeService;
-    
+
     public UserResumeController(UserResumeService userResumeService) {
         this.userResumeService = userResumeService;
     }
-    
+
     /**
      * Upload a new resume
      * POST /api/users/resume
@@ -40,11 +40,11 @@ public class UserResumeController {
     public ResponseEntity<UserResumeDTO> uploadResume(
             @AuthenticationPrincipal User user,
             @RequestParam("resume") MultipartFile file) {
-        
+
         UserResumeDTO resume = userResumeService.uploadResume(user.getId(), file);
         return ResponseEntity.status(HttpStatus.CREATED).body(resume);
     }
-    
+
     /**
      * Get all user's resumes
      * GET /api/users/resume
@@ -52,11 +52,11 @@ public class UserResumeController {
     @GetMapping
     public ResponseEntity<List<UserResumeDTO>> getUserResumes(
             @AuthenticationPrincipal User user) {
-        
+
         List<UserResumeDTO> resumes = userResumeService.getUserResumes(user.getId());
         return ResponseEntity.ok(resumes);
     }
-    
+
     /**
      * Get default resume
      * GET /api/users/resume/default
@@ -68,7 +68,7 @@ public class UserResumeController {
         UserResumeDTO resume = userResumeService.getDefaultResume(user.getId());
         return ResponseEntity.ok(resume);
     }
-    
+
     /**
      * Set resume as default
      * PATCH /api/users/resume/{id}/default
@@ -77,11 +77,11 @@ public class UserResumeController {
     public ResponseEntity<UserResumeDTO> setDefaultResume(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         UserResumeDTO resume = userResumeService.setDefaultResume(id, user.getId());
         return ResponseEntity.ok(resume);
     }
-    
+
     /**
      * View resume (PDF in browser)
      * GET /api/users/resume/{id}/view
@@ -90,15 +90,15 @@ public class UserResumeController {
     public ResponseEntity<Resource> viewResume(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         Resource resource = userResumeService.viewResume(id, user.getId());
-        
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"resume.pdf\"")
                 .body(resource);
     }
-    
+
     /**
      * Download resume
      * GET /api/users/resume/{id}/download
@@ -107,15 +107,15 @@ public class UserResumeController {
     public ResponseEntity<Resource> downloadResume(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         Resource resource = userResumeService.downloadResume(id, user.getId());
-        
+
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_PDF)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"resume.pdf\"")
                 .body(resource);
     }
-    
+
     /**
      * Delete resume
      * DELETE /api/users/resume/{id}
@@ -124,11 +124,11 @@ public class UserResumeController {
     public ResponseEntity<Void> deleteResume(
             @PathVariable Long id,
             @AuthenticationPrincipal User user) {
-        
+
         userResumeService.deleteResume(id, user.getId());
         return ResponseEntity.noContent().build();
     }
-    
+
     /**
      * Get resume count
      * GET /api/users/resume/count
@@ -136,7 +136,7 @@ public class UserResumeController {
     @GetMapping("/count")
     public ResponseEntity<Long> getResumeCount(
             @AuthenticationPrincipal User user) {
-        
+
         long count = userResumeService.getResumeCount(user.getId());
         return ResponseEntity.ok(count);
     }
