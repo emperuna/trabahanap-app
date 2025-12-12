@@ -1,0 +1,59 @@
+# ============================================
+# Trabahanap - Docker Compose for Local Dev
+# ============================================
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      # Database Configuration - Neon PostgreSQL
+      - DATABASE_URL=${DATABASE_URL:-jdbc:h2:mem:testdb}
+      - DATABASE_USERNAME=${DATABASE_USERNAME:-sa}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD:-password}
+      - DATABASE_DRIVER=${DATABASE_DRIVER:-org.h2.Driver}
+      # JPA Configuration
+      - JPA_DIALECT=${JPA_DIALECT:-org.hibernate.dialect.H2Dialect}
+      - DDL_AUTO=${DDL_AUTO:-update}
+      - SHOW_SQL=${SHOW_SQL:-false}
+      # JWT Configuration
+      - JWT_SECRET=${JWT_SECRET:-trabahanap_dev_secret_key_min_256_bits_12345678901234567890}
+      - JWT_EXPIRATION_MS=${JWT_EXPIRATION_MS:-86400000}
+      # CORS - Allow frontend
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:5173}
+      # H2 Console
+      - H2_CONSOLE_ENABLED=${H2_CONSOLE_ENABLED:-true}
+    volumes:
+      - backend-uploads:/app/uploads
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    restart: unless-stopped
+
+  # Optional: Local PostgreSQL for testing without Neon
+  # Uncomment to use local database instead of H2/Neon
+  # postgres:
+  #   image: postgres:15-alpine
+  #   environment:
+  #     - POSTGRES_DB=trabahanap
+  #     - POSTGRES_USER=trabahanap
+  #     - POSTGRES_PASSWORD=trabahanap_dev
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   healthcheck:
+  #     test: ["CMD-SHELL", "pg_isready -U trabahanap"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
+
+volumes:
+  backend-uploads:
+  # postgres-data:
