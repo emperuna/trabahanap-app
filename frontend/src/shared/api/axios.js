@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+// Use environment variable for API URL, fallback to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api',
+  baseURL: `${API_BASE_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -342,11 +345,7 @@ export const applicationsAPI = {
   // Get PDF URL for viewing (no download)
   getPDFUrl: (applicationId, fileType) => {
     const token = localStorage.getItem('token');
-    const apiUrl = window.location.origin.includes('localhost') 
-      ? 'http://localhost:8080' 
-      : window.location.origin;
-    
-    return `${apiUrl}/api/applications/view/${applicationId}/${fileType}`;
+    return `${API_BASE_URL}/api/applications/view/${applicationId}/${fileType}`;
   }
 };
 
