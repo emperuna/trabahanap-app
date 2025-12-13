@@ -1,9 +1,5 @@
 package com.trabahanap.service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -120,14 +116,8 @@ public class UserResumeService {
         // Verify ownership
         UserResume resume = getResume(resumeId, userId);
 
-        // Delete physical file
-        try {
-            Path filePath = Paths.get(resume.getFilePath());
-            Files.deleteIfExists(filePath);
-        } catch (IOException e) {
-            // Log but don't fail - DB record will still be deleted
-            System.err.println("Failed to delete file: " + e.getMessage());
-        }
+        // Delete file from storage (local or R2)
+        fileStorageService.deleteFile(resume.getFilePath());
 
         // Delete from database
         userResumeRepository.delete(resume);
