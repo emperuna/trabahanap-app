@@ -174,7 +174,7 @@ const JobSeekerSavedJobs = () => {
                 size={isMobile ? 'sm' : 'md'}
                 leftIcon={<HiSearch />}
                 as={RouterLink}
-                to="/jobseeker/find-jobs"
+                to="/find-jobs"
                 _hover={{
                   transform: 'translateY(-2px)',
                   boxShadow: 'lg',
@@ -291,7 +291,7 @@ const EmptyState = () => {
           size="lg"
           leftIcon={<HiSearch />}
           as={RouterLink}
-          to="/jobseeker/find-jobs"
+          to="/find-jobs"
           _hover={{
             transform: 'translateY(-2px)',
             boxShadow: 'lg',

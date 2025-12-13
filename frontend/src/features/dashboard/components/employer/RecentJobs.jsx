@@ -95,7 +95,7 @@ const JobCard = ({ job, onRefresh }) => {
           </Text>
           <Button 
             as={Link}
-            to={`/employer/jobs/${job.id}`}
+            to={`/employer-dashboard?section=manageJobs`}
             size="xs" 
             colorScheme="blue"
             variant="outline"

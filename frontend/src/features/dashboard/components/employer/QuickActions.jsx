@@ -40,22 +40,22 @@ const QuickActions = () => {
       colorScheme: 'purple',
       variant: 'outline'
     },
-    {
-      label: 'Manage Candidates',
-      description: 'View pipeline',
-      icon: HiUserGroup,
-      path: '/employer-dashboard?section=candidates',
-      colorScheme: 'green',
-      variant: 'outline'
-    },
-    {
-      label: 'View Analytics',
-      description: 'Hiring insights',
-      icon: HiChartBar,
-      path: '/employer-dashboard?section=analytics',
-      colorScheme: 'orange',
-      variant: 'outline'
-    }
+    // {
+    //   label: 'Manage Candidates',
+    //   description: 'View pipeline',
+    //   icon: HiUserGroup,
+    //   path: '/employer-dashboard?section=candidates',
+    //   colorScheme: 'green',
+    //   variant: 'outline'
+    // },
+    // {
+    //   label: 'View Analytics',
+    //   description: 'Hiring insights',
+    //   icon: HiChartBar,
+    //   path: '/employer-dashboard?section=analytics',
+    //   colorScheme: 'orange',
+    //   variant: 'outline'
+    // }
   ];
 
   return (

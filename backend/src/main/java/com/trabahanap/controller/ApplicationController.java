@@ -43,7 +43,7 @@ public class ApplicationController {
     public ResponseEntity<ApplicationDTO> applyForJob(
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @RequestParam("jobId") Long jobId,
-            @RequestParam("coverLetterText") String coverLetterText,
+            @RequestParam(value = "coverLetterText", required = false, defaultValue = "") String coverLetterText,
             @RequestParam(value = "coverLetterPdf", required = false) MultipartFile coverLetterPdf,
             @RequestParam(value = "resumePdf", required = false) MultipartFile resumePdf) {
 

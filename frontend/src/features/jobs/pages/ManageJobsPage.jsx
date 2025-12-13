@@ -220,7 +220,7 @@ const EmployerManageJobs = () => {
               </VStack>
               <Button 
                 as={Link} 
-                to="/employer/post-job" 
+                to="/employer-dashboard?section=postJob" 
                 colorScheme="blue" 
                 leftIcon={<HiPlus />}
               >

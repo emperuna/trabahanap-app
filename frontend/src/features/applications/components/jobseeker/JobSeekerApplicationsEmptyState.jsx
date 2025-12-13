@@ -91,7 +91,7 @@ const JobSeekerApplicationsEmptyState = () => {
             colorScheme="blue"
             size="lg"
             leftIcon={<HiSearch />}
-            onClick={() => navigate('/jobseeker/find-jobs')}
+            onClick={() => navigate('/find-jobs')}
             _hover={{
               transform: 'translateY(-2px)',
               boxShadow: 'lg',
