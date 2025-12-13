@@ -26,14 +26,18 @@ public class R2StorageService {
 
     public R2StorageService(
             S3Client s3Client,
-            @Value("${app.r2.bucket}") String bucketName,
+            @Value("${app.r2.bucket:trabahanap-uploads}") String bucketName,
             @Value("${app.r2.public-url:}") String publicUrl) {
         this.s3Client = s3Client;
         this.bucketName = bucketName;
         this.publicUrl = publicUrl;
 
-        // Ensure bucket exists on startup
-        ensureBucketExists();
+        // Verify bucket exists on startup (non-blocking)
+        if (s3Client != null) {
+            ensureBucketExists();
+        } else {
+            System.err.println("⚠️ R2StorageService: S3Client is null, R2 storage disabled");
+        }
     }
 
     /**
