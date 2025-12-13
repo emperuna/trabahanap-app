@@ -7,14 +7,14 @@ import {
   Text, 
   Button, 
   Badge, 
-  HStack 
+  HStack,
+  Box,
+  useColorModeValue,
+  Icon
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { HiCheckCircle, HiBriefcase, HiSearch, HiClipboardList } from 'react-icons/hi';
 import SaveJobButton from './SaveJobButton';
-// ✅ Add Poppins font imports
-import '@fontsource/poppins/400.css';
-import '@fontsource/poppins/600.css';
-import '@fontsource/poppins/700.css';
 
 const ApplyNowCard = ({ 
   company, 
@@ -23,164 +23,113 @@ const ApplyNowCard = ({
   loading = false, 
   jobId 
 }) => {
-  // ✅ Memoize content based on application status
-  const cardContent = useMemo(() => {
-    if (hasApplied) {
-      return {
-        title: 'Application Submitted',
-        description: `Your application for this position at ${company} has been submitted successfully. The employer will review your application and contact you if selected.`,
-        badge: (
-          <Badge 
-            colorScheme="green" 
-            variant="solid" 
-            borderRadius="full" 
-            px={3} 
-            py={1}
-          >
-            ✓ Applied Successfully
-          </Badge>
-        )
-      };
-    }
+  const cardBg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
 
-    return {
-      title: 'Apply Now',
-      description: `Please let ${company} know that you found this position on our job board. That's a great way to support us, so we can keep posting amazing jobs every week.`,
-      badge: null
-    };
-  }, [hasApplied, company]);
-
-  // ✅ Component for applied state buttons
-  const AppliedStateActions = () => (
-    <VStack spacing={3} w="full">
-      <HStack spacing={2} w="full">
-        <Button 
-          as={Link} 
-          to="/dashboard/applications" 
-          colorScheme="blue"
-          variant="solid" 
-          size="md"
-          borderRadius="md"
-          flex={1}
-        >
-          View Applications
-        </Button>
-
-        {jobId && (
-        <SaveJobButton
-          jobId={jobId}
-          size="md"
-          variant="icon"
-          colorScheme="purple"
-        />
-      )}
-        
-      </HStack>
-      <HStack w="full" spacing={2}>
-         <Button 
-          as={Link} 
-          to="/find-jobs" 
-          variant="ghost" 
-          size="md"
-          borderRadius="md"
-          flex={1}
-          color= "#444"
-          background="#E8E8E8"
-        >
-          Find More Jobs
-        </Button>
-      </HStack>
-    </VStack>
-  );
-
-  // ✅ Component for not applied state buttons
-  const NotAppliedStateActions = () => (
-    <VStack spacing={3} w="full">
-      <HStack w="full" spacing={2}>
-        <Button 
-          colorScheme="purple" 
-          size="lg" 
-          borderRadius="md"
-          onClick={onApply} 
-          w="full"
-          isLoading={loading}
-          loadingText="Opening Application..."
-        >
-          Apply Now
-        </Button>
-
-        {jobId && (
-          <SaveJobButton
-            jobId={jobId}
-            size="lg"
-            variant="icon"
-            colorScheme="purple"
-          />
-        )}   
-      </HStack>
-      
-      <Button 
-        as={Link} 
-        to="/find-jobs" 
-        variant="ghost" 
-        size="lg" 
-        borderRadius="md"
-        w="full"
-        color= "#444"
-        background="#E8E8E8"
+  if (hasApplied) {
+    return (
+      <Card 
+        bg={cardBg}
+        borderRadius="xl"
+        shadow="sm"
+        border="1px"
+        borderColor="green.200"
+        overflow="hidden"
       >
-        View Other Jobs
-      </Button>
-    </VStack>
-  );
+        <Box h="3px" bg="green.500" />
+        <CardBody p={5}>
+          <VStack spacing={4}>
+            <HStack spacing={2}>
+              <Icon as={HiCheckCircle} color="green.500" boxSize={5} />
+              <Heading size="sm" color={useColorModeValue('gray.800', 'white')}>
+                Application Sent
+              </Heading>
+            </HStack>
+            
+            <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.400')} textAlign="center">
+              Your application to {company} has been submitted successfully.
+            </Text>
+
+            <VStack spacing={2} w="full">
+              <Button 
+                as={Link} 
+                to="/dashboard/applications" 
+                colorScheme="blue"
+                size="md"
+                w="full"
+                leftIcon={<HiClipboardList />}
+              >
+                Track Applications
+              </Button>
+              <Button 
+                as={Link} 
+                to="/find-jobs" 
+                variant="ghost"
+                size="sm"
+                w="full"
+                leftIcon={<HiSearch />}
+              >
+                Find More Jobs
+              </Button>
+            </VStack>
+          </VStack>
+        </CardBody>
+      </Card>
+    );
+  }
 
   return (
     <Card 
-      bg="white" 
-      borderRadius="lg" // ✅ More rectangular
-      shadow="md"
-      maxW="400px"
-      w="full"
-      fontFamily="'Poppins', sans-serif" // ✅ Apply Poppins font to entire card
+      bg={cardBg}
+      borderRadius="xl"
+      shadow="sm"
+      border="1px"
+      borderColor={borderColor}
+      overflow="hidden"
     >
-      <CardBody p={8}>
-        <VStack spacing={6} textAlign="center">
-          {/* ✅ Dynamic Header */}
-          <VStack spacing={2}>
-            <Heading 
-              size="md" 
-              color="gray.800"
-              fontWeight="semibold"
-            >
-              {cardContent.title}
-            </Heading>
-            {cardContent.badge}
-          </VStack>
-
-          {/* ✅ Dynamic Description */}
-          <Text 
-            color="gray.600" 
-            fontSize="sm" 
-            textAlign="justify"
-            lineHeight="1.6"
-          >
-            {cardContent.description}
-          </Text>
+      <Box h="3px" bg="blue.500" />
+      <CardBody p={5}>
+        <VStack spacing={4}>
+          <Heading size="sm" color={useColorModeValue('gray.800', 'white')}>
+            Interested in this role?
+          </Heading>
           
-          {/* ✅ Dynamic Action Buttons */}
-          {hasApplied ? <AppliedStateActions /> : <NotAppliedStateActions />}
+          <Text fontSize="sm" color={useColorModeValue('gray.600', 'gray.400')} textAlign="center">
+            Submit your application to {company}.
+          </Text>
 
-          {/* ✅ Application Status Info */}
-          {hasApplied && (
-            <Text 
-              fontSize="xs" 
-              color="gray.500" 
-              textAlign="center"
-              fontStyle="italic"
+          <VStack spacing={2} w="full">
+            <HStack w="full" spacing={2}>
+              <Button 
+                colorScheme="blue" 
+                size="lg"
+                flex={1}
+                onClick={onApply} 
+                isLoading={loading}
+                loadingText="Opening..."
+                leftIcon={<HiBriefcase />}
+              >
+                Apply Now
+              </Button>
+              {jobId && (
+                <SaveJobButton
+                  jobId={jobId}
+                  size="lg"
+                  variant="icon"
+                />
+              )}
+            </HStack>
+            <Button 
+              as={Link} 
+              to="/find-jobs" 
+              variant="ghost"
+              size="sm"
+              w="full"
+              leftIcon={<HiSearch />}
             >
-              You can track your application status in your dashboard
-            </Text>
-          )}
+              View Other Jobs
+            </Button>
+          </VStack>
         </VStack>
       </CardBody>
     </Card>

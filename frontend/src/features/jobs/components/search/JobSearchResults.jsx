@@ -20,8 +20,6 @@ const JobSearchResults = ({
   filters,
   onSortChange,
   onRefresh,
-  onClearFilters,
-  activeFiltersCount,
   selectedJobId,
   onJobSelect,
   isCompactView = false,
@@ -48,16 +46,9 @@ const JobSearchResults = ({
         borderWidth="1px"
         borderColor={borderColor}
       >
-        <VStack align="start" spacing={0}>
-          <Text fontSize="lg" fontWeight="semibold">
-            {jobs.length} Jobs Found
-          </Text>
-          {activeFiltersCount > 0 && (
-            <Text fontSize="sm" color="gray.500">
-              {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''} active
-            </Text>
-          )}
-        </VStack>
+        <Text fontSize="lg" fontWeight="semibold">
+          {jobs.length} Jobs Found
+        </Text>
 
         <HStack spacing={2}>
           <Select
@@ -129,13 +120,8 @@ const JobSearchResults = ({
                 No jobs found
               </Text>
               <Text fontSize="sm" color="gray.400">
-                Try adjusting your filters
+                Try a different search term
               </Text>
-              {activeFiltersCount > 0 && (
-                <Button onClick={onClearFilters} colorScheme="blue" size="sm">
-                  Clear Filters
-                </Button>
-              )}
             </VStack>
           </Center>
         )}

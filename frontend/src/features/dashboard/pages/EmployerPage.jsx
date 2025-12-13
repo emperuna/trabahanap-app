@@ -24,8 +24,8 @@ const SIDEBAR_OPTIONS = [
   { key: 'postJob', label: 'Post Job', icon: HiPlus },
   { key: 'manageJobs', label: 'Manage Jobs', icon: HiBriefcase },
   { key: 'applications', label: 'Applications', icon: HiClipboardList },
-  { key: 'candidates', label: 'Candidates', icon: HiUserGroup },
-  { key: 'analytics', label: 'Analytics', icon: HiChartBar },
+  // { key: 'candidates', label: 'Candidates', icon: HiUserGroup },
+  // { key: 'analytics', label: 'Analytics', icon: HiChartBar },
   { key: 'settings', label: 'Settings', icon: HiCog },
 ];
 

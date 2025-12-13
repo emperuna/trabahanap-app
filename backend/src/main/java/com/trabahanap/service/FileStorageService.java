@@ -129,7 +129,11 @@ public class FileStorageService {
      * Store a file in the local filesystem.
      */
     private String storeFileLocally(MultipartFile file, String folder) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+        String originalFilename = file.getOriginalFilename();
+        if (originalFilename == null || originalFilename.isEmpty()) {
+            originalFilename = "file.pdf";
+        }
+        String fileName = StringUtils.cleanPath(originalFilename);
 
         try {
             if (fileName.contains("..")) {

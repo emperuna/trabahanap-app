@@ -21,7 +21,7 @@ const EmployerApplicationsHeader = ({
       <HStack spacing={3}>
         <Button 
           as={Link} 
-          to="/employer/post-job" 
+          to="/employer-dashboard?section=postJob" 
           colorScheme="blue" 
           variant="outline"
         >

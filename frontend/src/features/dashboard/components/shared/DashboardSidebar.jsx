@@ -217,22 +217,6 @@ const DashboardSidebar = () => {
       color: 'purple',
       isLoading: loadingSavedJobs
     },
-    {
-      label: 'Resume',
-      icon: HiDocumentText,
-      path: '/dashboard/resume',
-      badge: null,
-      description: 'CV builder & manager',
-      color: 'cyan'
-    },
-    {
-      label: 'Analytics',
-      icon: HiChartBar,
-      path: '/dashboard/analytics',
-      badge: null,
-      description: 'Job search insights',
-      color: 'teal'
-    },
   ];
 
   const isActivePath = (path) => {

@@ -1,10 +1,15 @@
 import React from 'react';
 import {
-  Card, CardBody, VStack, Flex, Avatar, Box, Heading, HStack, Badge, Icon, Divider, Text
+  Card, CardBody, VStack, HStack, Avatar, Box, Heading, Badge, Icon, Divider, Text,
+  useColorModeValue, Flex, List, ListItem, ListIcon
 } from '@chakra-ui/react';
 import {
   HiLocationMarker,
-  HiCurrencyDollar
+  HiCurrencyDollar,
+  HiBriefcase,
+  HiClock,
+  HiCheckCircle,
+  HiOfficeBuilding
 } from 'react-icons/hi';
 
 const JobDetailCard = ({
@@ -14,105 +19,167 @@ const JobDetailCard = ({
   mutedColor,
   formatSalary,
   formatDate
-}) => (
-  <Card bg={cardBg} borderRadius="2xl" shadow="lg" p={0}>
-    <CardBody p={0} position="relative">
-      {/* Gradient background behind avatar */}
-      <Box
-        position="absolute"
-        top={0}
-        left={0}
-        w="100%"
-        h="110px"
-        bgGradient="linear(120deg, brand.500 0%, brand.500 25%, blue.600 25%, blue.600 50%, blue.700 50%, blue.700 75%, blue.800 75%, blue.800 100%)"
-        borderTopRadius="2xl"
-        zIndex={1}
-      />
-      <VStack spacing={0} align="stretch" position="relative" zIndex={2}>
-        {/* Avatar Section */}
-        <Flex
-          justify="center"
-          align="center"
-          pt={16}
-          position="relative"
-        >
-          <Avatar
-            size="xl"
-            name={job.company}
-            src={job.companyLogo || undefined}
-            border="6px solid white"
-            bg="gray.200"
-            position="relative"
-            zIndex={2}
-          />
-        </Flex>
-        {/* Title & Meta */}
-        <Box px={{ base: 6, md: 12 }} pb={6}>
-          <Heading size="2xl" color="blue.500" fontWeight="bold" mb={2}>
-            {job.title}
-          </Heading>
-          <HStack spacing={6} flexWrap="wrap" mb={4}>
-            <HStack spacing={1}>
-              <Icon as={HiLocationMarker} color={mutedColor} />
-              <Text color={mutedColor} fontWeight="medium">
+}) => {
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
+  const sectionBg = useColorModeValue('gray.50', 'gray.750');
+  const accentColor = useColorModeValue('blue.600', 'blue.400');
+
+  // Parse list items from text (handles bullet points or newlines)
+  const parseListItems = (text) => {
+    if (!text) return [];
+    return text
+      .split(/[\n•\-]/)
+      .map(item => item.trim())
+      .filter(item => item.length > 0);
+  };
+
+  return (
+    <Card 
+      bg={cardBg} 
+      borderRadius="xl" 
+      shadow="sm"
+      border="1px"
+      borderColor={borderColor}
+      overflow="hidden"
+    >
+      <CardBody p={0}>
+        {/* Company Header */}
+        <Box px={6} py={6} borderBottom="1px" borderColor={borderColor}>
+          <HStack spacing={4} align="start">
+            <Avatar
+              size="lg"
+              name={job.company}
+              src={job.companyLogo || undefined}
+              bg="blue.500"
+              color="white"
+            />
+            <VStack align="start" spacing={1} flex={1}>
+              <HStack spacing={2}>
+                <Icon as={HiOfficeBuilding} color={mutedColor} boxSize={4} />
+                <Text fontSize="sm" color={mutedColor} fontWeight="500">
+                  {job.company}
+                </Text>
+              </HStack>
+              <Heading size="lg" color={textColor} fontWeight="700" lineHeight="1.2">
+                {job.title}
+              </Heading>
+            </VStack>
+          </HStack>
+        </Box>
+
+        {/* Key Details Bar */}
+        <Box px={6} py={4} bg={sectionBg}>
+          <Flex gap={4} flexWrap="wrap" justify="start">
+            <HStack spacing={2}>
+              <Icon as={HiLocationMarker} color={accentColor} boxSize={4} />
+              <Text fontSize="sm" fontWeight="500" color={textColor}>
                 {job.location}
               </Text>
             </HStack>
-            <HStack spacing={1}>
-              <Badge colorScheme="gray" fontWeight="medium" px={2} py={1} borderRadius="md">
-                {job.level || 'Senior'}
-              </Badge>
-            </HStack>
-            <HStack spacing={1}>
-              <Badge colorScheme="gray" fontWeight="medium" px={2} py={1} borderRadius="md">
-                {job.department || 'Development'}
-              </Badge>
-            </HStack>
-            <HStack spacing={1}>
-              <Badge colorScheme="gray" fontWeight="medium" px={2} py={1} borderRadius="md">
-                {job.jobType || 'Full-time'}
-              </Badge>
-            </HStack>
-            <HStack spacing={1}>
-              <Icon as={HiCurrencyDollar} color={mutedColor} />
-              <Text color={mutedColor} fontWeight="medium">
+            
+            <HStack spacing={2}>
+              <Icon as={HiCurrencyDollar} color="green.500" boxSize={4} />
+              <Text fontSize="sm" fontWeight="600" color="green.600">
                 {formatSalary(job.salary)}
               </Text>
             </HStack>
+
+            <HStack spacing={2}>
+              <Icon as={HiBriefcase} color={accentColor} boxSize={4} />
+              <Text fontSize="sm" fontWeight="500" color={textColor}>
+                {job.jobType || 'Full-time'}
+              </Text>
+            </HStack>
+
+            <HStack spacing={2}>
+              <Icon as={HiClock} color={mutedColor} boxSize={4} />
+              <Text fontSize="sm" color={mutedColor}>
+                {formatDate(job.createdAt)}
+              </Text>
+            </HStack>
+          </Flex>
+
+          {/* Tags */}
+          <HStack spacing={2} mt={3} flexWrap="wrap">
+            {job.level && (
+              <Badge colorScheme="purple" variant="subtle" px={2} py={0.5} borderRadius="md" fontSize="xs">
+                {job.level}
+              </Badge>
+            )}
+            {job.department && (
+              <Badge colorScheme="blue" variant="subtle" px={2} py={0.5} borderRadius="md" fontSize="xs">
+                {job.department}
+              </Badge>
+            )}
+            {job.workType && (
+              <Badge colorScheme="green" variant="subtle" px={2} py={0.5} borderRadius="md" fontSize="xs">
+                {job.workType}
+              </Badge>
+            )}
           </HStack>
-          <Text color={mutedColor} fontSize="sm" mb={2}>
-            Posted on: {formatDate(job.createdAt)}
-          </Text>
         </Box>
-        <Divider />
+
         {/* Job Description */}
-        <Box px={{ base: 6, md: 12 }} py={8}>
-          <Heading size="md" color={textColor} mb={4}>Job Description</Heading>
-          <Text color={textColor} lineHeight="1.8" whiteSpace="pre-line">
+        <Box px={6} py={6}>
+          <Heading size="sm" color={textColor} mb={3} fontWeight="600">
+            About This Role
+          </Heading>
+          <Text 
+            color={textColor} 
+            lineHeight="1.8" 
+            fontSize="md"
+            whiteSpace="pre-line"
+          >
             {job.description || 'No description provided.'}
           </Text>
         </Box>
+
         {/* Responsibilities */}
         {job.responsibilities && (
-          <Box px={{ base: 6, md: 12 }} pb={8}>
-            <Heading size="md" color={textColor} mb={4}>Responsibilities</Heading>
-            <Text color={textColor} lineHeight="1.8" whiteSpace="pre-line">
-              {job.responsibilities}
-            </Text>
-          </Box>
+          <>
+            <Divider />
+            <Box px={6} py={6}>
+              <Heading size="sm" color={textColor} mb={4} fontWeight="600">
+                Key Responsibilities
+              </Heading>
+              <List spacing={2}>
+                {parseListItems(job.responsibilities).map((item, index) => (
+                  <ListItem key={index} display="flex" alignItems="start">
+                    <ListIcon as={HiCheckCircle} color="green.500" mt={1} />
+                    <Text color={textColor} lineHeight="1.6" fontSize="md">
+                      {item}
+                    </Text>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </>
         )}
+
         {/* Requirements */}
         {job.requirements && (
-          <Box px={{ base: 6, md: 12 }} pb={8}>
-            <Heading size="md" color={textColor} mb={4}>Job Requirements</Heading>
-            <Text color={textColor} lineHeight="1.8" whiteSpace="pre-line">
-              {job.requirements}
-            </Text>
-          </Box>
+          <>
+            <Divider />
+            <Box px={6} py={6}>
+              <Heading size="sm" color={textColor} mb={4} fontWeight="600">
+                Requirements
+              </Heading>
+              <List spacing={2}>
+                {parseListItems(job.requirements).map((item, index) => (
+                  <ListItem key={index} display="flex" alignItems="start">
+                    <ListIcon as={HiCheckCircle} color="blue.500" mt={1} />
+                    <Text color={textColor} lineHeight="1.6" fontSize="md">
+                      {item}
+                    </Text>
+                  </ListItem>
+                ))}
+              </List>
+            </Box>
+          </>
         )}
-      </VStack>
-    </CardBody>
-  </Card>
-);
+      </CardBody>
+    </Card>
+  );
+};
 
 export default JobDetailCard;
