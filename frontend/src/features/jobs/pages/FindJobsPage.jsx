@@ -115,8 +115,6 @@ const JobSeekerFindJobs = () => {
             filters={searchFilters}
             onFilterChange={updateFilter}
             onSearch={handleSearch}
-            onClearFilters={clearFilters}
-            activeFiltersCount={getActiveFiltersCount()}
           />
         </Box>
       </Box>
@@ -157,8 +155,6 @@ const JobSeekerFindJobs = () => {
               filters={searchFilters}
               onSortChange={(sortBy) => updateFilter('sortBy', sortBy)}
               onRefresh={fetchJobs}
-              onClearFilters={clearFilters}
-              activeFiltersCount={getActiveFiltersCount()}
               selectedJobId={selectedJob?._id || selectedJob?.id}
               onJobSelect={handleJobSelect}
               isCompactView={true}
