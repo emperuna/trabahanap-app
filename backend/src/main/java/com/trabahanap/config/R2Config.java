@@ -30,6 +30,17 @@ public class R2Config {
 
     @Bean
     public S3Client s3Client() {
+        // Validate configuration
+        if (endpoint == null || endpoint.trim().isEmpty()) {
+            throw new IllegalStateException("R2_ENDPOINT is required when STORAGE_TYPE=r2");
+        }
+        if (accessKey == null || accessKey.trim().isEmpty()) {
+            throw new IllegalStateException("R2_ACCESS_KEY is required when STORAGE_TYPE=r2");
+        }
+        if (secretKey == null || secretKey.trim().isEmpty()) {
+            throw new IllegalStateException("R2_SECRET_KEY is required when STORAGE_TYPE=r2");
+        }
+
         return S3Client.builder()
                 .endpointOverride(URI.create(endpoint))
                 .credentialsProvider(StaticCredentialsProvider.create(

@@ -148,7 +148,8 @@ public class R2StorageService {
     }
 
     /**
-     * Ensure the bucket exists, create if it doesn't.
+     * Verify the bucket exists and connection works.
+     * Logs a warning if there are issues but doesn't crash the app.
      */
     private void ensureBucketExists() {
         try {
@@ -156,13 +157,15 @@ public class R2StorageService {
                     .bucket(bucketName)
                     .build();
             s3Client.headBucket(headBucketRequest);
+            System.out.println("✅ Connected to R2 bucket: " + bucketName);
         } catch (NoSuchBucketException e) {
-            // Bucket doesn't exist, create it
-            CreateBucketRequest createBucketRequest = CreateBucketRequest.builder()
-                    .bucket(bucketName)
-                    .build();
-            s3Client.createBucket(createBucketRequest);
-            System.out.println("Created R2 bucket: " + bucketName);
+            // Bucket doesn't exist - R2 requires bucket creation via dashboard
+            System.err.println(
+                    "⚠️ R2 bucket '" + bucketName + "' does not exist. Please create it in Cloudflare dashboard.");
+        } catch (S3Exception e) {
+            // Connection or auth error - log but don't crash
+            System.err.println("⚠️ Could not connect to R2: " + e.getMessage());
+            System.err.println("   Check your R2_ENDPOINT, R2_ACCESS_KEY, and R2_SECRET_KEY configuration.");
         }
     }
 }
