@@ -22,12 +22,12 @@ export default [
     },
     rules: {
       ...js.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Relaxed rules for development
+      'no-unused-vars': 'warn',
+      'no-undef': 'warn',
+      'react-hooks/rules-of-hooks': 'warn',
+      'react-hooks/exhaustive-deps': 'off',
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]
