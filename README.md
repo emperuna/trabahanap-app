@@ -1,8 +1,10 @@
 <p align="center">
-  <img src="frontend/public/logo.png" alt="TrabaHanap Logo" width="120" height="120">
+  <img src="logo.svg" alt="TrabaHanap Logo" width="80" height="80">
 </p>
 
-<h1 align="center">TrabaHanap</h1>
+<h1 align="center">
+  <img src="logo-brandname.svg" alt="TrabaHanap" height="40">
+</h1>
 
 <p align="center">
   <strong>🇵🇭 A Modern Job Portal for the Filipino Workforce</strong>
@@ -364,7 +366,26 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 
 ## 👥 Team
 
-Created and maintained by **Jeremy Garin** and contributors.
+<table>
+  <tr>
+    <td align="center">
+      <strong>Jeremy Garin</strong><br>
+      <sub>Fullstack Developer</sub>
+    </td>
+    <td align="center">
+      <strong>Ian Patrick Mesias</strong><br>
+      <sub>QA / Tester</sub>
+    </td>
+    <td align="center">
+      <strong>Jose Aquino III</strong><br>
+      <sub>Backend Developer</sub>
+    </td>
+    <td align="center">
+      <strong>Marc Justin Alberto</strong><br>
+      <sub>Frontend Developer</sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
