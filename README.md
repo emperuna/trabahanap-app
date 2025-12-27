@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-  <strong>🇵🇭 A Modern Job Portal for the Filipino Workforce</strong>
+  <strong>A Modern Job Portal for the Filipino Workforce</strong>
 </p>
 
 <p align="center">
@@ -25,16 +25,16 @@
   <img src="https://img.shields.io/badge/React-19-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
   <img src="https://img.shields.io/badge/Vite-Latest-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/PostgreSQL-15+-336791?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL">
-  <img src="https://img.shields.io/license/mit-blue?style=flat-square" alt="License">
+  <img src="https://img.shields.io/badge/License-MIT-blue?style=flat-square" alt="License">
 </p>
 
 ---
 
-## 📖 Overview
+## Overview
 
 **TrabaHanap** (_"trabaho" + "hanap" = "looking for work"_ in Filipino) is a full-stack job portal application designed to connect Filipino job seekers with employers. The platform provides a seamless experience for posting jobs, searching opportunities, and managing applications.
 
-### 🎯 Key Highlights
+### Key Highlights
 
 - **Full-Stack Monorepo** — Spring Boot backend + React frontend in one repository
 - **Cloud-Native** — Deployed on Railway (backend) and Cloudflare Pages (frontend)
@@ -43,33 +43,33 @@
 
 ---
 
-## ✨ Features
+## Features
 
 ### For Job Seekers
 
-- 🔍 **Job Search** — Browse and filter job listings by location, category, and keywords
-- 📝 **One-Click Apply** — Submit applications with resume uploads
-- 💾 **Save Jobs** — Bookmark interesting opportunities for later
-- 👤 **Profile Management** — Build and manage your professional profile
-- 📊 **Application Tracking** — Monitor the status of your applications
+- **Job Search** — Browse and filter job listings by location, category, and keywords
+- **One-Click Apply** — Submit applications with resume uploads
+- **Save Jobs** — Bookmark interesting opportunities for later
+- **Profile Management** — Build and manage your professional profile
+- **Application Tracking** — Monitor the status of your applications
 
 ### For Employers
 
-- 📋 **Job Posting** — Create and manage job listings with rich descriptions
-- 👥 **Applicant Management** — Review, shortlist, and track candidates
-- 🏢 **Company Profiles** — Showcase your company to attract talent
-- 📈 **Dashboard Analytics** — Insights into job posting performance
+- **Job Posting** — Create and manage job listings with rich descriptions
+- **Applicant Management** — Review, shortlist, and track candidates
+- **Company Profiles** — Showcase your company to attract talent
+- **Dashboard Analytics** — Insights into job posting performance
 
 ### Platform Features
 
-- 🔐 **Secure Authentication** — JWT tokens with role-based permissions
-- 📱 **Responsive Design** — Mobile-first UI that works on all devices
-- ⚡ **Fast Performance** — Optimized React + Vite frontend
-- 🐳 **Docker Support** — Containerized for easy deployment
+- **Secure Authentication** — JWT tokens with role-based permissions
+- **Responsive Design** — Mobile-first UI that works on all devices
+- **Fast Performance** — Optimized React + Vite frontend
+- **Docker Support** — Containerized for easy deployment
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Backend
 
@@ -108,7 +108,7 @@
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -190,11 +190,11 @@ VITE_API_URL=http://localhost:8080/api
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 trabahanap-app/
-├── 📂 backend/                 # Spring Boot API
+├── backend/                    # Spring Boot API
 │   ├── src/main/java/com/trabahanap/
 │   │   ├── config/            # Security, CORS, JWT config
 │   │   ├── controller/        # REST controllers
@@ -209,7 +209,7 @@ trabahanap-app/
 │   ├── Dockerfile
 │   └── pom.xml
 │
-├── 📂 frontend/                # React + Vite SPA
+├── frontend/                   # React + Vite SPA
 │   ├── src/
 │   │   ├── app/               # App-level components
 │   │   ├── assets/            # Images, icons
@@ -225,7 +225,7 @@ trabahanap-app/
 │   ├── index.html
 │   └── package.json
 │
-├── 📂 .github/workflows/       # CI/CD pipelines
+├── .github/workflows/          # CI/CD pipelines
 │   ├── backend-ci.yml
 │   └── frontend-ci.yml
 │
@@ -236,7 +236,7 @@ trabahanap-app/
 
 ---
 
-## 🐳 Docker Development
+## Docker
 
 Run the entire stack with Docker Compose:
 
@@ -258,7 +258,7 @@ This starts:
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ### Backend Tests
 
@@ -277,7 +277,7 @@ npm run lint               # Run ESLint
 
 ---
 
-## 🚢 Deployment
+## Deployment
 
 ### Backend (Railway)
 
@@ -298,16 +298,16 @@ The frontend deploys to Cloudflare Pages:
 
 ---
 
-## 🔒 API Documentation
+## API Reference
 
-### Authentication Endpoints
+### Authentication
 
 | Method | Endpoint           | Description       |
 | ------ | ------------------ | ----------------- |
 | `POST` | `/api/auth/signin` | User login        |
 | `POST` | `/api/auth/signup` | User registration |
 
-### Jobs Endpoints
+### Jobs
 
 | Method   | Endpoint         | Description           |
 | -------- | ---------------- | --------------------- |
@@ -317,7 +317,7 @@ The frontend deploys to Cloudflare Pages:
 | `PUT`    | `/api/jobs/{id}` | Update job            |
 | `DELETE` | `/api/jobs/{id}` | Delete job            |
 
-### Applications Endpoints
+### Applications
 
 | Method | Endpoint                     | Description               |
 | ------ | ---------------------------- | ------------------------- |
@@ -339,7 +339,7 @@ The frontend deploys to Cloudflare Pages:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions! Please follow these steps:
 
@@ -358,13 +358,13 @@ We welcome contributions! Please follow these steps:
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 👥 Team
+## Team
 
 <table>
   <tr>
@@ -390,5 +390,5 @@ This project is licensed under the **MIT License** — see the [LICENSE](LICENSE
 ---
 
 <p align="center">
-  <sub>Built with ❤️ for the Filipino workforce</sub>
+  <sub>Built for the Filipino workforce</sub>
 </p>
